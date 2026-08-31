@@ -4,26 +4,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VitaMet -Login</title>
     <link rel="stylesheet" href="style.css">
+    <title>VITAMET</title>
 </head>
+
 <body>
-    <div class="container">
 
-        <div class="imagem">
-            <img src="WhatsApp Image 2026-08-17 at 4.21.16 PM.jpeg" alt="Imagem VitaMet">
+    <header>
+        <nav>
+            <div class="logo">
+                VITA<span>MET</span>
+            </div>
+
+            <ul>
+                <li><a href="#inicio" class="active">Início</a></li>
+                <li><a href="#sobre">Sobre</a></li>
+                <li><a href="#avaliacoes">Avaliações</a></li>
+                <li><a href="#contato">Contato</a></li>
+            </ul>
+
+        </nav>
+    </header>
+
+    <main>
+
+        <section id="inicio" class="hero">
+
+            <div class="hero-overlay"></div>
+
+            <div class="hero-content">
+                <span class="subtitle">Cuidando da sua saúde</span>
+
+                <h1>VITAMET</h1>
+
+                <p>
+                    Uma solução simples e eficiente para a gestão
+                    de agendamentos de vitaminas e minerais.
+                </p>
+
+                <div class="buttons">
+                    <a href="#sobre" class="btn-primary">
+                        Conheça o VITAMET
+                    </a>
+
+             
+                </div>
+            </div>
+
+            <div class="wave"></div>
+
+        </section>
+
+        <section id="sobre" class="section">
+
+            <span class="section-subtitle">SOBRE O PROJETO</span>
+
+            <h2>Conheça o VITAMET</h2>
+
+            <p>
+                O VITAMET é um projeto de software livre criado
+                para facilitar a gestão de agendamentos de
+                vitaminas e minerais.
+            </p>
+
+            <p>
+                Nossa proposta é oferecer uma solução organizada,
+                moderna e acessível para auxiliar profissionais
+                e usuários.
+            </p>
+
+            <div class="cards">
+
+                <div class="card">
+                    <div class="icon">📅</div>
+                    <h3>Agendamentos</h3>
+                    <p>
+                        Organize seus agendamentos de maneira
+                        simples e eficiente.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <div class="icon">💊</div>
+                    <h3>Vitaminas</h3>
+                    <p>
+                        Gerencie informações relacionadas
+                        a vitaminas e minerais.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <div class="icon">💻</div>
+                    <h3>Software Livre</h3>
+                    <p>
+                        Contribua para o desenvolvimento
+                        e evolução do projeto.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+        <section id="avaliacoes" class="section reviews">
+
+            <span class="section-subtitle">AVALIAÇÕES</span>
+
+            <h2>O que dizem sobre o VITAMET</h2>
+
+            <div class="review">
+
+                <div class="stars">
+                    ★★★★★
+                </div>
+
+                <p>
+                    "O VITAMET torna a organização dos agendamentos
+                    muito mais simples e prática."
+                </p>
+
+                <strong>
+                    Usuário VITAMET
+                </strong>
+
+            </div>
+
+        </section>
+
+        <section id="contato" class="contact">
+
+            <div class="contact-content">
+
+                <span class="section-subtitle">FALE CONOSCO</span>
+
+                <h2>Faça parte do VITAMET</h2>
+
+                <p>
+                    O projeto é software livre e você pode contribuir
+                    com seu desenvolvimento através do GitHub.
+                </p>
+
+              
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+
+        <div class="footer-logo">
+            VITA<span>MET</span>
         </div>
-        <div class="login-box">
 
-            <h1>Login</h1>
+        <p>
+            Projeto de software livre para gestão de vitaminas e minerais.
+        </p>
 
-            <input type="text" id="login" placeholder="Digite seu login" required>
+        <p class="copyright">
+            © 2026 VITAMET
+        </p>
 
-            <input type="password" id="senha" placeholder="Digite sua senha" required>
+    </footer>
 
-            <button onclick="salvar()">Entrar</button>
-        </div>
-    </div>
- 
 </body>
 </html>
