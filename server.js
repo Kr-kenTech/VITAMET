@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const mysql = require('mysql2');
-const port = 3306;
 const bcrypt = require('bcrypt');
 
 const connection = mysql.createConnection({
@@ -22,6 +21,8 @@ connection.connect((err) => {
 
 module.exports = connection;
 app.use(express.json());
+
+app.use(express.static(__dirname));
 
 app.post('/login', async (req, res) => {
     const { email, senha } = req.body;
@@ -60,6 +61,6 @@ app.post('/login', async (req, res) => {
     });
 });
 
-app.listen(3306, () => {
-    console.log('Servidor rodando na porta 3306');
+app.listen(3000, () => {
+    console.log('Servidor rodando na porta 3000');
 });
