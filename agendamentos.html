@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VitaMed - Agendamentos</title>
+    <link rel="stylesheet" href="agendamentos.css">
+</head>
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <div class="logo-icon">
+                <img src="foto.jpeg" alt="VitaMed">
+            </div>
+
+            <div>
+                <h2>Vita<span>Med</span></h2>
+                <p>Clínica Veterinária</p>
+            </div>
+        </div>
+
+        <nav class="menu">
+
+            <a href="tutor.html" class="menu-item">
+                <span>🏠</span>
+                Início
+            </a>
+
+            <a href="tutor.html#pets" class="menu-item">
+                <span>🐾</span>
+                Meus Pets
+            </a>
+
+            <a href="agendamentos.html" class="menu-item active">
+                <span>📅</span>
+                Agendamento
+            </a>
+
+            <a href="#" class="menu-item">
+                <span>📋</span>
+                Consultas
+            </a>
+
+            <a href="#" class="menu-item">
+                <span>👥</span>
+                Comunidade
+            </a>
+
+            <a href="#" class="menu-item">
+                <span>👤</span>
+                Meu Perfil
+            </a>
+
+            <a href="#" class="menu-item">
+                <span>⚙️</span>
+                Configurações
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <div class="help">
+                <div class="help-icon">
+                    ?
+                </div>
+
+                <div>
+                    <strong>Precisa de ajuda?</strong>
+                    <p>Entre em contato com a VitaMed.</p>
+                </div>
+            </div>
+
+            <a href="login.html" class="logout">
+                <span>🚪</span>
+                Sair
+            </a>
+
+        </div>
+
+    </aside>
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <div class="mobile-logo">
+                VITA<span>MED</span>
+            </div>
+
+            <div class="top-user">
+
+                <button class="notification">
+                    🔔
+                </button>
+
+                <div class="avatar">
+                    <span id="avatarNome">TU</span>
+                </div>
+
+                <div class="user-info">
+                    <strong id="nomePerfil">Tutor</strong>
+                    <span>Tutor</span>
+                </div>
+
+                <span class="arrow">⌄</span>
+
+            </div>
+
+        </header>
+
+        <section class="content">
+
+            <div class="page-header">
+
+                <div>
+                    <span class="breadcrumb">
+                        ÁREA DO TUTOR
+                    </span>
+
+                    <h1>Meus Agendamentos</h1>
+
+                    <p>
+                        Acompanhe as consultas e cuidados dos seus pets.
+                    </p>
+                </div>
+
+                <a href="agendamento.html" class="btn-primary">
+                    + Novo agendamento
+                </a>
+
+            </div>
+
+            <div id="emptyState" class="empty-pets">
+
+                <div class="empty-icon">
+                    📅
+                </div>
+
+                <h2>Nenhum agendamento encontrado</h2>
+
+                <p>
+                    Você ainda não possui nenhuma consulta agendada.
+                    Agende uma consulta para cuidar da saúde do seu pet.
+                </p>
+
+                <a href="agendamento.html" class="btn-primary">
+                    Agendar consulta
+                </a>
+
+            </div>
+
+            <div id="appointmentsList" class="appointments-list"></div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script>
+
+const tutor = JSON.parse(localStorage.getItem("tutor"));
+
+if (tutor && tutor.nome) {
+
+    document.getElementById("nomePerfil").textContent = tutor.nome;
+
+    const partes = tutor.nome.trim().split(" ");
+
+    const iniciais =
+        partes[0].charAt(0) +
+        (partes.length > 1
+            ? partes[partes.length - 1].charAt(0)
+            : "");
+
+    document.getElementById("avatarNome").textContent =
+        iniciais.toUpperCase();
+}
+
+const agendamentos =
+    JSON.parse(localStorage.getItem("agendamentos")) || [];
+
+const emptyState =
+    document.getElementById("emptyState");
+
+const appointmentsList =
+    document.getElementById("appointmentsList");
+
+function mostrarAgendamentos() {
+
+    appointmentsList.innerHTML = "";
+
+    if (agendamentos.length === 0) {
+
+        emptyState.style.display = "flex";
+        appointmentsList.style.display = "none";
+
+        return;
+    }
+
+    emptyState.style.display = "none";
+    appointmentsList.style.display = "flex";
+
+    agendamentos.forEach(function(agendamento) {
+
+        const data = new Date(
+            agendamento.data + "T00:00:00"
+        );
+
+        const dia =
+            String(data.getDate()).padStart(2, "0");
+
+        const mes =
+            data.toLocaleDateString("pt-BR", {
+                month: "short"
+            }).replace(".", "").toUpperCase();
+
+        appointmentsList.innerHTML += `
+
+            <div class="appointment-card">
+
+                <div class="appointment-date">
+                    <strong>${dia}</strong>
+                    <span>${mes}</span>
+                </div>
+
+                <div class="appointment-info">
+
+                    <h3>
+                        ${agendamento.pet || "Meu pet"}
+                    </h3>
+
+                    <p>
+                        ${agendamento.servico || "Consulta"}
+                    </p>
+
+                    <span>
+                        ${agendamento.observacoes || "Agendamento realizado pela VitaMed"}
+                    </span>
+
+                </div>
+
+                <div class="appointment-time">
+
+                    <strong>
+                        ${agendamento.hora || "--:--"}
+                    </strong>
+
+                    <span>
+                        Agendado
+                    </span>
+
+                </div>
+
+            </div>
+
+        `;
+    });
+}
+
+mostrarAgendamentos();
+
+</script>
+
+</body>
+</html>
