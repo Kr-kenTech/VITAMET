@@ -72,7 +72,8 @@
                 </div>
             </div>
 
-            <a href="#" class="logout">
+            <!-- Adicionado o ID 'btnSair' aqui -->
+            <a href="#" id="btnSair" class="logout">
                 ↪ &nbsp; Sair
             </a>
 
@@ -94,7 +95,6 @@
                     🔔
                 </button>
 
-                <!-- Adicionado o ID 'avatarUsuario' aqui -->
                 <div class="avatar" id="avatarUsuario">
                     --
                 </div>
@@ -515,7 +515,7 @@
 </div>
 
 <script>
-    // Recupera os dados salvos no login via sessionStorage
+    // 1. Recupera os dados salvos no login via sessionStorage
     const usuarioSalvo = sessionStorage.getItem("usuario");
 
     if (usuarioSalvo) {
@@ -529,10 +529,8 @@
         let iniciais = "";
         
         if (partesNome.length >= 2) {
-            // Pega a primeira letra do primeiro nome e a primeira letra do último nome
             iniciais = (partesNome[0][0] + partesNome[partesNome.length - 1][0]).toUpperCase();
         } else if (partesNome.length === 1 && partesNome[0].length > 0) {
-            // Se tiver apenas um nome, pega as duas primeiras letras
             iniciais = partesNome[0].substring(0, 2).toUpperCase();
         } else {
             iniciais = "VT";
@@ -542,8 +540,19 @@
         document.getElementById("avatarUsuario").innerText = iniciais;
 
     } else {
-        // Se não houver sessão ativa, redireciona de volta para o login
+        // Se não houver sessão ativa, redireciona de volta para a raiz (login)
         window.location.href = "/";
+    }
+
+    // 2. Configura a ação de clique no botão Sair
+    const btnSair = document.getElementById("btnSair");
+    if (btnSair) {
+        btnSair.addEventListener("click", function(event) {
+            event.preventDefault(); // Impede o comportamento padrão do link (#)
+            
+            sessionStorage.removeItem("usuario");
+            window.location.href = "/";
+        });
     }
 </script>
 
