@@ -15,13 +15,13 @@ body {
 
 .imagem {
     width: 280px;
-    height: 430px;
+    height: 500px;
     display: flex;
     justify-content: center;
     align-items: center;
     background: white;
     border-radius: 20px 0 0 20px;
-    box-shadow: 0 10px 30px rgba(0, 85, 170, 0.034);
+    box-shadow: 0 10px 30px rgba(0, 85, 170, 0.2);
 }
 
 .imagem img {
@@ -29,49 +29,56 @@ body {
     border-radius: 10px;
 }
 
-.login-box {
-    width: 350px;
-    height: 430px;
-    padding: 0 40px;
+.cadastro-box {
+    width: 380px;
+    height: 500px;
+    padding: 30px 40px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     box-sizing: border-box;
     background: white;
     border-radius: 0 20px 20px 0;
-    box-shadow: 0 10px 30px rgba(29, 135, 241, 0);
+    box-shadow: 0 10px 30px rgba(0, 85, 170, 0.027);
 }
 
-.login-box h1 {
-    margin: 0 0 25px;
+.cadastro-box h1 {
+    margin: 0 0 8px;
     text-align: center;
     color: #0066cc;
-    font-size: 30px;
+    font-size: 28px;
 }
 
-.login-box input {
+.cadastro-box p {
+    margin: 0 0 18px;
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+}
+
+.cadastro-box input {
     width: 100%;
-    height: 48px;
-    padding: 0 15px;
-    margin-bottom: 15px;
+    height: 42px;
+    padding: 0 14px;
+    margin-bottom: 10px;
     box-sizing: border-box;
     border: 2px solid #cce4ff;
     border-radius: 10px;
     outline: none;
-    font-size: 15px;
+    font-size: 14px;
     color: #003b70;
     background: #f7fbff;
 }
 
-.login-box input:focus {
+.cadastro-box input:focus {
     border-color: #0077dd;
     background: white;
 }
 
-.login-box button {
+.cadastro-box button {
     width: 100%;
-    height: 40px;
-    margin-top: 10px;
+    height: 44px;
+    margin-top: 5px;
     border: none;
     border-radius: 10px;
     background: #0077dd;
@@ -81,47 +88,34 @@ body {
     cursor: pointer;
 }
 
-.login-box button:hover {
+.cadastro-box button:hover {
     background: #005bb5;
 }
 
-.login-box p {
+.voltar,
+.inicio {
     text-align: center;
-    color: #666;
-    font-size: 14px;
-    margin: 20px 0 10px;
-}
-
-.criar {
-    width: 100%;
-    padding: 16px 0;
-    text-align: center;
-     background: #0077dd;
-    color: white;
-    border-radius: 10px;
+    color: #0077dd;
     text-decoration: none;
+    font-size: 13px;
     font-weight: bold;
-    font-size: 16px;
-}
-
-.criar:hover {
-     background: #005bb5;
 }
 
 .voltar {
-    text-align: center;
-    color: #0077dd;
-    padding: 10px 0;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: bold;
+    margin-top: 15px;
 }
 
-.voltar:hover {
+.inicio {
+    margin-top: 8px;
+}
+
+.voltar:hover,
+.inicio:hover {
     text-decoration: underline;
 }
 
 @media (max-width: 700px) {
+
     body {
         height: auto;
         min-height: 100vh;
@@ -137,14 +131,13 @@ body {
 
     .imagem {
         width: 100%;
-        height: 220px;
+        height: 180px;
         border-radius: 20px 20px 0 0;
     }
 
-    .login-box {
+    .cadastro-box {
         width: 100%;
         height: auto;
-        min-height: 400px;
         padding: 30px;
         border-radius: 0 0 20px 20px;
     }

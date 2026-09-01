@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VitaMed - Login</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="imagem">
+            <img src="WhatsApp Image 2026-08-17 at 4.21.16 PM.jpeg" alt="Imagem VitaMed">
+        </div>
+
+        <div class="login-box">
+
+            <h1>Login</h1>
+
+            <input
+                type="email"
+                id="email"
+                placeholder="Digite seu e-mail"
+            >
+
+            <input
+                type="password"
+                id="senha"
+                placeholder="Digite sua senha"
+            >
+
+            <a href="esqueci-senha.html" class="esqueci">
+                Esqueci minha senha
+            </a>
+
+            <button onclick="entrar()">
+                Entrar
+            </button>
+
+            <p>Não possui uma conta?</p>
+
+            <a href="cadastro.html" class="criar">
+                Criar conta de tutor
+            </a>
+
+            <a href="index.html" class="voltar">
+                ← Voltar para o início
+            </a>
+
+        </div>
+
+    </div>
+
+    <script>
+        function entrar() {
+
+            let email = document.getElementById("email").value;
+            let senha = document.getElementById("senha").value;
+
+            let tutor = JSON.parse(localStorage.getItem("tutor"));
+
+            if (email === "" || senha === "") {
+                alert("Preencha o e-mail e a senha!");
+                return;
+            }
+
+            if (!tutor) {
+                alert("Nenhuma conta cadastrada!");
+                return;
+            }
+
+            if (email === tutor.email && senha === tutor.senha) {
+                alert("Login realizado com sucesso!");
+            } else {
+                alert("E-mail ou senha incorretos!");
+            }
+        }
+    </script>
+
+</body>
+
+</html>
