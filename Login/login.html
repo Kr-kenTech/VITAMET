@@ -13,7 +13,7 @@
     <div class="container">
 
         <div class="imagem">
-            <img src="WhatsApp Image 2026-08-17 at 4.21.16 PM.jpeg" alt="Imagem VitaMed">
+            <img src="/foto.jpeg" alt="Imagem VitaMed">
         </div>
 
         <div class="login-box">
@@ -46,8 +46,8 @@
                 Criar conta de tutor
             </a>
 
-            <a href="index.html" class="voltar">
-                ← Voltar para o início
+            <a href="/index.html" class="inicio">
+                 Voltar para o início
             </a>
 
         </div>
@@ -76,7 +76,7 @@
                 if (resposta.ok) {
                     alert(resultado.mensagem);
                     sessionStorage.setItem("usuario", JSON.stringify(resultado.usuario));
-                    window.location.href = "tutor.html";
+                    window.location.href = "/tutor.html";
                 } else {
                     alert(resultado.erro || "E-mail ou senha incorretos!");
                 }
