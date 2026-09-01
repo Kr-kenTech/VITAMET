@@ -27,78 +27,29 @@
             </h2>
 
             <p>
-                Preencha os dados abaixo para agendar
-                uma consulta para o seu pet.
+                Selecione seu pet e escolha o serviço,
+                a data e o horário da consulta.
             </p>
 
-            <form>
-
-                <div class="form-group">
-
-                    <label for="nome">
-                        Nome do responsável
-                    </label>
-
-                    <input
-                        type="text"
-                        id="nome"
-                        name="nome"
-                        placeholder="Digite seu nome"
-                        maxlength="100"
-                        required
-                    >
-
-                </div>
+            <form onsubmit="confirmarAgendamento(event)">
 
                 <div class="form-group">
 
                     <label for="pet">
-                        Nome do pet
+                        Seu pet
                     </label>
 
-                    <input
-                        type="text"
-                        id="pet"
-                        name="pet"
-                        placeholder="Ex: Thor"
-                        maxlength="50"
-                        required
-                    >
+                    <select id="pet" name="pet" required>
 
-                </div>
+                        <option value="" selected disabled>
+                            Selecione seu pet
+                        </option>
 
-                <div class="form-group">
+                        <option value="pet1">
+                            Meu pet
+                        </option>
 
-                    <label for="animal">
-                        Qual animal deseja agendar?
-                    </label>
-
-                    <input
-                        type="text"
-                        id="animal"
-                        name="animal"
-                        placeholder="Ex: cachorro, gato, coelho..."
-                        maxlength="50"
-                        required
-                    >
-
-                </div>
-
-                <div class="form-group">
-
-                    <label for="telefone">
-                        Telefone
-                    </label>
-
-                    <input
-                        type="tel"
-                        id="telefone"
-                        name="telefone"
-                        placeholder="(00) 00000-0000"
-                        maxlength="15"
-                        pattern="[0-9\s\(\)\-]+"
-                        required
-                    >
+                    </select>
 
                 </div>
 
@@ -108,11 +59,7 @@
                         Serviço desejado
                     </label>
 
-                    <select
-                        id="servico"
-                        name="servico"
-                        required
-                    >
+                    <select id="servico" name="servico" required>
 
                         <option value="" selected disabled>
                             Selecione um serviço
@@ -197,13 +144,37 @@
 
             </form>
 
-            <a href="index.html" class="voltar">
-                ← Voltar para a página inicial
+            <a href="tutor.html" class="voltar">
+                ← Voltar para Meus Pets
             </a>
 
         </div>
 
     </main>
+
+    <script>
+
+        function confirmarAgendamento(event) {
+
+            event.preventDefault();
+
+            const pet = document.getElementById("pet").value;
+            const servico = document.getElementById("servico").value;
+            const data = document.getElementById("data").value;
+            const horario = document.getElementById("horario").value;
+
+            if (!pet || !servico || !data || !horario) {
+                alert("Preencha todos os campos obrigatórios.");
+                return;
+            }
+
+            alert("Agendamento realizado com sucesso!");
+
+            event.target.reset();
+
+        }
+
+    </script>
 
 </body>
 

@@ -65,7 +65,24 @@ a {
 .logo h2 span {
     color: #8ed8f8;
 }
+.logo-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: #e8f8ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
 
+.logo-icon img {
+    width: 100%;
+    height: 100%;
+    
+    object-fit: cover;
+   
+}
 .logo p {
     margin-top: 3px;
     color: #607d8b;
@@ -98,6 +115,7 @@ a {
     background: #e8f8ff;
     color: #397a99;
     font-weight: bold;
+    background-image: url("WhatsApp Image 2026-08-17 at 4.21.16 PM.jpeg");
 }
 
 .menu-item span {
