@@ -51,8 +51,7 @@
     </div>
 
     <script>
-        function cadastrar() {
-
+        async function cadastrar() {
             let nome = document.getElementById("nome").value;
             let cpf = document.getElementById("cpf").value;
             let telefone = document.getElementById("telefone").value;
@@ -82,22 +81,26 @@
                 return;
             }
 
-            let tutor = {
-                nome: nome,
-                cpf: cpf,
-                telefone: telefone,
-                email: email,
-                senha: senha
-            };
+            try {
+                let resposta = await fetch('/cadastro', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome, cpf, telefone, email, senha })
+                });
 
-            localStorage.setItem("tutor", JSON.stringify(tutor));
+                let resultado = await resposta.json();
 
-            alert("Conta criada com sucesso!");
-
-            window.location.href = "login.html";
+                if (resposta.ok) {
+                    alert(resultado.mensagem);
+                    window.location.href = "login.html";
+                } else {
+                    alert(resultado.erro || "Erro ao realizar cadastro.");
+                }
+            } catch (error) {
+                alert("Erro de conexão com o servidor.");
+            }
         }
     </script>
-
 </body>
 
 </html>
