@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vitamed - Configurações</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="configuracoes.css">
+</head>
+<body>
+<aside class="sidebar">
+  <div class="logo-container">
+  <img src="WhatsApp Image 2026-08-17 at 4.21.16 PM.jpeg" alt="Logo Vitamed" class="logo-img">
+  <div class="logo-text">
+    <h2>Vitamet</h2>
+    <span>Admin</span>
+  </div>
+</div>
+    
+  <ul class="nav-list">
+  <li class="nav-item">
+    <a href="inicio 1.html"><i class="fa-solid fa-house"></i> Painel de Controle</a>
+  </li>
+  <li class="nav-item">
+    <a href="pets 2.html"><i class="fa-solid fa-notes-medical"></i> Pets & Prontuários</a>
+  </li>
+  <li class="nav-item">
+    <a href="veterinarios 3.html"><i class="fa-solid fa-user-doctor"></i> Veterinários (Ativos)</a>
+  </li>
+  <li class="nav-item">
+    <a href="gestao 4.html"><i class="fa-solid fa-users"></i> Gestão de Usuários</a>
+  </li>
+  <li class="nav-item">
+    <a href="publicacoes 5.html"><i class="fa-solid fa-newspaper"></i> Publicações</a>
+  </li>
+  <li class="nav-item">
+    <a href="logistica 6.html"><i class="fa-solid fa-box"></i> Logística & Estoque</a>
+  </li>
+  <li class="nav-item">
+    <a href="relatorios 7.html"><i class="fa-solid fa-chart-pie"></i> Relatórios</a>
+  </li>
+  <li class="nav-item active">
+    <a href="configuracoes 8.html"><i class="fa-solid fa-gear"></i> Configurações</a>
+  </li>
+</ul>
+  </aside>
+
+  <div class="main-wrapper">
+    
+    <header class="topbar">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        
+        <input type="text" placeholder="Buscar configurações...">
+      </div>
+      
+      <div class="user-profile">
+        <i class="fa-regular fa-bell" style="color: #64748b; font-size: 16px; margin-right: 10px;"></i>
+        <img src="WhatsApp Image 2026-08-31 at 9.31.23 PM.jpeg" alt="Foto Usuário" class="user-avatar">
+        <div class="user-info">
+          
+          <span>Usuário Admin</span>
+          <strong>Dr. Raylander</strong>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+
+      <h1 class="section-title">Configurações do Sistema</h1>
+      <p class="section-subtitle">Gerencie os dados do estabelecimento, permissões e preferências de uso.</p>
+
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Dados Gerais da Clínica</h2>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Campo</th>
+                <th>Informação Cadastrada</th>
+                <th>Última Alteração</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Razão Social</strong></td>
+                <td>Clínica Veterinária Vitamed LTDA</td>
+                <td>10/01/2023</td>
+                <td><span class="badge badge-success">Ativo</span></td>
+                <td class="actions-icon"><i class="fa-solid fa-pen"></i></td>
+              </tr>
+              <tr>
+                <td><strong>CNPJ / Inscrição</strong></td>
+                <td>12.345.678/0001-90</td>
+                <td>10/01/2023</td>
+                <td><span class="badge badge-success">Verificado</span></td>
+                <td class="actions-icon"><i class="fa-solid fa-pen"></i></td>
+              </tr>
+              <tr>
+                <td><strong>E-mail de Notificações</strong></td>
+                <td>contato@vitamedvet.com.br</td>
+                <td>15/08/2023</td>
+                <td><span class="badge badge-success">Confirmado</span></td>
+                <td class="actions-icon"><i class="fa-solid fa-pen"></i></td>
+              </tr>
+              <tr>
+                <td><strong>Backup do Sistema</strong></td>
+                <td>Nuvem Automática (Diário - 00:00)</td>
+                <td>Hoje, 00:00</td>
+                <td><span class="badge badge-success">Sincronizado</span></td>
+                <td class="actions-icon"><i class="fa-solid fa-rotate"></i></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Preferências do Usuário</h2>
+          <div>
+            <button class="btn btn-secondary"><i class="fa-solid fa-rotate-left"></i> Restaurar Padrões</button>
+            <button class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Salvar Alterações</button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Recurso</th>
+                <th>Descrição</th>
+                <th>Estado Atual</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Alertas de Estoque Baixo</strong></td>
+                <td>Enviar e-mail para a equipe de compras quando o estoque atingir nível crítico</td>
+                <td><span class="badge badge-success">Habilitado</span></td>
+                <td class="actions-icon"><i class="fa-solid fa-toggle-on" style="color: #0084d4; font-size: 18px;"></i></td>
+              </tr>
+              <tr>
+                <td><strong>Autenticação em Dois Fatores (2FA)</strong></td>
+                <td>Exigir código via app autenticador ao realizar login com perfil admin</td>
+                <td><span class="badge badge-success">Habilitado</span></td>
+                <td class="actions-icon"><i class="fa-solid fa-toggle-on" style="color: #0084d4; font-size: 18px;"></i></td>
+              </tr>
+              <tr>
+                <td><strong>Notificações de Consultas</strong></td>
+                <td>Enviar lembrete por mensagem para os tutores 24h antes do atendimento</td>
+                <td><span class="badge badge-warning">Pendente</span></td>
+                <td class="actions-icon"><i class="fa-solid fa-toggle-off" style="color: #94a3b8; font-size: 18px;"></i></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+</body>
+</html>

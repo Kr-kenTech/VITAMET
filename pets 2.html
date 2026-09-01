@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vitamed - Gestão de Pets e Produtos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="pets.css">
+</head>
+<body>
+<aside class="sidebar">
+  <div class="logo-container">
+  <img src="WhatsApp Image 2026-08-17 at 4.21.16 PM.jpeg" alt="Logo Vitamed" class="logo-img">
+  <div class="logo-text">
+    <h2>Vitamet</h2>
+    <span>Admin</span>
+  </div>
+</div> 
+
+<ul class="nav-list">
+  <li class="nav-item">
+    <a href="inicio 1.html"><i class="fa-solid fa-house"></i> Painel de Controle</a>
+  </li>
+  <li class="nav-item active">
+    <a href="pets 2.html"><i class="fa-solid fa-notes-medical"></i> Pets & Prontuários</a>
+  </li>
+  <li class="nav-item">
+    <a href="veterinarios 3.html"><i class="fa-solid fa-user-doctor"></i> Veterinários (Ativos)</a>
+  </li>
+  <li class="nav-item">
+    <a href="gestao 4.html"><i class="fa-solid fa-users"></i> Gestão de Usuários</a>
+  </li>
+  <li class="nav-item">
+    <a href="publicacoes 5.html"><i class="fa-solid fa-newspaper"></i> Publicações</a>
+  </li>
+  <li class="nav-item">
+    <a href="logistica 6.html"><i class="fa-solid fa-box"></i> Logística & Estoque</a>
+  </li>
+  <li class="nav-item">
+    <a href="realatorios 7.html"><i class="fa-solid fa-chart-pie"></i> Relatórios</a>
+  </li>
+  <li class="nav-item">
+    <a href="configuracoes 8.html"><i class="fa-solid fa-gear"></i> Configurações</a>
+  </li>
+</ul>
+  </aside>
+
+  <div class="main-wrapper">
+    
+    <header class="topbar">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Buscar pet, tutor ou produto...">
+      </div>
+      
+      <div class="user-profile">
+        <i class="fa-regular fa-bell" style="color: #64748b; font-size: 16px; margin-right: 10px;"></i>
+        <img src="WhatsApp Image 2026-08-31 at 9.31.23 PM.jpeg" alt="Foto Usuário" class="user-avatar">
+        <div class="user-info">
+          <span>Usuário Admin</span>
+          <strong>Dr.Raylander</strong>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+
+      <h1 class="section-title">Gestão de Pets & Prontuários</h1>
+      <p class="section-subtitle">Visualize, cadastre e gerencie a ficha clínica dos pacientes.</p>
+
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Pets Cadastrados</h2>
+          <div>
+            <button class="btn btn-secondary"><i class="fa-solid fa-pen"></i> Editar</button>
+            <button class="btn btn-primary"><i class="fa-solid fa-plus"></i> Novo Pet</button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Nome do Pet</th>
+                <th>Espécie / Raça</th>
+                <th>Tutor Responsável</th>
+                <th>Última Consulta</th>
+                <th>Status Clínico</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="pet-info">
+                    <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=100" class="pet-avatar" alt="Thor">
+                    <strong>Thor</strong>
+                  </div>
+                </td>
+                <td>Cão - Golden Retriever</td>
+                <td>Carlos Eduardo</td>
+                <td>20/10/2026</td>
+                <td><span class="badge badge-success">Em Dia</span></td>
+                <td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="pet-info">
+                    <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=100" class="pet-avatar" alt="Luna">
+                    <strong>Luna</strong>
+                  </div>
+                </td>
+                <td>Gato - Siamês</td>
+                <td>Mariana Souza</td>
+                <td>01/09/2026</td>
+                <td><span class="badge badge-warning">Retorno Pendente</span></td>
+                <td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td>
+              </tr>
+                 <tr>
+                <td>
+                  <div class="pet-info">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgXj-rgAgOjC2A9quZDGsym2Ys796VKW2HZa8IAGXIrQ&s=10" class="pet-avatar" alt="Luna">
+                    <strong>Quiara</strong>
+                  </div>
+                </td>
+                <td>Cachorro - chau chau</td>
+                <td>Letica Eduarda</td>
+                <td>10/09/2026</td>
+                <td><span class="badge badge-warning">Retorno Pendente</span></td>
+                <td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td>
+              </tr>
+                  <tr>
+                <td>
+                  <div class="pet-info">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7jtZqhoZFYcPXy5vo26xYhiKayAmw6A-RtO72Y6Y2Nw&s=10 " class="pet-avatar" alt="Luna">
+                    <strong>Filomena</strong>
+                  </div>
+                </td>
+                <td>Cachorro - Pinscher</td>
+                <td>Pablo Escobar</td>
+                <td>30/09/2026</td>
+                <td><span class="badge badge-warning">Retorno Pendente</span></td>
+                <td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+     
+
+    </main>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vitamet - Gestão de Usuários</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="gestao.css">
+</head>
+<body>
+
+  <aside class="sidebar">
+ <div class="logo-container">
+  <img src="WhatsApp Image 2026-08-17 at 4.21.16 PM.jpeg" alt="Logo Vitamed" class="logo-img">
+  <div class="logo-text">
+    <h2>Vitamet</h2>
+    <span>Admin</span>
+  </div>
+</div>
+<ul class="nav-list">
+  <li class="nav-item">
+    <a href="inicio 1.html"><i class="fa-solid fa-house"></i> Painel de Controle</a>
+  </li>
+  <li class="nav-item">
+    <a href="pets 2.html"><i class="fa-solid fa-notes-medical"></i> Pets & Prontuários</a>
+  </li>
+  <li class="nav-item">
+    <a href="veterinarios 3.html"><i class="fa-solid fa-user-doctor"></i> Veterinários (Ativos)</a>
+  </li>
+  <li class="nav-item active">
+    <a href="gestao 4.html"><i class="fa-solid fa-users"></i> Gestão de Usuários</a>
+  </li>
+  <li class="nav-item">
+    <a href="publicacoes 5.html"><i class="fa-solid fa-newspaper"></i> Publicações</a>
+  </li>
+  <li class="nav-item">
+    <a href="logistica 6.html"><i class="fa-solid fa-box"></i> Logística & Estoque</a>
+  </li>
+  <li class="nav-item">
+    <a href="realatorios 7.html"><i class="fa-solid fa-chart-pie"></i> Relatórios</a>
+  </li>
+  <li class="nav-item">
+    <a href="configuracoes 8.html"><i class="fa-solid fa-gear"></i> Configurações</a>
+  </li>
+</ul>
+  </aside>
+
+  <div class="main-wrapper">
+    
+    <header class="topbar">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Buscar usuário, e-mail ou perfil...">
+      </div>
+      
+      <div class="user-profile">
+        <i class="fa-regular fa-bell" style="color: #64748b; font-size: 16px; margin-right: 10px;"></i>
+        <img src="WhatsApp Image 2026-08-31 at 9.31.23 PM.jpeg" alt="Foto Usuário" class="user-avatar">
+        <div class="user-info">
+          <span>Usuário Admin</span>
+          <strong>Dr.Raylander</strong>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+
+      <h1 class="section-title">Gestão de Usuários do Sistema</h1>
+      <p class="section-subtitle">Gerencie as contas de acesso, níveis de permissão e perfis cadastrados.</p>
+
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Usuários Cadastrados</h2>
+          <div>
+            <button class="btn btn-secondary"><i class="fa-solid fa-pen"></i> Editar Permissões</button>
+            <button class="btn btn-primary"><i class="fa-solid fa-plus"></i> Novo Usuário</button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Usuário</th>
+                <th>E-mail</th>
+                <th>Nível de Acesso</th>
+                <th>Último Acesso</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="pet-info">
+                    <img src="WhatsApp Image 2026-08-31 at 9.31.23 PM.jpeg" class="pet-avatar" alt="Dr. Miguel Pinto">
+                    <strong>Dr.Raylander</strong>
+                  </div>
+                </td>
+                <td>raylander.gerente@vitamet.com</td>
+                <td>Administrador</td>
+                <td>Hoje, 09:14</td>
+                <td><span class="badge badge-success">Ativo</span></td>
+                <td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="pet-info">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6H4Ch_m8BopasWt3VEnDt_RD3Jf7WaOvgvcxf0hvEiQ&s=10" class="pet-avatar" alt="Juliana Ramos">
+                    <strong>Juliana Ramos</strong>
+                  </div>
+                </td>
+                <td>juliana.recepcao@vitamet.com</td>
+                <td>Recepção / Atendimento</td>
+                <td>Ontem, 17:45</td>
+                <td><span class="badge badge-success">Ativo</span></td>
+                <td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="pet-info">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvFkCpDBrG2nsd5YR2KX-aAuHX-sH2jTsQlhJiM-mJPw&s=10" class="pet-avatar" alt="Lucas Ferraz">
+                    <strong>Lucas Ferraz</strong>
+                  </div>
+                </td>
+                <td>lucas.estoque@vitamet.com</td>
+                <td>Gerente de Estoque</td>
+                <td>22/10/2023</td>
+                <td><span class="badge badge-danger">Inativo</span></td>
+                <td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td>
+              </tr>
+                 <tr>
+                <td>
+                  <div class="pet-info">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuyZpxsEcpAmy-fqf8k9neh2BQqQdltl5QkXiG_CY1fw&s=10" class="pet-avatar" alt="Juliana Ramos">
+                    <strong>Dra. Ana Silva</strong>
+                  </div>
+                </td>
+                <td>anasilva.veterinario@vitamet.com</td>
+                <td> Veterinário / Atendimento</td>
+                <td>Ontem, 14:30</td>
+                <td><span class="badge badge-success">Ativo</span></td>
+                <td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td>
+              </tr>
+                 <tr>
+                <td>
+                  <div class="pet-info">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTV06XCYCPTu1hnLqIyVIvk-CHG4i_LczySMuyjjMbSIQ&s=10" class="pet-avatar" alt="Juliana Ramos">
+                    <strong>Dr.Miguel Pinto</strong>
+                  </div>
+                </td>
+                <td>migeulpinto.gerente@vitamet.com</td>
+                <td>Gerente Geral</td>
+                <td>Hoje, 11:45</td>
+                <td><span class="badge badge-success">Ativo</span></td>
+                <td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td>
+              </tr>
+                  <tr>
+                <td>
+                  <div class="pet-info">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToTN3g1P1Eni9ujdYiquzJW7rSLUyEnO2IzX5EyIJtLw&s=10" class="pet-avatar" alt="Juliana Ramos">
+                    <strong>Dr. Roberto Costa</strong>
+                  </div>
+                </td>
+                <td>roberto.veterinario@vitamet.com</td>
+                <td>Veterinário / Atendimento</td>
+                <td>Hoje, 13:40</td>
+                <td><span class="badge badge-success">Ativo</span></td>
+                <td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td>
+              </tr>
+                  <tr>
+                <td>
+                  <div class="pet-info">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxTy-Y_HaeVCgBNLCX5UbSxFc3BVNBWvc0KSFtUQVzoQ&s=10" class="pet-avatar" alt="Juliana Ramos">
+                    <strong>Dra. Carla Mendes</strong>
+                  </div>
+                </td>
+                <td>carlamendes.recepcao@vitamet.com</td>
+                <td>Veterinário / Atendimento</td>
+                <td>Ontem, 14:45</td>
+                <td><span class="badge badge-success">Ativo</span></td>
+                <td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+</body>
+</html>

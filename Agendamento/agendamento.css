@@ -28,9 +28,8 @@ body {
 
 .appointment-content {
     width: 100%;
-    max-width: 650px;
+    max-width: 600px;
     padding: 30px;
-    margin-left: 100px;
     background: rgba(255, 255, 255, 0.96);
     border-radius: 20px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
@@ -59,7 +58,7 @@ body {
 h2 {
     text-align: center;
     color: #28556b;
-    font-size: 34px;
+    font-size: 32px;
     margin: 10px 0;
 }
 
@@ -142,6 +141,7 @@ textarea {
     color: #397a99;
     font-size: 14px;
     font-weight: bold;
+    text-decoration: none;
 }
 
 .voltar:hover {
@@ -166,4 +166,5 @@ textarea {
         flex-direction: column;
         gap: 0;
     }
+
 }

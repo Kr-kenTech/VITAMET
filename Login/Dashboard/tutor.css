@@ -65,7 +65,24 @@ a {
 .logo h2 span {
     color: #8ed8f8;
 }
+.logo-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: #e8f8ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
 
+.logo-icon img {
+    width: 100%;
+    height: 100%;
+    
+    object-fit: cover;
+   
+}
 .logo p {
     margin-top: 3px;
     color: #607d8b;
@@ -85,7 +102,6 @@ a {
     align-items: center;
     gap: 13px;
     color: #607d8b;
-    text-decoration: none;
     font-size: 14px;
     transition: 0.3s;
 }
@@ -99,6 +115,7 @@ a {
     background: #e8f8ff;
     color: #397a99;
     font-weight: bold;
+    background-image: url("WhatsApp Image 2026-08-17 at 4.21.16 PM.jpeg");
 }
 
 .menu-item span {
@@ -149,7 +166,6 @@ a {
     margin-top: 15px;
     padding: 10px;
     color: #607d8b;
-    text-decoration: none;
     font-size: 13px;
 }
 
@@ -181,7 +197,6 @@ a {
     border: 1px solid #d9eef7;
     border-radius: 10px;
     cursor: pointer;
-    color: #397a99;
 }
 
 .avatar {
@@ -215,7 +230,7 @@ a {
 }
 
 .content {
-    max-width: 1250px;
+    max-width: 1200px;
     margin: auto;
     padding: 42px;
 }
@@ -224,7 +239,7 @@ a {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    margin-bottom: 28px;
+    margin-bottom: 30px;
 }
 
 .breadcrumb {
@@ -236,7 +251,6 @@ a {
 .page-header h1 {
     margin-top: 9px;
     font-size: 31px;
-    letter-spacing: -1px;
     color: #28556b;
 }
 
@@ -248,12 +262,11 @@ a {
 
 .btn-primary {
     min-height: 44px;
-    padding: 0 18px;
+    padding: 0 20px;
     border: 2px solid #8ed8f8;
     border-radius: 25px;
     background: #8ed8f8;
     color: #17445c;
-    text-decoration: none;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -270,247 +283,48 @@ a {
     color: white;
 }
 
-.summary {
-    width: fit-content;
-    margin-bottom: 24px;
-    padding: 12px 18px;
-    background: white;
-    border: 1px solid #d9eef7;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    box-shadow: 0 5px 20px rgba(80, 160, 200, 0.08);
-}
-
-.summary-icon {
-    width: 37px;
-    height: 37px;
-    border-radius: 9px;
-    background: #e8f8ff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.summary strong {
-    font-size: 18px;
-    color: #397a99;
-}
-
-.summary span {
-    margin-left: 5px;
-    color: #607d8b;
-    font-size: 13px;
-}
-
-.pets-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 25px;
-}
-
-.pet-card {
-    background: white;
-    border: 1px solid #d9eef7;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 5px 20px rgba(80, 160, 200, 0.12);
-    transition: 0.3s;
-}
-
-.pet-card:hover {
-    transform: translateY(-7px);
-    box-shadow: 0 10px 25px rgba(80, 160, 200, 0.2);
-}
-
-.pet-image {
-    height: 190px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 75px;
-}
-
-.dog {
-    background: #e8f8ff;
-}
-
-.cat {
-    background: #e8f8ff;
-}
-
-.status {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    padding: 6px 9px;
-    background: white;
-    border-radius: 20px;
-    color: #397a99;
-    font-size: 10px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.status i {
-    width: 6px;
-    height: 6px;
-    background: #55a9cc;
-    border-radius: 50%;
-}
-
-.pet-content {
-    padding: 18px;
-}
-
-.pet-title {
-    display: flex;
-    justify-content: space-between;
-}
-
-.pet-title h2 {
-    font-size: 18px;
-    color: #397a99;
-}
-
-.pet-title p {
-    margin-top: 4px;
-    color: #607d8b;
-    font-size: 12px;
-}
-
-.more {
-    border: none;
-    background: transparent;
-    color: #607d8b;
-    font-size: 20px;
-}
-
-.pet-details {
-    margin-top: 20px;
-    padding-top: 16px;
-    border-top: 1px solid #d9eef7;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-}
-
-.pet-details > div {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-}
-
-.pet-details small {
-    display: block;
-    color: #607d8b;
-    font-size: 10px;
-}
-
-.pet-details strong {
-    display: block;
-    margin-top: 3px;
-    font-size: 12px;
-    color: #28556b;
-}
-
-.pet-actions {
-    margin-top: 18px;
-    display: flex;
-    gap: 8px;
-}
-
-.btn-edit {
-    flex: 1;
-    height: 38px;
-    border: 2px solid #8ed8f8;
-    border-radius: 25px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #397a99;
-    background: white;
-    text-decoration: none;
-    font-size: 11px;
-    font-weight: bold;
-    transition: 0.3s;
-}
-
-.btn-edit:hover {
-    background: #8ed8f8;
-    color: #17445c;
-}
-
-.btn-delete {
-    height: 38px;
-    padding: 0 12px;
-    border: 1px solid #cdeefa;
-    border-radius: 25px;
-    background: #e8f8ff;
-    color: #397a99;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    font-size: 11px;
-    font-weight: bold;
-    transition: 0.3s;
-}
-
-.btn-delete:hover {
-    background: #55a9cc;
-    color: white;
-}
-
-.add-pet {
+.empty-pets {
     min-height: 390px;
-    border: 2px dashed #8ed8f8;
-    border-radius: 15px;
-    background: transparent;
-    text-decoration: none;
+    padding: 50px 25px;
+    background: white;
+    border: 1px solid #d9eef7;
+    border-radius: 18px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: #607d8b;
-    transition: 0.3s;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(80, 160, 200, 0.08);
 }
 
-.add-pet:hover {
-    background: #e8f8ff;
-    border-color: #55a9cc;
-    transform: translateY(-5px);
-}
-
-.add-icon {
-    width: 54px;
-    height: 54px;
-    margin-bottom: 13px;
+.empty-icon {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 20px;
     border-radius: 50%;
-    background: #8ed8f8;
-    color: #17445c;
+    background: #e8f8ff;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 30px;
+    font-size: 38px;
 }
 
-.add-pet strong {
+.empty-pets h2 {
     color: #397a99;
-    font-size: 14px;
+    font-size: 22px;
 }
 
-.add-pet span {
-    margin-top: 5px;
-    font-size: 11px;
+.empty-pets p {
+    max-width: 500px;
+    margin: 10px auto 22px;
+    color: #607d8b;
+    font-size: 13px;
+    line-height: 1.6;
 }
 
 .register-section {
-    margin-top: 45px;
+    display: none;
+    margin-top: 35px;
     background: white;
     border: 1px solid #d9eef7;
     border-radius: 15px;
@@ -518,10 +332,17 @@ a {
     box-shadow: 0 5px 20px rgba(80, 160, 200, 0.08);
 }
 
+.register-section.show {
+    display: block;
+}
+
 .form-header {
     padding: 25px 28px;
-    border-bottom: 1px solid #d9eef7;
     background: #e8f8ff;
+    border-bottom: 1px solid #d9eef7;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
 }
 
 .form-label {
@@ -533,8 +354,8 @@ a {
 
 .form-header h2 {
     margin-top: 6px;
-    font-size: 23px;
     color: #397a99;
+    font-size: 23px;
 }
 
 .form-header p {
@@ -543,8 +364,24 @@ a {
     font-size: 12px;
 }
 
+.close-form {
+    width: 35px;
+    height: 35px;
+    border: none;
+    border-radius: 50%;
+    background: white;
+    color: #397a99;
+    font-size: 25px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.close-form:hover {
+    background: #8ed8f8;
+}
+
 .register-section form {
-    padding: 25px 28px;
+    padding: 28px;
 }
 
 .photo-area {
@@ -609,9 +446,9 @@ a {
 .form-group label {
     display: block;
     margin-bottom: 6px;
+    color: #397a99;
     font-size: 11px;
     font-weight: bold;
-    color: #397a99;
 }
 
 .form-group label span {
@@ -625,11 +462,10 @@ a {
     padding: 11px 12px;
     border: 1px solid #cdeefa;
     border-radius: 8px;
-    background: #f4fbff;
     outline: none;
+    background: #f4fbff;
     color: #263238;
     font-size: 12px;
-    transition: 0.3s;
 }
 
 .form-group textarea {
@@ -671,7 +507,7 @@ a {
 
 .btn-cancel {
     height: 44px;
-    padding: 0 18px;
+    padding: 0 20px;
     border: 2px solid #8ed8f8;
     border-radius: 25px;
     background: white;
@@ -697,8 +533,8 @@ a {
 
 @media (max-width: 1100px) {
 
-    .pets-grid {
-        grid-template-columns: repeat(2, 1fr);
+    .content {
+        padding: 35px;
     }
 
 }
@@ -744,10 +580,6 @@ a {
         width: 100%;
     }
 
-    .pets-grid {
-        grid-template-columns: 1fr;
-    }
-
 }
 
 @media (max-width: 550px) {
@@ -783,6 +615,10 @@ a {
     .photo-area {
         align-items: flex-start;
         flex-direction: column;
+    }
+
+    .empty-pets {
+        padding: 35px 20px;
     }
 
 }
