@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const mysql = require('mysql2');
 const path = require('path');
-const argon2 = require('argon2-browser');
+const argon2 = require('@node-rs/argon2');
 
 // Conexão com o banco de dados
 const connection = mysql.createConnection({
@@ -45,6 +45,24 @@ app.get('/tutor.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'Login', 'Dashboard', 'tutor.html'));
 });
 
+// Rota de Usuário por ID (para preencher o painel)
+app.get('/usuario/:id', (req, res) => {
+    const { id } = req.params;
+    const query = 'SELECT id, nome, email, perfil FROM usuario WHERE id = ?';
+
+    connection.query(query, [id], (err, results) => {
+        if (err) {
+            return res.status(500).json({ erro: 'Erro interno no servidor.' });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ erro: 'Usuário não encontrado.' });
+        }
+
+        return res.status(200).json(results[0]);
+    });
+});
+
 // Rota de Cadastro
 app.post('/cadastro', async (req, res) => {
     const { nome, cpf, telefone, email, senha } = req.body;
@@ -55,17 +73,18 @@ app.post('/cadastro', async (req, res) => {
 
     try {
         const senhaHash = await argon2.hash(senha, {
-            type: argon2.argon2id,
             memoryCost: 65536,
             timeCost: 3,
             parallelism: 2,
         });
+
         const queryUsuario = 'INSERT INTO usuario (nome, email, senha, perfil) VALUES (?, ?, ?, ?)';
         connection.query(queryUsuario, [nome, email, senhaHash, 'tutor'], (err, results) => {
             if (err) {
                 if (err.code === 'ER_DUP_ENTRY') {
                     return res.status(400).json({ erro: 'Este e-mail já está cadastrado.' });
                 }
+                console.error("Erro no MySQL (usuario):", err);
                 return res.status(500).json({ erro: 'Erro ao cadastrar usuário.' });
             }
 
@@ -77,6 +96,7 @@ app.post('/cadastro', async (req, res) => {
                     if (err2.code === 'ER_DUP_ENTRY') {
                         return res.status(400).json({ erro: 'CPF ou e-mail já cadastrado.' });
                     }
+                    console.error("Erro no MySQL (tutor):", err2);
                     return res.status(500).json({ erro: 'Erro ao cadastrar tutor.' });
                 }
 
@@ -84,6 +104,7 @@ app.post('/cadastro', async (req, res) => {
             });
         });
     } catch (error) {
+        console.error("Erro detalhado no cadastro:", error);
         return res.status(500).json({ erro: 'Erro interno no servidor.' });
     }
 });
@@ -109,22 +130,24 @@ app.post('/login', (req, res) => {
 
         const usuario = results[0];
 
-        try{
-            const senhaCorreta = await argon2.verify(senha, usuario.senha);
-        if (!senhaCorreta) {
-            return res.status(401).json({ erro: 'E-mail ou senha inválidos.' });
-        }
-
-        return res.status(200).json({
-            mensagem: 'Login realizado com sucesso!',
-            usuario: {
-                id: usuario.id,
-                nome: usuario.nome,
-                email: usuario.email,
-                perfil: usuario.perfil
+        try {
+            const senhaCorreta = await argon2.verify(usuario.senha, senha);
+            
+            if (!senhaCorreta) {
+                return res.status(401).json({ erro: 'E-mail ou senha inválidos.' });
             }
-        });
-        } catch {
+
+            return res.status(200).json({
+                mensagem: 'Login realizado com sucesso!',
+                usuario: {
+                    id: usuario.id,
+                    nome: usuario.nome,
+                    email: usuario.email,
+                    perfil: usuario.perfil
+                }
+            });
+        } catch (error) {
+            console.error("Erro detalhado no login:", error);
             return res.status(401).json({ erro: 'Erro ao verificar senha.' });
         }
     });
