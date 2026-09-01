@@ -1,8 +1,9 @@
 const express = require('express');
 const app = express();
 const mysql = require('mysql2');
-const bcrypt = require('bcrypt');
+const path = require('path');
 
+// Conexão com o banco de dados
 const connection = mysql.createConnection({
     host: '127.0.0.1', 
     user: 'root',
@@ -19,12 +20,59 @@ connection.connect((err) => {
     console.log('Conectado ao banco de dados Vitamet com sucesso como ID ' + connection.threadId);
 });
 
-module.exports = connection;
+// Middleware para JSON
 app.use(express.json());
 
-app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname, 'Login')));
+app.use('/Cadastro', express.static(path.join(__dirname, 'Login', 'Cadastro')));
 
-app.post('/login', async (req, res) => {
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'Login', 'login.html'));
+});
+
+app.get('/cadastro.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'Login', 'Cadastro', 'cadastro.html'));
+});
+
+// Rota de Cadastro
+app.post('/cadastro', async (req, res) => {
+    const { nome, cpf, telefone, email, senha } = req.body;
+
+    if (!nome || !cpf || !telefone || !email || !senha) {
+        return res.status(400).json({ erro: 'Todos os campos são obrigatórios.' });
+    }
+
+    try {
+        const queryUsuario = 'INSERT INTO usuario (nome, email, senha, perfil) VALUES (?, ?, ?, ?)';
+        connection.query(queryUsuario, [nome, email, senha, 'tutor'], (err, results) => {
+            if (err) {
+                if (err.code === 'ER_DUP_ENTRY') {
+                    return res.status(400).json({ erro: 'Este e-mail já está cadastrado.' });
+                }
+                return res.status(500).json({ erro: 'Erro ao cadastrar usuário.' });
+            }
+
+            const usuarioId = results.insertId;
+
+            const queryTutor = 'INSERT INTO tutor (usuario_id, nome, cpf, telefone, email, endereco) VALUES (?, ?, ?, ?, ?, ?)';
+            connection.query(queryTutor, [usuarioId, nome, cpf, telefone, email, ''], (err2) => {
+                if (err2) {
+                    if (err2.code === 'ER_DUP_ENTRY') {
+                        return res.status(400).json({ erro: 'CPF ou e-mail já cadastrado.' });
+                    }
+                    return res.status(500).json({ erro: 'Erro ao cadastrar tutor.' });
+                }
+
+                return res.status(201).json({ mensagem: 'Conta criada com sucesso!' });
+            });
+        });
+    } catch (error) {
+        return res.status(500).json({ erro: 'Erro interno no servidor.' });
+    }
+});
+
+// Rota de Login
+app.post('/login', (req, res) => {
     const { email, senha } = req.body;
 
     if (!email || !senha) {
@@ -33,7 +81,7 @@ app.post('/login', async (req, res) => {
 
     const query = 'SELECT * FROM usuario WHERE email = ?';
 
-    connection.query(query, [email], async (err, results) => {
+    connection.query(query, [email], (err, results) => {
         if (err) {
             return res.status(500).json({ erro: 'Erro interno no servidor.' });
         }
@@ -43,9 +91,8 @@ app.post('/login', async (req, res) => {
         }
 
         const usuario = results[0];
-        const senhaCorreta = await bcrypt.compare(senha, usuario.senha);
 
-        if (!senhaCorreta) {
+        if (senha !== usuario.senha) {
             return res.status(401).json({ erro: 'E-mail ou senha inválidos.' });
         }
 
@@ -61,6 +108,28 @@ app.post('/login', async (req, res) => {
     });
 });
 
+// Rota de Recuperação de Senha
+app.post('/recuperar', (req, res) => {
+    const { email } = req.body;
+
+    if (!email) {
+        return res.status(400).json({ erro: 'E-mail é obrigatório.' });
+    }
+
+    const query = 'SELECT * FROM usuario WHERE email = ?';
+    connection.query(query, [email], (err, results) => {
+        if (err) {
+            return res.status(500).json({ erro: 'Erro interno no servidor.' });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ erro: 'E-mail não encontrado!' });
+        }
+
+        return res.status(200).json({ mensagem: 'E-mail encontrado!' });
+    });
+});
+
 app.listen(3000, () => {
-    console.log('Servidor rodando na porta 3000');
+    console.log('Servidor rodando na porta 3000 em http://localhost:3000');
 });

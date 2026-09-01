@@ -42,7 +42,7 @@
 
             <p>Não possui uma conta?</p>
 
-            <a href="cadastro.html" class="criar">
+            <a href="Cadastro/cadastro.html" class="criar">
                 Criar conta de tutor
             </a>
 
@@ -55,27 +55,33 @@
     </div>
 
     <script>
-        function entrar() {
-
+        async function entrar() {
             let email = document.getElementById("email").value;
             let senha = document.getElementById("senha").value;
 
-            let tutor = JSON.parse(localStorage.getItem("tutor"));
-
-            if (email === "" || senha === "") {
+            if (!email || !senha) {
                 alert("Preencha o e-mail e a senha!");
                 return;
             }
 
-            if (!tutor) {
-                alert("Nenhuma conta cadastrada!");
-                return;
-            }
+            try {
+                let resposta = await fetch('/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, senha })
+                });
 
-            if (email === tutor.email && senha === tutor.senha) {
-                alert("Login realizado com sucesso!");
-            } else {
-                alert("E-mail ou senha incorretos!");
+                let resultado = await resposta.json();
+
+                if (resposta.ok) {
+                    alert(resultado.mensagem);
+                    sessionStorage.setItem("usuario", JSON.stringify(resultado.usuario));
+                    window.location.href = "tutor.html";
+                } else {
+                    alert(resultado.erro || "E-mail ou senha incorretos!");
+                }
+            } catch (error) {
+                alert("Erro de conexão com o servidor.");
             }
         }
     </script>
