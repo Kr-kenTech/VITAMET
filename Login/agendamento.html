@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="agendamento.css">
+    <title>Agendamento | VITAMED</title>
+</head>
+
+<body>
+
+    <main class="appointment">
+
+        <div class="appointment-content">
+
+            <div class="logo">
+                VITA<span>MED</span>
+            </div>
+
+            <span class="section-subtitle">
+                AGENDAMENTO
+            </span>
+
+            <h2>
+                Agende uma consulta
+            </h2>
+
+            <p>
+                Preencha os dados abaixo para agendar
+                uma consulta para o seu pet.
+            </p>
+
+            <form>
+
+                <div class="form-group">
+
+                    <label for="nome">
+                        Nome do responsável
+                    </label>
+
+                    <input
+                        type="text"
+                        id="nome"
+                        name="nome"
+                        placeholder="Digite seu nome"
+                        maxlength="100"
+                        required
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="pet">
+                        Nome do pet
+                    </label>
+
+                    <input
+                        type="text"
+                        id="pet"
+                        name="pet"
+                        placeholder="Ex: Thor"
+                        maxlength="50"
+                        required
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="animal">
+                        Qual animal deseja agendar?
+                    </label>
+
+                    <input
+                        type="text"
+                        id="animal"
+                        name="animal"
+                        placeholder="Ex: cachorro, gato, coelho..."
+                        maxlength="50"
+                        required
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="telefone">
+                        Telefone
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="telefone"
+                        name="telefone"
+                        placeholder="(00) 00000-0000"
+                        maxlength="15"
+                        pattern="[0-9\s\(\)\-]+"
+                        required
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="servico">
+                        Serviço desejado
+                    </label>
+
+                    <select
+                        id="servico"
+                        name="servico"
+                        required
+                    >
+
+                        <option value="" selected disabled>
+                            Selecione um serviço
+                        </option>
+
+                        <option value="consulta">
+                            Consulta veterinária
+                        </option>
+
+                        <option value="vacinacao">
+                            Vacinação
+                        </option>
+
+                        <option value="exames">
+                            Exames
+                        </option>
+
+                        <option value="higiene">
+                            Higiene e cuidados
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label for="data">
+                            Data
+                        </label>
+
+                        <input
+                            type="date"
+                            id="data"
+                            name="data"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="horario">
+                            Horário
+                        </label>
+
+                        <input
+                            type="time"
+                            id="horario"
+                            name="horario"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="observacoes">
+                        Observações
+                    </label>
+
+                    <textarea
+                        id="observacoes"
+                        name="observacoes"
+                        rows="4"
+                        maxlength="300"
+                        placeholder="Informe alguma observação sobre o seu pet"
+                    ></textarea>
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="btn-agendar"
+                >
+                    Confirmar agendamento
+                </button>
+
+            </form>
+
+            <a href="index.html" class="voltar">
+                ← Voltar para a página inicial
+            </a>
+
+        </div>
+
+    </main>
+
+</body>
+
+</html>
