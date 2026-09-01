@@ -32,9 +32,64 @@
 
             <nav class="menu">
 
+<<<<<<< HEAD
                 <a href="#" class="menu-item">
                     <span>⌂</span>
                     Início
+=======
+        </div>
+
+    </aside>
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <div class="mobile-logo">
+                🐾 Vita<span>Met</span>
+            </div>
+
+            <div class="top-user">
+
+                <button class="notification">
+                    🔔
+                </button>
+
+                <!-- Adicionado o ID 'avatarUsuario' aqui -->
+                <div class="avatar" id="avatarUsuario">
+                    --
+                </div>
+
+                <div class="user-info">
+                    <strong id="nomeUsuario">Carregando...</strong>
+                    <span>Tutor</span>
+                </div>
+
+                <span class="arrow">⌄</span>
+
+            </div>
+
+        </header>
+
+        <section class="content">
+
+            <div class="page-header">
+
+                <div>
+                    <span class="breadcrumb">
+                        Início / Meus Pets
+                    </span>
+
+                    <h1>Meus Pets</h1>
+
+                    <p>
+                        Gerencie os animais cadastrados na sua conta.
+                    </p>
+                </div>
+
+                <a href="#cadastro" class="btn-primary">
+                    + Cadastrar novo pet
+>>>>>>> e09e685439cea20354557f9e284bbdc2f4cd68e8
                 </a>
 
                 <a href="#" class="menu-item active">
@@ -461,6 +516,43 @@
 
     </script>
 
+<script>
+    // Recupera os dados salvos no login via sessionStorage
+    const usuarioSalvo = sessionStorage.getItem("usuario");
+
+    if (usuarioSalvo) {
+        const usuario = JSON.parse(usuarioSalvo);
+        
+        // Insere dinamicamente o nome completo do usuário logado
+        document.getElementById("nomeUsuario").innerText = usuario.nome;
+
+        // Extrai as iniciais do nome (ex: "Roberto Carlos" vira "RC")
+        const partesNome = usuario.nome.trim().split(" ");
+        let iniciais = "";
+        
+        if (partesNome.length >= 2) {
+            // Pega a primeira letra do primeiro nome e a primeira letra do último nome
+            iniciais = (partesNome[0][0] + partesNome[partesNome.length - 1][0]).toUpperCase();
+        } else if (partesNome.length === 1 && partesNome[0].length > 0) {
+            // Se tiver apenas um nome, pega as duas primeiras letras
+            iniciais = partesNome[0].substring(0, 2).toUpperCase();
+        } else {
+            iniciais = "VT";
+        }
+
+        // Aplica as iniciais no elemento do avatar
+        document.getElementById("avatarUsuario").innerText = iniciais;
+
+    } else {
+        // Se não houver sessão ativa, redireciona de volta para o login
+        window.location.href = "/";
+    }
+</script>
+
 </body>
+<<<<<<< HEAD
 
 </html>
+=======
+</html>
+>>>>>>> e09e685439cea20354557f9e284bbdc2f4cd68e8
