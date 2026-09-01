@@ -23,15 +23,25 @@ connection.connect((err) => {
 // Middleware para JSON
 app.use(express.json());
 
+app.use(express.static(path.join(__dirname)));
 app.use(express.static(path.join(__dirname, 'Login')));
-app.use('/Cadastro', express.static(path.join(__dirname, 'Login', 'Cadastro')));
+app.use('/Dashboard', express.static(path.join(__dirname, 'Login', 'Dashboard')));
 
+// Rotas para as páginas principais
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'Login', 'login.html'));
 });
 
+app.get('/index.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 app.get('/cadastro.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'Login', 'Cadastro', 'cadastro.html'));
+});
+
+app.get('/tutor.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'Login', 'Dashboard', 'tutor.html'));
 });
 
 // Rota de Cadastro
