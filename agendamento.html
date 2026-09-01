@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="agendamento.css">
-    <title>Agendamento | VITAMET/title>
+    <title>Agendamento | VITAMET</title>
 </head>
 
 <body>
@@ -45,7 +45,7 @@
                             Selecione seu pet
                         </option>
 
-                        <option value="pet1">
+                        <option value="Meu pet">
                             Meu pet
                         </option>
 
@@ -65,19 +65,19 @@
                             Selecione um serviço
                         </option>
 
-                        <option value="consulta">
+                        <option value="Consulta veterinária">
                             Consulta veterinária
                         </option>
 
-                        <option value="vacinacao">
+                        <option value="Vacinação">
                             Vacinação
                         </option>
 
-                        <option value="exames">
+                        <option value="Exames">
                             Exames
                         </option>
 
-                        <option value="higiene">
+                        <option value="Higiene e cuidados">
                             Higiene e cuidados
                         </option>
 
@@ -158,19 +158,57 @@
 
             event.preventDefault();
 
-            const pet = document.getElementById("pet").value;
-            const servico = document.getElementById("servico").value;
-            const data = document.getElementById("data").value;
-            const horario = document.getElementById("horario").value;
+            const pet =
+                document.getElementById("pet").value;
+
+            const servico =
+                document.getElementById("servico").value;
+
+            const data =
+                document.getElementById("data").value;
+
+            const horario =
+                document.getElementById("horario").value;
+
+            const observacoes =
+                document.getElementById("observacoes").value;
 
             if (!pet || !servico || !data || !horario) {
+
                 alert("Preencha todos os campos obrigatórios.");
+
                 return;
             }
 
+            const agendamentos =
+                JSON.parse(
+                    localStorage.getItem("agendamentos")
+                ) || [];
+
+            const novoAgendamento = {
+
+                pet: pet,
+
+                servico: servico,
+
+                data: data,
+
+                horario: horario,
+
+                observacoes: observacoes
+
+            };
+
+            agendamentos.push(novoAgendamento);
+
+            localStorage.setItem(
+                "agendamentos",
+                JSON.stringify(agendamentos)
+            );
+
             alert("Agendamento realizado com sucesso!");
 
-            event.target.reset();
+            window.location.href = "agendamentos.html";
 
         }
 
