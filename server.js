@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const mysql = require('mysql2');
 const path = require('path');
+const argon2 = require('argon2-browser');
 
 // Conexão com o banco de dados
 const connection = mysql.createConnection({
@@ -23,15 +24,25 @@ connection.connect((err) => {
 // Middleware para JSON
 app.use(express.json());
 
+app.use(express.static(path.join(__dirname)));
 app.use(express.static(path.join(__dirname, 'Login')));
-app.use('/Cadastro', express.static(path.join(__dirname, 'Login', 'Cadastro')));
+app.use('/Dashboard', express.static(path.join(__dirname, 'Login', 'Dashboard')));
 
+// Rotas para as páginas principais
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'Login', 'login.html'));
 });
 
+app.get('/index.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 app.get('/cadastro.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'Login', 'Cadastro', 'cadastro.html'));
+});
+
+app.get('/tutor.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'Login', 'Dashboard', 'tutor.html'));
 });
 
 // Rota de Cadastro
@@ -43,8 +54,14 @@ app.post('/cadastro', async (req, res) => {
     }
 
     try {
+        const senhaHash = await argon2.hash(senha, {
+            type: argon2.argon2id,
+            memoryCost: 65536,
+            timeCost: 3,
+            parallelism: 2,
+        });
         const queryUsuario = 'INSERT INTO usuario (nome, email, senha, perfil) VALUES (?, ?, ?, ?)';
-        connection.query(queryUsuario, [nome, email, senha, 'tutor'], (err, results) => {
+        connection.query(queryUsuario, [nome, email, senhaHash, 'tutor'], (err, results) => {
             if (err) {
                 if (err.code === 'ER_DUP_ENTRY') {
                     return res.status(400).json({ erro: 'Este e-mail já está cadastrado.' });
@@ -81,7 +98,7 @@ app.post('/login', (req, res) => {
 
     const query = 'SELECT * FROM usuario WHERE email = ?';
 
-    connection.query(query, [email], (err, results) => {
+    connection.query(query, [email], async (err, results) => {
         if (err) {
             return res.status(500).json({ erro: 'Erro interno no servidor.' });
         }
@@ -92,7 +109,9 @@ app.post('/login', (req, res) => {
 
         const usuario = results[0];
 
-        if (senha !== usuario.senha) {
+        try{
+            const senhaCorreta = await argon2.verify(senha, usuario.senha);
+        if (!senhaCorreta) {
             return res.status(401).json({ erro: 'E-mail ou senha inválidos.' });
         }
 
@@ -105,6 +124,9 @@ app.post('/login', (req, res) => {
                 perfil: usuario.perfil
             }
         });
+        } catch {
+            return res.status(401).json({ erro: 'Erro ao verificar senha.' });
+        }
     });
 });
 
