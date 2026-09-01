@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vitamed Veterinary Clinic Admin</title>
+ <link rel="stylesheet" href="inicio.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  
+<aside class="sidebar">
+  <div class="brand">
+    <img src="WhatsApp Image 2026-08-17 at 4.21.16 PM.jpeg" alt="Logo" class="logo-img" />
+    <div class="brand-text">
+      <h1>Vitamet</h1>
+      <span>Admin</span>
+    </div>
+  </div>
+
+  <ul class="nav-list">
+    <li class="nav-item active">
+      <a href="inicio 1.html"><i class="fa-solid fa-house"></i> Painel de Controle</a>
+    </li>
+    <li class="nav-item">
+      <a href="pets 2.html"><i class="fa-solid fa-notes-medical"></i> Pets & Prontuários</a>
+    </li>
+    <li class="nav-item">
+      <a href="veterinarios 3.html"><i class="fa-solid fa-user-doctor"></i> Veterinários (Ativos)</a>
+    </li>
+    <li class="nav-item">
+      <a href="gestao 4.html"><i class="fa-solid fa-users"></i> Gestão de Usuários</a>
+    </li>
+    <li class="nav-item">
+      <a href="publicacoes 5.html"><i class="fa-solid fa-newspaper"></i> Publicações</a>
+    </li>
+    <li class="nav-item">
+      <a href="logistica 6.html"><i class="fa-solid fa-box"></i> Logística & Estoque</a>
+    </li>
+    <li class="nav-item">
+      <a href="realatorios 7.html"><i class="fa-solid fa-chart-pie"></i> Relatórios</a>
+    </li>
+    <li class="nav-item">
+      <a href="configuracoes 8.html"><i class="fa-solid fa-gear"></i> Configurações</a>
+    </li>
+  </ul>
+</aside>
+
+  <div class="main-wrapper">
+    
+    <header class="header">
+      <div class="search-bar">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Buscar...">
+      </div>
+
+      <div class="header-right">
+        <div class="icon-badge">
+          <i class="fa-regular fa-bell"></i>
+          
+        </div>
+        
+
+        <div class="user-profile">
+          <img src="WhatsApp Image 2026-08-31 at 9.31.23 PM.jpeg" alt="Dr. Miguel Pinto">
+          <div class="user-info">
+            <span class="user-role">Usuário Admin</span>
+            <span class="user-name">Dr.Raylander <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i></span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <main class="dashboard-container">
+      
+  
+      <div class="dashboard-header">
+        <div class="dashboard-title">
+          <h2>Painel de Administração</h2>
+          <div class="date">Quarta-feira, 01 de Out de 2026</div>
+          <div class="subtitle">Bem-vindo ao Painel de Administração da Clínica Veterinária Vitamed.</div>
+        </div>
+        <div class="action-btns">
+          <button class="btn btn-outline"><i class="fa-solid fa-pen"></i> Editar</button>
+          <button class="btn btn-primary">Novo Cadastro</button>
+        </div>
+      </div>
+
+     
+      <div class="metrics-grid">
+        
+        <div class="metric-card">
+          <div class="metric-header">
+            <div class="metric-icon"><i class="fa-regular fa-clipboard"></i></div>
+            <div class="metric-title">Consultas Hoje</div>
+          </div>
+          <div class="metric-body">
+            <span class="metric-value">32</span>
+            <span class="tag tag-success">+10%</span>
+            <svg class="mini-chart" viewBox="0 0 50 20">
+              <path d="M0 15 L15 12 L30 18 L50 2" fill="none" stroke="#16a34a" stroke-width="2"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <div class="metric-icon"><i class="fa-solid fa-paw"></i></div>
+            <div class="metric-title">Pets Atendidos</div>
+          </div>
+          <div class="metric-body">
+            <span class="metric-value">21</span>
+            <span class="tag tag-danger">-5%</span>
+            <svg class="mini-chart" viewBox="0 0 50 20">
+              <path d="M0 5 L15 10 L30 4 L50 16" fill="none" stroke="#dc2626" stroke-width="2"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <div class="metric-icon"><i class="fa-regular fa-user"></i></div>
+            <div class="metric-title">Veterinários Ativos</div>
+          </div>
+          <div class="metric-body">
+            <span class="metric-value">9</span>
+            <svg class="mini-chart" viewBox="0 0 50 20">
+              <rect x="5" y="10" width="6" height="10" fill="#0284c7"/>
+              <rect x="18" y="5" width="6" height="15" fill="#0284c7"/>
+              <rect x="31" y="12" width="6" height="8" fill="#0284c7"/>
+              <rect x="44" y="2" width="6" height="18" fill="#0284c7"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-header">
+            <div class="metric-icon"><i class="fa-regular fa-bell"></i></div>
+            <div class="metric-title">Alertar Estoque</div>
+          </div>
+          <div class="metric-body">
+            <span class="metric-value">3 itens</span>
+          </div>
+        </div>
+
+      </div>     
+      <div class="content-grid">
+        
+        <div class="card-panel">
+          <div class="panel-header">
+            <span class="panel-title">Médicos Veterinários (Ativos)</span>
+            <div class="action-btns">
+              <button class="btn btn-outline" style="padding: 4px 10px; font-size: 12px;"><i class="fa-solid fa-pen"></i> Editar</button>
+              <button class="btn btn-primary" style="padding: 4px 10px; font-size: 12px;">Novo Cadastro</button>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>CRMV</th>
+                  <th>Especialidade</th>
+                  <th>Horário</th>
+                  <th>Status</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="doctor-cell">
+                      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJxySIUPrKICp17OqgoJrdLtVsNQ_dQYS2fZfUe1ymeA&s=10" alt="Dra. Ana Silva">
+                      Dra. Ana Silva
+                    </div>
+                  </td>
+                  <td>45231</td>
+                  <td>Clínica Geral</td>
+                  <td>08-16h</td>
+                  <td><span class="status-badge status-active">Ativo</span></td>
+                  <td><i class="fa-solid fa-ellipsis-vertical action-more"></i></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="doctor-cell">
+                      <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=100&auto=format&fit=crop&q=80" alt="Dr. Carlos Lima">
+                      Dr. Carlos Lima
+                    </div>
+                  </td>
+                  <td>38992</td>
+                  <td>Cirurgia</td>
+                  <td>10-18h</td>
+                  <td><span class="status-badge status-consult">Em Consulta</span></td>
+                  <td><i class="fa-solid fa-ellipsis-vertical action-more"></i></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="doctor-cell">
+                      <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=100&auto=format&fit=crop&q=80" alt="Dra. Sofia Mendes">
+                      Dra. Sofia Mendes
+                    </div>
+                  </td>
+                  <td>51004</td>
+                  <td>Dermatologia</td>
+                  <td>13-21h</td>
+                  <td><span class="status-badge status-active">Ativo</span></td>
+                  <td><i class="fa-solid fa-ellipsis-vertical action-more"></i></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div>
+          
+          <div class="card-panel">
+            <div class="panel-header">
+              <span class="panel-title">Últimas Publicações & Monitoramento</span>
+            </div>
+
+            <div class="pub-item">
+              <div class="pub-info">
+                <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=100&auto=format&fit=crop&q=80" alt="Cachorro">
+                <div class="pub-text">
+                  <span class="pub-title">Dicas de Vacinação</span>
+                </div>
+              </div>
+              <span class="status-badge status-active">Ativo</span>
+            </div>
+
+            <div class="pub-item">
+              <div class="pub-info">
+                <img src="https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?w=100&auto=format&fit=crop&q=80" alt="Cachorro sorrindo">
+                <div class="pub-text">
+                  <span class="pub-title">Higiene Bucal Pet</span>
+                </div>
+              </div>
+              <span class="status-badge status-pending">Pendente</span>
+            </div>
+
+            <div class="pub-item">
+              <div class="pub-info">
+                <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=100&auto=format&fit=crop&q=80" alt="Cachorro praia">
+                <div class="pub-text">
+                  <span class="pub-title">Cuidados no Verão</span>
+                </div>
+              </div>
+              <span class="status-badge status-scheduled">Agendado</span>
+            </div>
+          </div>
+
+        
+          <div class="card-panel">
+            <div class="panel-header">
+              <span class="panel-title">Logística de Insumos</span>
+              <i class="fa-solid fa-chevron-up accordion-toggle"></i>
+            </div>
+            
+            <span style="font-size: 12px; color: #6474

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vitamed - Logística & Estoque</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="logistica.css">
+  <style>
+    .hidden { display: none !important; }
+    .clickable-card { cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+    .clickable-card:hover { transform: translateY(-2px); }
+  </style>
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="logo-container">
+      <img src="WhatsApp Image 2026-08-17 at 4.21.16 PM.jpeg" alt="Logo Vitamed" class="logo-img">
+      <div class="logo-text">
+        <h2>Vitamet</h2>
+        <span>Admin</span>
+      </div>
+    </div>
+    <ul class="nav-list">
+      <li class="nav-item">
+        <a href="inicio 1.html"><i class="fa-solid fa-house"></i> Painel de Controle</a>
+      </li>
+      <li class="nav-item">
+        <a href="pets 2.html"><i class="fa-solid fa-notes-medical"></i> Pets & Prontuários</a>
+      </li>
+      <li class="nav-item">
+        <a href="veterinarios 3.html"><i class="fa-solid fa-user-doctor"></i> Veterinários (Ativos)</a>
+      </li>
+      <li class="nav-item">
+        <a href="gestao 4.html"><i class="fa-solid fa-users"></i> Gestão de Usuários</a>
+      </li>
+      <li class="nav-item">
+        <a href="publicacoes 5.html"><i class="fa-solid fa-newspaper"></i> Publicações</a>
+      </li>
+      <li class="nav-item active">
+        <a href="logistica 6.html"><i class="fa-solid fa-box"></i> Logística & Estoque</a>
+      </li>
+      <li class="nav-item">
+        <a href="realatorios 7.html"><i class="fa-solid fa-chart-pie"></i> Relatórios</a>
+      </li>
+      <li class="nav-item">
+        <a href="configuracoes 8.html"><i class="fa-solid fa-gear"></i> Configurações</a>
+      </li>
+    </ul>
+  </aside>
+
+  <div class="main-wrapper">
+    
+    <header class="topbar">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Buscar insumo, SKU ou fornecedor...">
+      </div>
+      
+      <div class="user-profile">
+        <i class="fa-regular fa-bell" style="color: #64748b; font-size: 16px; margin-right: 10px;"></i>
+        <img src="WhatsApp Image 2026-08-31 at 9.31.23 PM.jpeg" alt="Foto Usuário" class="user-avatar">
+        <div class="user-info">
+          <span>Usuário Admin</span>
+          <strong>Dr. Raylander</strong>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+
+      <h1 class="section-title" id="page-title">Controle de Logística & Estoque</h1>
+      <p class="section-subtitle" id="page-subtitle">Gerencie o inventário de medicamentos, insumos cirúrgicos e suprimentos.</p>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon icon-blue"><i class="fa-solid fa-boxes-stacked"></i></div>
+          <div>
+            <span class="stat-label">Total de Itens</span>
+            <h3 class="stat-value">1.248</h3>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon icon-green"><i class="fa-solid fa-circle-dollar-to-slot"></i></div>
+          <div>
+            <span class="stat-label">Valor em Estoque</span>
+            <h3 class="stat-value">R$ 142.850,00</h3>
+          </div>
+        </div>
+
+        <div class="stat-card clickable-card" onclick="exibirItensCriticos()">
+          <div class="stat-icon icon-red"><i class="fa-solid fa-triangle-exclamation"></i></div>
+          <div>
+            <span class="stat-label">Itens Críticos</span>
+            <h3 class="stat-value">14 itens</h3>
+          </div>
+        </div>
+
+        <div class="stat-card clickable-card" onclick="exibirPedidos()">
+          <div class="stat-icon icon-amber"><i class="fa-solid fa-truck-ramp-box"></i></div>
+          <div>
+            <span class="stat-label">Lista de Pedidos</span>
+            <h3 class="stat-value">13 pedidos</h3>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" id="view-inventario">
+        <div class="card-header">
+          <h2 class="card-title">Inventário de Insumos e Produtos</h2>
+          <div>
+            <button class="btn btn-secondary"><i class="fa-solid fa-file-export"></i> Exportar (.CSV)</button>
+            <button class="btn btn-primary"><i class="fa-solid fa-plus"></i> Entrada de Material</button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Código (SKU)</th>
+                <th>Item / Descrição</th>
+                <th>Categoria</th>
+                <th>Qtd. Atual</th>
+                <th>Custo Un.</th>
+                <th>Total Em Estoque</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>#MED-8832</td>
+                <td><strong>Vacina V10 Importada</strong></td>
+                <td>Medicamentos / Vacinas</td>
+                <td>42 unid.</td>
+                <td>R$ 95,00</td>
+                <td>R$ 3.990,00</td>
+                <td><span class="badge badge-success">Normal</span></td>
+                <td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td>
+              </tr>
+              <tr>
+                <td>#RAÇ-1029</td>
+                <td><strong>Ração Terapêutica Renal 2kg</strong></td>
+                <td>Alimentação Especial</td>
+                <td>3 unid.</td>
+                <td>R$ 180,00</td>
+                <td>R$ 540,00</td>
+                <td><span class="badge badge-danger">Crítico (Repor)</span></td>
+                <td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td>
+              </tr>
+              <tr>
+                <td>#INS-5041</td>
+                <td><strong>Seringa Descartável 3ml (Cx 100)</strong></td>
+                <td>Insumos Hospitalares</td>
+                <td>18 caixas</td>
+                <td>R$ 42,50</td>
+                <td>R$ 765,00</td>
+                <td><span class="badge badge-success">Normal</span></td>
+                <td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td>
+              </tr>
+              <tr>
+                <td>#ANEST-019</td>
+                <td><strong>Anestésico Isoflurano 100ml</strong></td>
+                <td>Cirúrgico / Anestésicos</td>
+                <td>5 frascos</td>
+                <td>R$ 310,00</td>
+                <td>R$ 1.550,00</td>
+                <td><span class="badge badge-warning">Atenção</span></td>
+                <td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card hidden" id="view-pedidos">
+        <div class="card-header">
+          <h2 class="card-title">Listagem dos 13 Pedidos de Compra</h2>
+          <div>
+            <button class="btn btn-secondary" onclick="exibirInventario()"><i class="fa-solid fa-arrow-left"></i> Voltar para Página Principal</button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Nº Pedido</th>
+                <th>Fornecedor</th>
+                <th>Data do Pedido</th>
+                <th>Previsão Entrega</th>
+                <th>Valor Total</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>#PED-9012</td><td><strong>Distribuidora VetBrasil</strong></td><td>01/09/2026</td><td>05/09/2026</td><td>R$ 4.500,00</td><td><span class="badge badge-warning">Em Trânsito</span></td><td class="actions-icon"><i class="fa-solid fa-eye"></i></td></tr>
+              <tr><td>#PED-9011</td><td><strong>Zoetis Saúde Animal</strong></td><td>30/08/2026</td><td>03/09/2026</td><td>R$ 12.300,00</td><td><span class="badge badge-warning">Pendente</span></td><td class="actions-icon"><i class="fa-solid fa-eye"></i></td></tr>
+              <tr><td>#PED-9010</td><td><strong>Laboratório Covet</strong></td><td>28/08/2026</td><td>01/09/2026</td><td>R$ 1.850,00</td><td><span class="badge badge-success">Entregue</span></td><td class="actions-icon"><i class="fa-solid fa-eye"></i></td></tr>
+              <tr><td>#PED-9009</td><td><strong>Insumos Hospitalares SP</strong></td><td>25/08/2026</td><td>02/09/2026</td><td>R$ 890,00</td><td><span class="badge badge-warning">Em Trânsito</span></td><td class="actions-icon"><i class="fa-solid fa-eye"></i></td></tr>
+              <tr><td>#PED-9008</td><td><strong>Royal Canin Distribuição</strong></td><td>24/08/2026</td><td>29/08/2026</td><td>R$ 6.400,00</td><td><span class="badge badge-success">Entregue</span></td><td class="actions-icon"><i class="fa-solid fa-eye"></i></td></tr>
+              <tr><td>#PED-9007</td><td><strong>Cirúrgica Biomed</strong></td><td>22/08/2026</td><td>27/08/2026</td><td>R$ 3.120,00</td><td><span class="badge badge-danger">Cancelado</span></td><td class="actions-icon"><i class="fa-solid fa-eye"></i></td></tr>
+              <tr><td>#PED-9006</td><td><strong>MSD Saúde Animal</strong></td><td>20/08/2026</td><td>26/08/2026</td><td>R$ 9.750,00</td><td><span class="badge badge-success">Entregue</span></td><td class="actions-icon"><i class="fa-solid fa-eye"></i></td></tr>
+              <tr><td>#PED-9005</td><td><strong>VetLine Suprimentos</strong></td><td>18/08/2026</td><td>24/08/2026</td><td>R$ 2.100,00</td><td><span class="badge badge-success">Entregue</span></td><td class="actions-icon"><i class="fa-solid fa-eye"></i></td></tr>
+              <tr><td>#PED-9004</td><td><strong>PharmaPets Ltda</strong></td><td>15/08/2026</td><td>20/08/2026</td><td>R$ 780,00</td><td><span class="badge badge-success">Entregue</span></td><td class="actions-icon"><i class="fa-solid fa-eye"></i></td></tr>
+              <tr><td>#PED-9003</td><td><strong>Distribuidora VetBrasil</strong></td><td>12/08/2026</td><td>17/08/2026</td><td>R$ 5.340,00</td><td><span class="badge badge-success">Entregue</span></td><td class="actions-icon"><i class="fa-solid fa-eye"></i></td></tr>
+              <tr><td>#PED-9002</td><td><strong>Elanco Animal Health</strong></td><td>10/08/2026</td><td>15/08/2026</td><td>R$ 11.200,00</td><td><span class="badge badge-success">Entregue</span></td><td class="actions-icon"><i class="fa-solid fa-eye"></i></td></tr>
+              <tr><td>#PED-9001</td><td><strong>Insumos Hospitalares SP</strong></td><td>05/08/2026</td><td>10/08/2026</td><td>R$ 1.450,00</td><td><span class="badge badge-success">Entregue</span></td><td class="actions-icon"><i class="fa-solid fa-eye"></i></td></tr>
+              <tr><td>#PED-9000</td><td><strong>Cirúrgica Biomed</strong></td><td>01/08/2026</td><td>06/08/2026</td><td>R$ 4.890,00</td><td><span class="badge badge-success">Entregue</span></td><td class="actions-icon"><i class="fa-solid fa-eye"></i></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card hidden" id="view-criticos">
+        <div class="card-header">
+          <h2 class="card-title">Relatório de Itens Críticos em Estoque (14 itens)</h2>
+          <div>
+            <button class="btn btn-secondary" onclick="exibirInventario()"><i class="fa-solid fa-arrow-left"></i> Voltar para Página Principal</button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Código (SKU)</th>
+                <th>Item / Descrição</th>
+                <th>Categoria</th>
+                <th>Qtd. Atual</th>
+                <th>Qtd. Mínima</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>#RAÇ-1029</td><td><strong>Ração Terapêutica Renal 2kg</strong></td><td>Alimentação Especial</td><td>3 unid.</td><td>10 unid.</td><td><span class="badge badge-danger">Crítico (Repor)</span></td><td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td></tr>
+              <tr><td>#ANEST-019</td><td><strong>Anestésico Isoflurano 100ml</strong></td><td>Cirúrgico / Anestésicos</td><td>5 frascos</td><td>15 frascos</td><td><span class="badge badge-warning">Atenção</span></td><td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td></tr>
+              <tr><td>#AGU-3021</td><td><strong>Agulha Descartável 25x7 (Cx 100)</strong></td><td>Insumos Hospitalares</td><td>2 caixas</td><td>12 caixas</td><td><span class="badge badge-danger">Crítico (Repor)</span></td><td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td></tr>
+              <tr><td>#LUVA-008</td><td><strong>Luva Cirúrgica Estéril 7.5</strong></td><td>Insumos Hospitalares</td><td>4 pares</td><td>20 pares</td><td><span class="badge badge-danger">Crítico (Repor)</span></td><td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td></tr>
+              <tr><td>#ANT-4022</td><td><strong>Antibiótico Enrofloxacino 50mg</strong></td><td>Medicamentos</td><td>1 frasco</td><td>8 frascos</td><td><span class="badge badge-danger">Crítico (Repor)</span></td><td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td></tr>
+              <tr><td>#SOR-0012</td><td><strong>Soro Fisiológico 0.9% 500ml</strong></td><td>Insumos Hospitalares</td><td>6 bolsas</td><td>30 bolsas</td><td><span class="badge badge-warning">Atenção</span></td><td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td></tr>
+              <tr><td>#ANTI-881</td><td><strong>Anti-inflamatório Meloxicam 2mg</strong></td><td>Medicamentos</td><td>2 caixas</td><td>10 caixas</td><td><span class="badge badge-danger">Crítico (Repor)</span></td><td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td></tr>
+              <tr><td>#GAZ-0033</td><td><strong>Gaze Hidrófila Estéril (Pacote)</strong></td><td>Insumos Hospitalares</td><td>8 pacotes</td><td>40 pacotes</td><td><span class="badge badge-danger">Crítico (Repor)</span></td><td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td></tr>
+              <tr><td>#CAT-1102</td><td><strong>Cateter Intravenoso 22G</strong></td><td>Insumos Hospitalares</td><td>5 unid.</td><td>25 unid.</td><td><span class="badge badge-danger">Crítico (Repor)</span></td><td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td></tr>
+              <tr><td>#FIO-0091</td><td><strong>Fio de Satura Nylon 3-0</strong></td><td>Cirúrgico</td><td>3 caixas</td><td>15 caixas</td><td><span class="badge badge-warning">Atenção</span></td><td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td></tr>
+              <tr><td>#POM-5541</td><td><strong>Pomada Cicatrizante Vet 50g</strong></td><td>Medicamentos</td><td>2 bisnagas</td><td>10 bisnagas</td><td><span class="badge badge-danger">Crítico (Repor)</span></td><td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td></tr>
+              <tr><td>#ALC-7070</td><td><strong>Álcool 70% Hospitalar 1L</strong></td><td>Higienização</td><td>2 frascos</td><td>12 frascos</td><td><span class="badge badge-danger">Crítico (Repor)</span></td><td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td></tr>
+              <tr><td>#TERM-004</td><td><strong>Termômetro Digital Veterinário</strong></td><td>Equipamentos</td><td>1 unid.</td><td>5 unid.</td><td><span class="badge badge-warning">Atenção</span></td><td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td></tr>
+              <tr><td>#SHAM-302</td><td><strong>Shampoo Terapêutico Clorexidina</strong></td><td>Estética / Tratamento</td><td>3 frascos</td><td>10 frascos</td><td><span class="badge badge-danger">Crítico (Repor)</span></td><td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    function ocultarTodas() {
+      document.getElementById('view-inventario').classList.add('hidden');
+      document.getElementById('view-pedidos').classList.add('hidden');
+      document.getElementById('view-criticos').classList.add('hidden');
+    }
+
+    function exibirPedidos() {
+      ocultarTodas();
+      document.getElementById('view-pedidos').classList.remove('hidden');
+      document.getElementById('page-title').innerText = "Lista de Pedidos";
+      document.getElementById('page-subtitle').innerText = "Gerenciamento e acompanhamento dos 13 pedidos de compra.";
+    }
+
+    function exibirItensCriticos() {
+      ocultarTodas();
+      document.getElementById('view-criticos').classList.remove('hidden');
+      document.getElementById('page-title').innerText = "Itens Críticos";
+      document.getElementById('page-subtitle').innerText = "Listagem de insumos com estoque abaixo do nível mínimo de segurança.";
+    }
+
+    function exibirInventario() {
+      ocultarTodas();
+      document.getElementById('view-inventario').classList.remove('hidden');
+      document.getElementById('page-title').innerText = "Controle de Logística & Estoque";
+      document.getElementById('page-subtitle').innerText = "Gerencie o inventário de medicamentos, insumos cirúrgicos e suprimentos.";
+    }
+  </script>
+
+</body>
+</html>

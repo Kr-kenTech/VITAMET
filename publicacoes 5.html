@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vitamed - Publicações</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="publicacoes.css">
+</head>
+<body>
+
+
+  <aside class="sidebar">
+    <div class="logo-container">
+      <img src="WhatsApp Image 2026-08-17 at 4.21.16 PM.jpeg" alt="Logo Vitamet" class="logo-img">
+      <div class="logo-text">
+        <h2>Vitamet</h2>
+        <span>Admin</span>
+      </div>
+    </div>
+    
+    <ul class="nav-list">
+      <li class="nav-item">
+        <a href="inicio 1.html"><i class="fa-solid fa-house"></i> Painel de Controle</a>
+      </li>
+      <li class="nav-item">
+        <a href="pets 2.html"><i class="fa-solid fa-notes-medical"></i> Pets & Prontuários</a>
+      </li>
+      <li class="nav-item">
+        <a href="veterinarios 3.html"><i class="fa-solid fa-user-doctor"></i> Veterinários (Ativos)</a>
+      </li>
+      <li class="nav-item">
+        <a href="gestao 4.html"><i class="fa-solid fa-users"></i> Gestão de Usuários</a>
+      </li>
+      <li class="nav-item active">
+        <a href="publicacoes 5.html"><i class="fa-solid fa-newspaper"></i> Publicações</a>
+      </li>
+      <li class="nav-item">
+        <a href="logistica 6.html"><i class="fa-solid fa-box"></i> Logística & Estoque</a>
+      </li>
+      <li class="nav-item">
+        <a href="realatorios 7.html"><i class="fa-solid fa-chart-pie"></i> Relatórios</a>
+      </li>
+      <li class="nav-item">
+        <a href="configuracoes 8.html"><i class="fa-solid fa-gear"></i> Configurações</a>
+      </li>
+    </ul>
+  </aside>
+
+  
+  <div class="main-wrapper">
+    
+    <header class="topbar">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Buscar publicação, autor ou tag...">
+      </div>
+      
+      <div class="user-profile">
+        <i class="fa-regular fa-bell"></i>
+        <img src="WhatsApp Image 2026-08-31 at 9.31.23 PM.jpeg" alt="Foto Usuário" class="user-avatar">
+        <div class="user-info">
+          <span>Usuário Admin</span>
+          <strong>Dr. Raylander</strong>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+
+      <h1 class="section-title">Gestão de Publicações & Blog</h1>
+      <p class="section-subtitle">Gerencie artigos, avisos da clínica e conteúdos para redes sociais dos tutores.</p>
+
+    
+      <div class="publisher-card">
+        <h2 class="card-title">Criar Nova Publicação</h2>
+
+        <label class="field-label">Canais de Divulgação</label>
+        <div class="channel-selector">
+          <label class="channel-btn blog-btn">
+            <input type="checkbox" checked> <i class="fa-solid fa-globe"></i> Blog Site
+          </label>
+          <label class="channel-btn instagram-btn">
+            <input type="checkbox" checked> <i class="fa-brands fa-instagram"></i> Instagram
+          </label>
+          <label class="channel-btn">
+            <input type="checkbox"> <i class="fa-brands fa-whatsapp"></i> WhatsApp (Listas)
+          </label>
+          <label class="channel-btn">
+            <input type="checkbox"> <i class="fa-brands fa-facebook"></i> Facebook
+          </label>
+        </div>
+
+        <div class="form-grid">
+          <div class="col-left">
+            <div class="form-group">
+              <label class="field-label">Título / Chamada principal</label>
+              <input type="text" class="form-control" placeholder="Ex: Campanha de Vacinação Antirrábica 2026">
+            </div>
+            <div class="form-group">
+              <label class="field-label">Conteúdo da Publicação</label>
+              <textarea class="form-control" placeholder="Escreva o texto completo para o Blog e redes sociais..."></textarea>
+            </div>
+          </div>
+
+          <div class="col-right">
+            <div class="form-group">
+              <label class="field-label">Categoria</label>
+              <select class="form-control">
+                <option>Avisos da Clínica</option>
+                <option>Dicas de Saúde</option>
+                <option>Artigos Técnicos</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="field-label">Mídia (Imagem ou Vídeo)</label>
+              <div class="upload-box">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <span>Arraste arquivos ou clique para buscar</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn-submit"><i class="fa-solid fa-paper-plane"></i> Publicar em Todos os Canais</button>
+        </div>
+      </div>
+
+     
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Título da Publicação</th>
+              <th>Canais</th>
+              <th>Categoria</th>
+              <th>Autor</th>
+              <th>Data</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Cuidados Essenciais com Cães no Verão</strong></td>
+              <td>
+                <div class="social-icons">
+                  <i class="fa-solid fa-globe" style="color: #0284c7;"></i>
+                  <i class="fa-brands fa-instagram" style="color: #e1306c;"></i>
+                  <i class="fa-brands fa-facebook" style="color: #1877f2;"></i>
+                </div>
+              </td>
+              <td>Dicas de Saúde</td>
+              <td>Dra. Ana Silva</td>
+              <td>18/10/2026</td>
+              <td><span class="badge badge-success">Publicado</span></td>
+              <td class="actions-col"><i class="fa-solid fa-ellipsis-vertical"></i></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </main>
+  </div>
+
+</body>
+</html>

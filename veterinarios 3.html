@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vitamed - Veterinários Ativos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="veterinarios.css">
+</head>
+<body>
+
+  <aside class="sidebar">
+<div class="logo-container">
+  <img src="WhatsApp Image 2026-08-17 at 4.21.16 PM.jpeg" alt="Logo Vitamed" class="logo-img">
+  <div class="logo-text">
+    <h2>Vitamet</h2>
+    <span>Admin</span>
+  </div>
+</div>
+<ul class="nav-list">
+  <li class="nav-item">
+    <a href="inicio 1.html"><i class="fa-solid fa-house"></i> Painel de Controle</a>
+  </li>
+  <li class="nav-item">
+    <a href="pets 2.html"><i class="fa-solid fa-notes-medical"></i> Pets & Prontuários</a>
+  </li>
+  <li class="nav-item active">
+    <a href="veterinarios 3.html"><i class="fa-solid fa-user-doctor"></i> Veterinários (Ativos)</a>
+  </li>
+  <li class="nav-item">
+    <a href="gestao 4.html"><i class="fa-solid fa-users"></i> Gestão de Usuários</a>
+  </li>
+  <li class="nav-item">
+    <a href="publicacoes 5.html"><i class="fa-solid fa-newspaper"></i> Publicações</a>
+  </li>
+  <li class="nav-item">
+    <a href="logistica 6.html"><i class="fa-solid fa-box"></i> Logística & Estoque</a>
+  </li>
+  <li class="nav-item">
+    <a href="realatorios 7.html"><i class="fa-solid fa-chart-pie"></i> Relatórios</a>
+  </li>
+  <li class="nav-item">
+    <a href="configuracoes 8.html"><i class="fa-solid fa-gear"></i> Configurações</a>
+  </li>
+</ul>
+  </aside>
+
+  <div class="main-wrapper">
+    
+    <header class="topbar">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Buscar veterinário, CRMV ou especialidade...">
+      </div>
+      
+      <div class="user-profile">
+        <i class="fa-regular fa-bell" style="color: #64748b; font-size: 16px; margin-right: 10px;"></i>
+        <img src="WhatsApp Image 2026-08-31 at 9.31.23 PM.jpeg" alt="Foto Usuário" class="user-avatar">
+        <div class="user-info">
+          <span>Usuário Admin</span>
+          <strong>Dr.Raylander</strong>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+
+      <h1 class="section-title">Médicos Veterinários (Ativos)</h1>
+      <p class="section-subtitle">Gerencie o corpo clínico, especialidades, horários e status dos profissionais.</p>
+
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Corpo Clínico</h2>
+          <div>
+            <button class="btn btn-secondary"><i class="fa-solid fa-pen"></i> Editar</button>
+            <button class="btn btn-primary"><i class="fa-solid fa-plus"></i> Novo Cadastro</button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>CRMV</th>
+                <th>Especialidade</th>
+                <th>Horário</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="pet-info">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuyZpxsEcpAmy-fqf8k9neh2BQqQdltl5QkXiG_CY1fw&s=10" class="pet-avatar" alt="Dra. Ana Silva">
+                    <strong>Dra. Ana Silva</strong>
+                  </div>
+                </td>
+                <td>45231</td>
+                <td>Clínica Geral</td>
+                <td>08-16h</td>
+                <td><span class="badge badge-success">Ativo</span></td>
+                <td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="pet-info">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToTN3g1P1Eni9ujdYiquzJW7rSLUyEnO2IzX5EyIJtLw&s=10" class="pet-avatar" alt="Dr. Roberto Costa">
+                    <strong>Dr. Roberto Costa</strong>
+                  </div>
+                </td>
+                <td>38912</td>
+                <td>Cirurgia Veterinária</td>
+                <td>10-19h</td>
+                <td><span class="badge badge-success">Ativo</span></td>
+                <td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="pet-info">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxTy-Y_HaeVCgBNLCX5UbSxFc3BVNBWvc0KSFtUQVzoQ&s=10" class="pet-avatar" alt="Dra. Carla Mendes">
+                    <strong>Dra. Carla Mendes</strong>
+                  </div>
+                </td>
+                <td>51204</td>
+                <td>Dermatologia</td>
+                <td>13-21h</td>
+                <td><span class="badge badge-warning">Em Licença</span></td>
+                <td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+</body>
+</html>

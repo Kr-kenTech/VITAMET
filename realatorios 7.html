@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vitamed - Relatórios Gerenciais</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="relatorios.css">
+</head>
+<body>
+
+  <aside class="sidebar">
+<div class="logo-container">
+  <img src="WhatsApp Image 2026-08-17 at 4.21.16 PM.jpeg" alt="Logo Vitamed" class="logo-img">
+  <div class="logo-text">
+    <h2>Vitamet</h2>
+    <span>Admin</span>
+  </div>
+</div>
+<ul class="nav-list">
+  <li class="nav-item">
+    <a href="inicio 1.html"><i class="fa-solid fa-house"></i> Painel de Controle</a>
+  </li>
+  <li class="nav-item">
+    <a href="pets 2.html"><i class="fa-solid fa-notes-medical"></i> Pets & Prontuários</a>
+  </li>
+  <li class="nav-item">
+    <a href="veterinarios 3.html"><i class="fa-solid fa-user-doctor"></i> Veterinários (Ativos)</a>
+  </li>
+  <li class="nav-item">
+    <a href="gestao 4.html"><i class="fa-solid fa-users"></i> Gestão de Usuários</a>
+  </li>
+  <li class="nav-item">
+    <a href="publicacoes 5.html"><i class="fa-solid fa-newspaper"></i> Publicações</a>
+  </li>
+  <li class="nav-item">
+    <a href="logistica 6.html"><i class="fa-solid fa-box"></i> Logística & Estoque</a>
+  </li>
+  <li class="nav-item active">
+    <a href="relatorios 7.html"><i class="fa-solid fa-chart-pie"></i> Relatórios</a>
+  </li>
+  <li class="nav-item">
+    <a href="configuracoes 8.html"><i class="fa-solid fa-gear"></i> Configurações</a>
+  </li>
+</ul>
+  </aside>
+
+  <div class="main-wrapper">
+    
+    <header class="topbar">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Buscar relatório ou período...">
+      </div>
+      
+      <div class="user-profile">
+        <i class="fa-regular fa-bell" style="color: #64748b; font-size: 16px; margin-right: 10px;"></i>
+        <img src="WhatsApp Image 2026-08-31 at 9.31.23 PM.jpeg" alt="Foto Usuário" class="user-avatar">
+        <div class="user-info">
+          <span>Usuário Admin</span>
+          <strong>Dr. Raylander</strong>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+
+      <h1 class="section-title">Relatórios & Indicadores</h1>
+      <p class="section-subtitle">Consulte o desempenho financeiro, atendimentos e movimentação operacional da clínica.</p>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon icon-green"><i class="fa-solid fa-sack-dollar"></i></div>
+          <div>
+            <span class="stat-label">Faturamento Mês</span>
+            <h3 class="stat-value">R$ 84.920,00</h3>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon icon-blue"><i class="fa-solid fa-stethoscope"></i></div>
+          <div>
+            <span class="stat-label">Consultas Realizadas</span>
+            <h3 class="stat-value">312 atend.</h3>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon icon-amber"><i class="fa-solid fa-hospital-user"></i></div>
+          <div>
+            <span class="stat-label">Novos Tutores</span>
+            <h3 class="stat-value">7 cadastros</h3>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon icon-red"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+          <div>
+            <span class="stat-label">Despesas Operacionais</span>
+            <h3 class="stat-value">R$ 23.410,00</h3>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Central de Exportação de Relatórios</h2>
+          <div>
+            <button class="btn btn-secondary"><i class="fa-solid fa-filter"></i> Selecionar Período</button>
+            <button class="btn btn-primary"><i class="fa-solid fa-plus"></i> Gerar Novo Relatório</button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Nome do Relatório</th>
+                <th>Tipo</th>
+                <th>Período</th>
+                <th>Data da Geração</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Balanço Financeiro Mensal</strong></td>
+                <td>Financeiro</td>
+                <td>01/10 a 31/10/2023</td>
+                <td>Ontem, 18:30</td>
+                <td><span class="badge badge-success">Concluído</span></td>
+                <td class="actions-icon"><i class="fa-solid fa-download"></i></td>
+              </tr>
+              <tr>
+                <td><strong>Desempenho por Veterinário</strong></td>
+                <td>Clínico / Operacional</td>
+                <td>Últimos 30 dias</td>
+                <td>25/10/2023</td>
+                <td><span class="badge badge-success">Concluído</span></td>
+                <td class="actions-icon"><i class="fa-solid fa-download"></i></td>
+              </tr>
+              <tr>
+                <td><strong>Movimentação de Vacinas & Estoque</strong></td>
+                <td>Logística</td>
+                <td>15/09 a 15/10/2023</td>
+                <td>16/10/2023</td>
+                <td><span class="badge badge-success">Concluído</span></td>
+                <td class="actions-icon"><i class="fa-solid fa-download"></i></td>
+              </tr>
+              <tr>
+                <td><strong>Projeção Orçamentária Q4</strong></td>
+                <td>Planejamento</td>
+                <td>Novembro/Dezembro</td>
+                <td>Em processamento</td>
+                <td><span class="badge badge-warning">Processando</span></td>
+                <td class="actions-icon"><i class="fa-solid fa-arrows-rotate"></i></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+</body>
+</html>
