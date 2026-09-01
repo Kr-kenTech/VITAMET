@@ -13,7 +13,7 @@
     <div class="container">
 
         <div class="imagem">
-            <img src="WhatsApp Image 2026-08-17 at 4.21.16 PM.jpeg" alt="Imagem VitaMed">
+            <img src="/foto.jpeg" alt="Imagem VitaMed">
         </div>
 
         <div class="cadastro-box">
@@ -38,11 +38,11 @@
                 Criar conta
             </button>
 
-            <a href="login.html" class="voltar">
+            <a href="../login.html" class="voltar">
                 ← Voltar para o login
             </a>
 
-            <a href="index.html" class="inicio">
+            <a href="/index.html" class="inicio">
                 ← Voltar para o início
             </a>
 
@@ -92,7 +92,7 @@
 
                 if (resposta.ok) {
                     alert(resultado.mensagem);
-                    window.location.href = "login.html";
+                    window.location.href = "../login.html";
                 } else {
                     alert(resultado.erro || "Erro ao realizar cadastro.");
                 }
