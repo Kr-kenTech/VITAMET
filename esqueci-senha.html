@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VitaMed - Recuperar Senha</title>
+    <link rel="stylesheet" href="cadastro.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="imagem">
+            <img src="WhatsApp Image 2026-08-17 at 4.21.16 PM.jpeg" alt="Imagem VitaMed">
+        </div>
+
+        <div class="cadastro-box">
+
+            <h1>Recuperar senha</h1>
+
+            <p>
+                Digite o e-mail cadastrado para recuperar sua senha.
+            </p>
+
+            <input
+                type="email"
+                id="email"
+                placeholder="Digite seu e-mail"
+            >
+
+            <button onclick="recuperar()">
+                Recuperar senha
+            </button>
+
+            <a href="login.html" class="voltar">
+                ← Voltar para o login
+            </a>
+
+            <a href="index.html" class="inicio">
+                ← Voltar para o início
+            </a>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        function recuperar() {
+
+            let email = document.getElementById("email").value;
+
+            let tutor = JSON.parse(localStorage.getItem("tutor"));
+
+            if (email === "") {
+                alert("Digite seu e-mail!");
+                return;
+            }
+
+            if (!tutor || email !== tutor.email) {
+                alert("E-mail não encontrado!");
+                return;
+            }
+
+            alert("E-mail encontrado! Agora você pode redefinir sua senha.");
+
+            window.location.href = "nova-senha.html";
+        }
+
+    </script>
+
+</body>
+
+</html>

@@ -6,11 +6,12 @@
 
 html {
     scroll-behavior: smooth;
+    scroll-padding-top: 80px;
 }
 
 body {
     font-family: Arial, Helvetica, sans-serif;
-    background: #f4f9ff;
+    background: #f4fbff;
     color: #263238;
 }
 
@@ -19,32 +20,31 @@ a {
 }
 
 header {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 10;
+    z-index: 1000;
+    background: rgba(40, 85, 107, 0);
+  
 }
 
 nav {
     width: 100%;
-    max-width: none;
-    margin: 0;
     padding: 18px 35px;
-
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
 .logo {
-    color: white;
+    color: rgb(8, 8, 8);
     font-size: 24px;
     font-weight: bold;
 }
 
 .logo span {
-    color: #d5f3ff;
+    color: #8ed8f8;
 }
 
 nav ul {
@@ -52,38 +52,35 @@ nav ul {
     align-items: center;
     gap: 30px;
     list-style: none;
-    margin: 0;
-    padding: 0;
 }
 
 nav ul li a {
-    color: white;
+   color: #050505;
     font-size: 14px;
     font-weight: bold;
     transition: 0.3s;
 }
 
 nav ul li a:hover {
-    color: #b9e6ff;
+    color: #8ed8f8;
 }
 
 .hero {
-    height: 95vh;
+    height: 100vh;
     min-height: 500px;
-    border-radius: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
-
     text-align: center;
     color: white;
 
     background:
         linear-gradient(
-            rgba(80, 150, 190, 0.65),
+            rgba(80, 150, 190, 0.295),
             rgba(20, 70, 100, 0.75)
         ),
-        url("https://th.bing.com/th/id/OIP.ZhSMoWTjLPXG9JTp-CyN3QHaFS?w=250&h=180&c=7&r=0&o=7&pid=1.7&rm=3") center/cover no-repeat;
+        url("https://media.istockphoto.com/id/1445196818/pt/foto/group-of-cute-pets-on-white-background-banner-design.jpg?s=612x612&w=0&k=20&c=wly0obQ9hBS_e2fpH0FcY1kiNLqFlKxtnTQmpbHkbMI=")
+        center / cover no-repeat;
 }
 
 .hero-content {
@@ -94,12 +91,17 @@ nav ul li a:hover {
 .subtitle {
     font-size: 15px;
     font-weight: bold;
-    color: #dff5ff;
+    color: #e5f8ff;
 }
 
 .hero h1 {
     font-size: 65px;
     margin: 10px 0;
+    color: white;
+}
+
+.hero h1 span {
+    color: #8ed8f8;
 }
 
 .hero p {
@@ -116,19 +118,23 @@ nav ul li a:hover {
 
 .btn-primary,
 .btn-secondary {
+    padding: 14px 25px;
     border-radius: 25px;
     font-weight: bold;
     transition: 0.3s;
+    display: inline-block;
 }
 
 .btn-primary {
     background: #8ed8f8;
     color: #17445c;
+    border: 2px solid #8ed8f8;
 }
 
 .btn-secondary {
     background: white;
     color: #397a99;
+    border: 2px solid white;
 }
 
 .btn-primary:hover,
@@ -151,14 +157,14 @@ nav ul li a:hover {
 
 .section h2 {
     font-size: 38px;
-    color: #28556b;
+   color: #55a9cc;
     margin: 10px 0 20px;
 }
 
 .section > p {
     max-width: 700px;
     margin: 10px auto;
-    color: #607d8b;
+    color: #00aaff;
     line-height: 1.7;
 }
 
@@ -197,72 +203,44 @@ nav ul li a:hover {
     line-height: 1.6;
 }
 
-.reviews {
-    background: #e4f5fc;
+.services {
+    background: #e8f8ff;
     max-width: none;
 }
 
-.review {
-    max-width: 650px;
-    margin: 30px auto;
-    padding: 35px;
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 5px 20px rgba(80, 160, 200, 0.12);
-}
-
-.stars {
-    color: #f4c95d;
-    font-size: 25px;
-    margin-bottom: 15px;
-}
-
-.review p {
-    color: #607d8b;
-    line-height: 1.7;
-    margin-bottom: 15px;
-}
-
-.contact {
-    padding: 90px 20px;
-    text-align: center;
-    color: white;
-    background: #8ed8f8;
-}
-
-.contact h2 {
-    font-size: 40px;
-    color: #17445c;
-    margin: 10px 0 15px;
-}
-
-.contact p {
-    max-width: 650px;
-    margin: auto auto 25px;
-    color: #28556b;
-    line-height: 1.6;
-}
-
-.contact .btn-primary {
-    background: white;
-    color: #397a99;
+.service-button {
+    margin-top: 40px;
 }
 
 footer {
     padding: 35px 20px;
     text-align: center;
-    background: #28556b;
-    color: white;
+    background: #28556b00;
+    color: #4cc1f3;
 }
 
 footer p {
-    color: #c8eaf7;
+    color: #080808;
     margin-top: 10px;
 }
 
+.footer-logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.footer-logo span {
+    color: #8ed8f8;
+}
+
+.copyright {
+    margin-top: 20px;
+}
+
 @media (max-width: 700px) {
+
     nav {
-        padding: 18px 20px;
+        padding: 15px 20px;
         flex-direction: column;
         gap: 15px;
     }
@@ -291,15 +269,12 @@ footer p {
     .section h2 {
         font-size: 30px;
     }
-
-    .contact h2 {
-        font-size: 30px;
-    }
 }
 
 @media (max-width: 450px) {
+
     nav {
-        padding: 15px 10px;
+        padding: 12px 10px;
     }
 
     nav ul {

@@ -1,0 +1,148 @@
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(180deg, #ffffff, #30a9e6);
+}
+
+.container {
+    display: flex;
+    align-items: stretch;
+}
+
+.imagem {
+    width: 280px;
+    height: 430px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    border-radius: 20px 0 0 20px;
+    box-shadow: 0 10px 30px rgba(0, 85, 170, 0.2);
+}
+
+.imagem img {
+    width: 200px;
+    border-radius: 10px;
+}
+
+.cadastro-box {
+    width: 380px;
+    height: 430px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-sizing: border-box;
+    background: white;
+    border-radius: 0 20px 20px 0;
+    box-shadow: 0 10px 30px rgba(0, 85, 170, 0.007);
+}
+
+.cadastro-box h1 {
+    margin: 0 0 15px;
+    text-align: center;
+    color: #0066cc;
+    font-size: 28px;
+}
+
+.cadastro-box p {
+    margin: 0 0 25px;
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.cadastro-box input {
+    width: 100%;
+    height: 48px;
+    padding: 0 15px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    border: 2px solid #cce4ff;
+    border-radius: 10px;
+    outline: none;
+    font-size: 15px;
+    color: #003b70;
+    background: #f7fbff;
+}
+
+.cadastro-box input:focus {
+    border-color: #0077dd;
+    background: white;
+}
+
+.cadastro-box button {
+    width: 100%;
+    height: 48px;
+    margin-top: 5px;
+    border: none;
+    border-radius: 10px;
+    background: #0077dd;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.cadastro-box button:hover {
+    background: #005bb5;
+}
+
+.voltar,
+.inicio {
+    text-align: center;
+    color: #0077dd;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.voltar {
+    margin-top: 20px;
+}
+
+.inicio {
+    margin-top: 10px;
+}
+
+.voltar:hover,
+.inicio:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 700px) {
+
+    body {
+        height: auto;
+        min-height: 100vh;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    .container {
+        flex-direction: column;
+        width: 100%;
+        max-width: 400px;
+    }
+
+    .imagem {
+        width: 100%;
+        height: 200px;
+        border-radius: 20px 20px 0 0;
+    }
+
+    .cadastro-box {
+        width: 100%;
+        height: auto;
+        min-height: 350px;
+        padding: 30px;
+        border-radius: 0 0 20px 20px;
+    }
+}
+
+
