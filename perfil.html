@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VitaMet - Meu Perfil</title>
+    <link rel="stylesheet" href="perfil.css">
+</head>
+<body>
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <div class="logo-icon">
+                <img src="foto.jpeg" alt="VitaMet">
+            </div>
+
+            <div>
+                <h2>Vita<span>Met</span></h2>
+                <p>Clínica Veterinária</p>
+            </div>
+        </div>
+
+        <nav class="menu">
+
+            <a href="tutor.html" class="menu-item">
+                <span>🏠</span>
+                Início
+            </a>
+
+            <a href="tutor.html#pets" class="menu-item">
+                <span>🐾</span>
+                Meus Pets
+            </a>
+
+            <a href="agendamentos.html" class="menu-item">
+                <span>📅</span>
+                Agendamento
+            </a>
+
+            <a href="consultas.html" class="menu-item">
+                <span>📋</span>
+                Consultas
+            </a>
+
+            <a href="comunidade.html" class="menu-item">
+                <span>👥</span>
+                Comunidade
+            </a>
+
+            <a href="perfil.html" class="menu-item active">
+                <span>👤</span>
+                Meu Perfil
+            </a>
+
+            <a href="#" class="menu-item">
+                <span>⚙️</span>
+                Configurações
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <div class="help">
+                <div class="help-icon">?</div>
+
+                <div>
+                    <strong>Precisa de ajuda?</strong>
+                    <p>Entre em contato com a VitaMet.</p>
+                </div>
+            </div>
+
+            <a href="login.html" class="logout">
+                <span>🚪</span>
+                Sair
+            </a>
+
+        </div>
+
+    </aside>
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <div class="mobile-logo">
+                VITA<span>MET</span>
+            </div>
+
+            <div class="top-user">
+
+                <button class="notification" type="button">
+                    🔔
+                </button>
+
+                <div class="avatar">
+                    <span id="avatarNome">TU</span>
+                </div>
+
+                <div class="user-info">
+                    <strong id="nomePerfil">Tutor</strong>
+                    <span>Tutor</span>
+                </div>
+
+                <span class="arrow">⌄</span>
+
+            </div>
+
+        </header>
+
+        <section class="content">
+
+            <div class="page-header">
+
+                <div>
+                    <span class="breadcrumb">ÁREA DO TUTOR</span>
+
+                    <h1>Meu Perfil</h1>
+
+                    <p>
+                        Consulte e atualize seus dados pessoais.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="profile-card">
+
+                <div class="profile-top">
+
+                    <div class="profile-avatar">
+                        <span id="avatarGrande">TU</span>
+                    </div>
+
+                    <div class="profile-name">
+                        <h2 id="nomeGrande">Tutor</h2>
+                        <p>Tutor VitaMet</p>
+                    </div>
+
+                </div>
+
+                <div class="profile-divider"></div>
+
+                <div class="profile-section">
+
+                    <div class="section-title">
+                        <h3>Dados pessoais</h3>
+                        <p>Informações cadastradas na sua conta.</p>
+                    </div>
+
+                    <div class="profile-grid">
+
+                        <div class="profile-field">
+                            <label>Nome completo</label>
+                            <div class="field-value" id="campoNome">
+                                Não informado
+                            </div>
+                        </div>
+
+                        <div class="profile-field">
+                            <label>E-mail</label>
+                            <div class="field-value" id="campoEmail">
+                                Não informado
+                            </div>
+                        </div>
+
+                        <div class="profile-field">
+                            <label>Telefone</label>
+                            <div class="field-value" id="campoTelefone">
+                                Não informado
+                            </div>
+                        </div>
+
+                        <div class="profile-field">
+                            <label>CPF</label>
+                            <div class="field-value" id="campoCpf">
+                                Não informado
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="profile-divider"></div>
+
+                <div class="profile-section">
+
+                    <div class="section-title">
+                        <h3>Conta</h3>
+                        <p>Gerencie as informações da sua conta.</p>
+                    </div>
+
+                    <div class="account-options">
+
+                        <div class="account-item">
+                            <div class="account-icon">🔒</div>
+
+                            <div>
+                                <strong>Senha</strong>
+                                <span>Altere sua senha de acesso.</span>
+                            </div>
+
+                            <button type="button" class="option-button">
+                                Alterar
+                            </button>
+                        </div>
+
+                        <div class="account-item">
+                            <div class="account-icon">⚙️</div>
+
+                            <div>
+                                <strong>Configurações</strong>
+                                <span>Personalize suas preferências.</span>
+                            </div>
+
+                            <a href="#" class="option-button">
+                                Acessar
+                            </a>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script>
+        const tutor = JSON.parse(
+            localStorage.getItem("tutor")
+        );
+
+        if (tutor) {
+
+            const nome =
+                tutor.nome ||
+                tutor.nomeCompleto ||
+                "Tutor";
+
+            const email =
+                tutor.email ||
+                tutor.eMail ||
+                "Não informado";
+
+            const telefone =
+                tutor.telefone ||
+                tutor.celular ||
+                "Não informado";
+
+            const cpf =
+                tutor.cpf ||
+                "Não informado";
+
+            const partes =
+                nome.trim().split(" ");
+
+            let iniciais =
+                partes[0].charAt(0);
+
+            if (partes.length > 1) {
+                iniciais +=
+                    partes[partes.length - 1].charAt(0);
+            }
+
+            const iniciaisFormatadas =
+                iniciais.toUpperCase();
+
+            document.getElementById("nomePerfil").textContent =
+                nome;
+
+            document.getElementById("avatarNome").textContent =
+                iniciaisFormatadas;
+
+            document.getElementById("nomeGrande").textContent =
+                nome;
+
+            document.getElementById("avatarGrande").textContent =
+                iniciaisFormatadas;
+
+            document.getElementById("campoNome").textContent =
+                nome;
+
+            document.getElementById("campoEmail").textContent =
+                email;
+
+            document.getElementById("campoTelefone").textContent =
+                telefone;
+
+            document.getElementById("campoCpf").textContent =
+                cpf;
+        }
+    </script>
+
+</body>
+</html>
