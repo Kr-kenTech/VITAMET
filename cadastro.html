@@ -51,6 +51,68 @@
     </div>
 
     <script>
+
+        const cpfInput = document.getElementById("cpf");
+
+        // Máscara progressiva do CPF
+        cpfInput.addEventListener("input", () => {
+            let valor = cpfInput.value.replace(/\D/g, "");
+            valor = valor.substring(0, 11);
+
+            valor = valor.replace(/(\d{3})(\d)/, "$1.$2");
+            valor = valor.replace(/(\d{3})(\d)/, "$1.$2");
+            valor = valor.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+
+            cpfInput.value = valor;
+        });
+
+        // Função para calcular os dígitos verificadores
+        function validarCPF(cpfValor) {
+            cpfValor = cpfValor.replace(/\D/g, "");
+
+            if (cpfValor.length !== 11) return false;
+            if (/^(\d)\1+$/.test(cpfValor)) return false;
+
+            let soma = 0;
+            let resto;
+
+            for (let i = 1; i <= 9; i++) {
+                soma += parseInt(cpfValor.substring(i - 1, i)) * (11 - i);
+            }
+
+            resto = (soma * 10) % 11;
+            if (resto === 10 || resto === 11) resto = 0;
+            if (resto !== parseInt(cpfValor.substring(9, 10))) return false;
+
+            soma = 0;
+
+            for (let i = 1; i <= 10; i++) {
+                soma += parseInt(cpfValor.substring(i - 1, i)) * (12 - i);
+            }
+
+            resto = (soma * 10) % 11;
+            if (resto === 10 || resto === 11) resto = 0;
+            if (resto !== parseInt(cpfValor.substring(10, 11))) return false;
+
+            return true;
+        }
+
+        // Feedback visual ao sair do campo (blur)
+        cpfInput.addEventListener("blur", () => {
+            if (cpfInput.value.trim() === "") {
+                cpfInput.style.border = "";
+                return;
+            }
+
+            if (validarCPF(cpfInput.value)) {
+                cpfInput.style.border = "2px solid green";
+            } else {
+                cpfInput.style.border = "2px solid red";
+                alert("CPF inválido!");
+            }
+        });
+
+
         async function cadastrar() {
             let nome = document.getElementById("nome").value;
             let cpf = document.getElementById("cpf").value;
