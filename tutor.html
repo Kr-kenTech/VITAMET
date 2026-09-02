@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VitaMed - Área do Tutor</title>
+    <link rel="stylesheet" href="tutor.css">
+</head>
+
+<body>
+
+    <div class="layout">
+
+        <aside class="sidebar">
+
+            <div class="logo">
+                <div class="logo-icon">
+                    <img src="foto.jpeg" alt="VitaMed">
+                </div>
+
+                <div>
+                    <h2>Vita<span>Med</span></h2>
+                    <p>Clínica Veterinária</p>
+                </div>
+            </div>
+
+            <nav class="menu">
+
+                <a href="#" class="menu-item active" id="linkInicio">
+                    <span>🏠</span>
+                    Início
+                </a>
+
+                <a href="#pets" class="menu-item">
+                    <span>🐾</span>
+                    Meus Pets
+                </a>
+
+                <a href="#" class="menu-item" id="linkAgendamento">
+                    <span>📅</span>
+                    Agendamento
+                </a>
+
+                <a href="#" class="menu-item">
+                    <span>📋</span>
+                    Consultas
+                </a>
+
+                <a href="#" class="menu-item">
+                    <span>👥</span>
+                    Comunidade
+                </a>
+
+                <a href="#" class="menu-item">
+                    <span>👤</span>
+                    Meu Perfil
+                </a>
+
+                <a href="#" class="menu-item">
+                    <span>⚙️</span>
+                    Configurações
+                </a>
+
+            </nav>
+
+            <div class="sidebar-bottom">
+
+                <div class="help">
+
+                    <div class="help-icon">
+                        ?
+                    </div>
+
+                    <div>
+                        <strong>Precisa de ajuda?</strong>
+                        <p>Entre em contato com a VitaMed.</p>
+                    </div>
+
+                </div>
+
+                <a href="login.html" class="logout">
+                    <span>🚪</span>
+                    Sair
+                </a>
+
+            </div>
+
+        </aside>
+
+        <main class="main">
+
+            <header class="topbar">
+
+                <div class="mobile-logo">
+                    VITA<span>MED</span>
+                </div>
+
+                <div class="top-user">
+
+                    <button class="notification">
+                        🔔
+                    </button>
+
+                    <div class="avatar">
+                        <span id="avatarNome">TU</span>
+                    </div>
+
+                    <div class="user-info">
+                        <strong id="nomePerfil">Tutor</strong>
+                        <span>Tutor</span>
+                    </div>
+
+                    <span class="arrow">⌄</span>
+
+                </div>
+
+            </header>
+
+            <section class="content" id="pets">
+
+                <div class="page-header">
+
+                    <div>
+                        <span class="breadcrumb">
+                            ÁREA DO TUTOR
+                        </span>
+
+                        <h1>Meus Pets</h1>
+
+                        <p>
+                            Cadastre e acompanhe os seus animais na VitaMed.
+                        </p>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="btn-primary"
+                        onclick="abrirFormulario()">
+                        + Cadastrar Pet
+                    </button>
+
+                </div>
+
+                <div id="petsContainer"></div>
+
+            </section>
+
+            <section
+                id="registerSection"
+                class="register-section">
+
+                <div class="form-header">
+
+                    <div>
+                        <span class="form-label">
+                            NOVO PET
+                        </span>
+
+                        <h2>Cadastrar Pet</h2>
+
+                        <p>
+                            Preencha os dados do seu animal.
+                        </p>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="close-form"
+                        onclick="fecharFormulario()">
+                        ×
+                    </button>
+
+                </div>
+
+                <form id="petForm">
+
+                    <div class="photo-area">
+
+                        <div class="photo-preview" id="photoPreview">
+                            🐾
+                        </div>
+
+                        <div>
+                            <label class="upload">
+                                Escolher foto
+                                <input
+                                    type="file"
+                                    id="fotoPet"
+                                    accept="image/*">
+                            </label>
+
+                            <p>
+                                JPG ou PNG
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+
+                            <label for="nomePet">
+                                Nome do pet
+                            </label>
+
+                            <input
+                                type="text"
+                                id="nomePet"
+                                placeholder="Ex: Thor"
+                                maxlength="50"
+                                required>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="animal">
+                                Animal
+                            </label>
+
+                            <select id="animal" required>
+
+                                <option value="" selected disabled>
+                                    Selecione
+                                </option>
+
+                                <option value="Cachorro">
+                                    Cachorro
+                                </option>
+
+                                <option value="Gato">
+                                    Gato
+                                </option>
+
+                                <option value="Coelho">
+                                    Coelho
+                                </option>
+
+                                <option value="Ave">
+                                    Ave
+                                </option>
+
+                                <option value="Outro">
+                                    Outro
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="raca">
+                                Raça
+                            </label>
+
+                            <input
+                                type="text"
+                                id="raca"
+                                placeholder="Ex: Golden Retriever"
+                                maxlength="50"
+                                required>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="sexo">
+                                Sexo
+                            </label>
+
+                            <select id="sexo" required>
+
+                                <option value="" selected disabled>
+                                    Selecione
+                                </option>
+
+                                <option value="Macho">
+                                    Macho
+                                </option>
+
+                                <option value="Fêmea">
+                                    Fêmea
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="idade">
+                                Idade
+                            </label>
+
+                            <input
+                                type="number"
+                                id="idade"
+                                placeholder="Ex: 3"
+                                min="0"
+                                max="50"
+                                required>
+
+                        </div>
+
+                        <div class="form-group weight">
+
+                            <label for="peso">
+                                Peso
+                            </label>
+
+                            <input
+                                type="number"
+                                id="peso"
+                                placeholder="Ex: 12"
+                                min="0"
+                                max="500"
+                                step="0.1"
+                                required>
+
+                            <span>kg</span>
+
+                        </div>
+
+                        <div class="form-group full">
+
+                            <label for="observacoes">
+                                Observações
+                            </label>
+
+                            <textarea
+                                id="observacoes"
+                                rows="4"
+                                maxlength="300"
+                                placeholder="Informe alguma observação sobre seu pet"></textarea>
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-buttons">
+
+                        <button
+                            type="button"
+                            class="btn-cancel"
+                            onclick="fecharFormulario()">
+                            Cancelar
+                        </button>
+
+                        <button
+                            type="submit"
+                            class="btn-primary">
+                            Cadastrar Pet
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <script>
+        // Pega o ID do usuário direto da URL (ex: tutor.html?id=9)
+        const urlParams = new URLSearchParams(window.location.search);
+        const usuarioId = urlParams.get('id');
+
+        if (!usuarioId) {
+            alert("Usuário não autenticado. Faça login novamente.");
+            window.location.href = "login.html";
+        }
+
+        // Mantém os links do menu dinâmicos levando o ID junto
+        document.getElementById("linkInicio").href = `tutor.html?id=${usuarioId}`;
+
+        let usuarioLogado = {};
+
+        // Busca os dados do usuário diretamente do Banco de Dados via API
+        async function carregarDadosUsuario() {
+            try {
+                const resposta = await fetch(`/usuario/${usuarioId}`);
+                const dados = await resposta.json();
+
+                if (!resposta.ok) {
+                    alert(dados.erro || "Sessão inválida.");
+                    window.location.href = "login.html";
+                    return;
+                }
+
+                usuarioLogado = dados;
+
+                // Preenche o perfil no topo com os dados vindos do banco de dados
+                document.getElementById("nomePerfil").textContent = usuarioLogado.nome;
+
+                const partes = usuarioLogado.nome.trim().split(" ");
+                const iniciais = partes[0].charAt(0) + (partes.length > 1 ? partes[partes.length - 1].charAt(0) : "");
+                document.getElementById("avatarNome").textContent = iniciais.toUpperCase();
+
+                // Carrega os pets vinculados a este usuário do banco
+                mostrarPets();
+            } catch (error) {
+                console.error("Erro ao carregar usuário do BD:", error);
+            }
+        }
+
+        function abrirFormulario() {
+            const formulario = document.getElementById("registerSection");
+            formulario.classList.add("show");
+            formulario.scrollIntoView({ behavior: "smooth" });
+        }
+
+        function fecharFormulario() {
+            const formulario = document.getElementById("registerSection");
+            formulario.classList.remove("show");
+            document.getElementById("petForm").reset();
+            document.getElementById("photoPreview").innerHTML = "🐾";
+        }
+
+        async function mostrarPets() {
+            const container = document.getElementById("petsContainer");
+            container.innerHTML = "";
+
+            try {
+                const resposta = await fetch(`/api/animais/tutor/${usuarioId}`);
+                const pets = await resposta.json();
+
+                if (!Array.isArray(pets) || pets.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-pets">
+                            <div class="empty-icon">🐾</div>
+                            <h2>Nenhum pet cadastrado</h2>
+                            <p>
+                                Você ainda não possui nenhum pet cadastrado.
+                                Cadastre seu primeiro animal para acompanhar
+                                seus cuidados na VitaMed.
+                            </p>
+                            <button type="button" class="btn-primary" onclick="abrirFormulario()">
+                                + Cadastrar meu primeiro pet
+                            </button>
+                        </div>
+                    `;
+                    return;
+                }
+
+                pets.forEach(function(pet) {
+                    container.innerHTML += `
+                        <div class="pet-card">
+                            <div class="pet-image">
+                                🐾
+                            </div>
+                            <div class="pet-info">
+                                <h3>${pet.nome}</h3>
+                                <p>${pet.especie} • ${pet.raca}</p>
+                                <span>${pet.sexo} • ${pet.idade} ano(s) • ${pet.peso} kg</span>
+                            </div>
+                            <button type="button" class="btn-excluir" onclick="excluirPet(${pet.id})">
+                                Excluir
+                            </button>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                console.error("Erro ao carregar pets:", error);
+            }
+        }
+
+        document.getElementById("fotoPet").addEventListener("change", function(event) {
+            const arquivo = event.target.files[0];
+            if (!arquivo) {
+                document.getElementById("photoPreview").innerHTML = "🐾";
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById("photoPreview").innerHTML = `
+                    <img src="${e.target.result}" alt="Foto do pet">
+                `;
+            };
+            reader.readAsDataURL(arquivo);
+        });
+
+        document.getElementById("petForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const novoPet = {
+                usuario_id: usuarioId,
+                nome: document.getElementById("nomePet").value,
+                especie: document.getElementById("animal").value,
+                raca: document.getElementById("raca").value,
+                sexo: document.getElementById("sexo").value,
+                idade: document.getElementById("idade").value,
+                peso: document.getElementById("peso").value,
+                status_atual: 'Ativo'
+            };
+
+            try {
+                const resposta = await fetch('/api/animais', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(novoPet)
+                });
+
+                const resultado = await resposta.json();
+
+                if (resposta.ok) {
+                    alert("Pet cadastrado com sucesso no banco de dados!");
+                    fecharFormulario();
+                    mostrarPets();
+                } else {
+                    alert("Erro ao cadastrar: " + resultado.erro);
+                }
+            } catch (error) {
+                console.error("Erro na requisição:", error);
+                alert("Erro de conexão com o servidor.");
+            }
+        });
+
+        function excluirPet(id) {
+            const confirmar = confirm("Tem certeza que deseja excluir este pet?");
+            if (!confirmar) {
+                return;
+            }
+            alert("ID do pet selecionado para exclusão: " + id);
+        }
+
+        // Inicia a aplicação buscando os dados do usuário no Banco de Dados
+        carregarDadosUsuario();
+    </script>
+
+</body>
+
+</html>
