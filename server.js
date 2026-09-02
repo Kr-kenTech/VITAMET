@@ -24,13 +24,12 @@ connection.connect((err) => {
 // Middleware para JSON
 app.use(express.json());
 
+// Servir arquivos estáticos da pasta atual
 app.use(express.static(path.join(__dirname)));
-app.use(express.static(path.join(__dirname, 'Login')));
-app.use('/Dashboard', express.static(path.join(__dirname, 'Login', 'Dashboard')));
 
 // Rotas para as páginas principais
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'Login', 'login.html'));
+    res.sendFile(path.join(__dirname, 'login.html'));
 });
 
 app.get('/index.html', (req, res) => {
@@ -38,11 +37,11 @@ app.get('/index.html', (req, res) => {
 });
 
 app.get('/cadastro.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'Login', 'Cadastro', 'cadastro.html'));
+    res.sendFile(path.join(__dirname, 'cadastro.html'));
 });
 
 app.get('/tutor.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'Login', 'Dashboard', 'tutor.html'));
+    res.sendFile(path.join(__dirname, 'tutor.html'));
 });
 
 // Rota de Usuário por ID (para preencher o painel)
@@ -172,6 +171,103 @@ app.post('/recuperar', (req, res) => {
         }
 
         return res.status(200).json({ mensagem: 'E-mail encontrado!' });
+    });
+});
+
+// ==========================================
+// ROTAS DE ANIMAIS (PETS)
+// ==========================================
+
+// Cadastrar novo animal vinculado ao tutor
+app.post('/api/animais', (req, res) => {
+    const { usuario_id, nome, especie, raca, idade, sexo, peso, status_atual } = req.body;
+
+    const queryTutor = 'SELECT id FROM tutor WHERE usuario_id = ?';
+    connection.query(queryTutor, [usuario_id], (err, results) => {
+        if (err || results.length === 0) {
+            return res.status(404).json({ erro: 'Tutor não encontrado para este usuário.' });
+        }
+
+        const tutorId = results[0].id;
+
+        const queryAnimal = `
+            INSERT INTO animal (tutor_id, nome, especie, raca, idade, sexo, peso, status_atual) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        `;
+
+        connection.query(queryAnimal, [tutorId, nome, especie, raca, idade, sexo, peso, status_atual || 'Ativo'], (err2, resultAnimal) => {
+            if (err2) {
+                console.error("Erro ao salvar animal:", err2);
+                return res.status(500).json({ erro: 'Erro ao cadastrar animal.' });
+            }
+            return res.status(201).json({ mensagem: 'Animal cadastrado com sucesso!', id: resultAnimal.insertId });
+        });
+    });
+});
+
+// Listar pets do tutor
+app.get('/api/animais/tutor/:usuarioId', (req, res) => {
+    const { usuarioId } = req.params;
+
+    const query = `
+        SELECT a.id, a.nome, a.especie, a.raca, a.idade, a.sexo, a.peso, a.status_atual
+        FROM animal a
+        JOIN tutor t ON a.tutor_id = t.id
+        WHERE t.usuario_id = ?
+    `;
+
+    connection.query(query, [usuarioId], (err, results) => {
+        if (err) {
+            console.error("Erro ao buscar animais:", err);
+            return res.status(500).json({ erro: 'Erro interno no servidor.' });
+        }
+        return res.status(200).json(results);
+    });
+});
+
+// ==========================================
+// ROTAS DE AGENDAMENTOS E CONSULTAS
+// ==========================================
+
+// Cadastrar nova consulta
+app.post('/api/agendamentos', (req, res) => {
+    const { animal_id, veterinario_id, data, hora, tipo, status } = req.body;
+
+    if (!animal_id || !data || !hora || !tipo) {
+        return res.status(400).json({ erro: 'Preencha todos os campos obrigatórios do agendamento.' });
+    }
+
+    const query = `INSERT INTO consulta (animal_id, veterinario_id, data, hora, tipo, status) VALUES (?, ?, ?, ?, ?, ?)`;
+    const vetId = veterinario_id || 1; 
+    const statusConsulta = status || 'Agendado';
+
+    connection.query(query, [animal_id, vetId, data, hora, tipo, statusConsulta], (err, results) => {
+        if (err) {
+            console.error("Erro ao salvar consulta:", err);
+            return res.status(500).json({ erro: 'Erro ao salvar agendamento no banco.' });
+        }
+        return res.status(201).json({ mensagem: 'Consulta agendada com sucesso!', id: results.insertId });
+    });
+});
+
+// Listar consultas vinculadas ao tutor logado
+app.get('/api/agendamentos/tutor/:usuarioId', (req, res) => {
+    const { usuarioId } = req.params;
+
+    const query = `
+        SELECT c.id, a.nome AS pet, c.tipo AS servico, c.data, c.hora, c.status 
+        FROM consulta c
+        JOIN animal a ON c.animal_id = a.id
+        JOIN tutor t ON a.tutor_id = t.id
+        WHERE t.usuario_id = ?
+    `;
+
+    connection.query(query, [usuarioId], (err, results) => {
+        if (err) {
+            console.error("Erro ao buscar agendamentos:", err);
+            return res.status(500).json({ erro: 'Erro interno no servidor.' });
+        }
+        return res.status(200).json(results);
     });
 });
 

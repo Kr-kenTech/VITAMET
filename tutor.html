@@ -27,7 +27,7 @@
 
             <nav class="menu">
 
-                <a href="tutor.html" class="menu-item active">
+                <a href="#" class="menu-item active" id="linkInicio">
                     <span>🏠</span>
                     Início
                 </a>
@@ -37,7 +37,7 @@
                     Meus Pets
                 </a>
 
-                <a href="agendamentos.html" class="menu-item">
+                <a href="#" class="menu-item" id="linkAgendamento">
                     <span>📅</span>
                     Agendamento
                 </a>
@@ -316,6 +316,7 @@
                                 id="peso"
                                 placeholder="Ex: 12"
                                 min="0"
+                                max="500"
                                 step="0.1"
                                 required>
 
@@ -365,245 +366,173 @@
     </div>
 
     <script>
+        // Pega o ID do usuário direto da URL (ex: tutor.html?id=9)
+        const urlParams = new URLSearchParams(window.location.search);
+        const usuarioId = urlParams.get('id');
 
-        let pets = JSON.parse(localStorage.getItem("pets")) || [];
+        if (!usuarioId) {
+            alert("Usuário não autenticado. Faça login novamente.");
+            window.location.href = "login.html";
+        }
+
+        // Mantém os links do menu dinâmicos levando o ID junto
+        document.getElementById("linkInicio").href = `tutor.html?id=${usuarioId}`;
+
+        let usuarioLogado = {};
+
+        // Busca os dados do usuário diretamente do Banco de Dados via API
+        async function carregarDadosUsuario() {
+            try {
+                const resposta = await fetch(`/usuario/${usuarioId}`);
+                const dados = await resposta.json();
+
+                if (!resposta.ok) {
+                    alert(dados.erro || "Sessão inválida.");
+                    window.location.href = "login.html";
+                    return;
+                }
+
+                usuarioLogado = dados;
+
+                // Preenche o perfil no topo com os dados vindos do banco de dados
+                document.getElementById("nomePerfil").textContent = usuarioLogado.nome;
+
+                const partes = usuarioLogado.nome.trim().split(" ");
+                const iniciais = partes[0].charAt(0) + (partes.length > 1 ? partes[partes.length - 1].charAt(0) : "");
+                document.getElementById("avatarNome").textContent = iniciais.toUpperCase();
+
+                // Carrega os pets vinculados a este usuário do banco
+                mostrarPets();
+            } catch (error) {
+                console.error("Erro ao carregar usuário do BD:", error);
+            }
+        }
 
         function abrirFormulario() {
-
             const formulario = document.getElementById("registerSection");
-
             formulario.classList.add("show");
-
-            formulario.scrollIntoView({
-                behavior: "smooth"
-            });
-
+            formulario.scrollIntoView({ behavior: "smooth" });
         }
 
         function fecharFormulario() {
-
             const formulario = document.getElementById("registerSection");
-
             formulario.classList.remove("show");
-
             document.getElementById("petForm").reset();
-
             document.getElementById("photoPreview").innerHTML = "🐾";
-
         }
 
-        function mostrarPets() {
-
+        async function mostrarPets() {
             const container = document.getElementById("petsContainer");
-
             container.innerHTML = "";
 
-            if (pets.length === 0) {
+            try {
+                const resposta = await fetch(`/api/animais/tutor/${usuarioId}`);
+                const pets = await resposta.json();
 
-                container.innerHTML = `
-                    <div class="empty-pets">
-
-                        <div class="empty-icon">
-                            🐾
-                        </div>
-
-                        <h2>Nenhum pet cadastrado</h2>
-
-                        <p>
-                            Você ainda não possui nenhum pet cadastrado.
-                            Cadastre seu primeiro animal para acompanhar
-                            seus cuidados na VitaMed.
-                        </p>
-
-                        <button
-                            type="button"
-                            class="btn-primary"
-                            onclick="abrirFormulario()">
-                            + Cadastrar meu primeiro pet
-                        </button>
-
-                    </div>
-                `;
-
-                return;
-            }
-
-            pets.forEach(function(pet, index) {
-
-                const imagem = pet.foto
-                    ? `<img src="${pet.foto}" alt="${pet.nome}">`
-                    : "🐾";
-
-                container.innerHTML += `
-                    <div class="pet-card">
-
-                        <div class="pet-image">
-                            ${imagem}
-                        </div>
-
-                        <div class="pet-info">
-
-                            <h3>${pet.nome}</h3>
-
+                if (!Array.isArray(pets) || pets.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-pets">
+                            <div class="empty-icon">🐾</div>
+                            <h2>Nenhum pet cadastrado</h2>
                             <p>
-                                ${pet.animal} • ${pet.raca}
+                                Você ainda não possui nenhum pet cadastrado.
+                                Cadastre seu primeiro animal para acompanhar
+                                seus cuidados na VitaMed.
                             </p>
-
-                            <span>
-                                ${pet.sexo} • ${pet.idade} ano(s) • ${pet.peso} kg
-                            </span>
-
-                            ${
-                                pet.observacoes
-                                ? `<small>${pet.observacoes}</small>`
-                                : ""
-                            }
-
+                            <button type="button" class="btn-primary" onclick="abrirFormulario()">
+                                + Cadastrar meu primeiro pet
+                            </button>
                         </div>
+                    `;
+                    return;
+                }
 
-                        <button
-                            type="button"
-                            class="btn-excluir"
-                            onclick="excluirPet(${index})">
-                            Excluir
-                        </button>
-
-                    </div>
-                `;
-
-            });
-
+                pets.forEach(function(pet) {
+                    container.innerHTML += `
+                        <div class="pet-card">
+                            <div class="pet-image">
+                                🐾
+                            </div>
+                            <div class="pet-info">
+                                <h3>${pet.nome}</h3>
+                                <p>${pet.especie} • ${pet.raca}</p>
+                                <span>${pet.sexo} • ${pet.idade} ano(s) • ${pet.peso} kg</span>
+                            </div>
+                            <button type="button" class="btn-excluir" onclick="excluirPet(${pet.id})">
+                                Excluir
+                            </button>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                console.error("Erro ao carregar pets:", error);
+            }
         }
 
         document.getElementById("fotoPet").addEventListener("change", function(event) {
-
             const arquivo = event.target.files[0];
-
             if (!arquivo) {
                 document.getElementById("photoPreview").innerHTML = "🐾";
                 return;
             }
 
             const reader = new FileReader();
-
             reader.onload = function(e) {
-
                 document.getElementById("photoPreview").innerHTML = `
-                    <img
-                        src="${e.target.result}"
-                        alt="Foto do pet">
+                    <img src="${e.target.result}" alt="Foto do pet">
                 `;
-
             };
-
             reader.readAsDataURL(arquivo);
-
         });
 
-        document.getElementById("petForm").addEventListener("submit", function(event) {
-
+        document.getElementById("petForm").addEventListener("submit", async function(event) {
             event.preventDefault();
 
-            const nome = document.getElementById("nomePet").value;
-            const animal = document.getElementById("animal").value;
-            const raca = document.getElementById("raca").value;
-            const sexo = document.getElementById("sexo").value;
-            const idade = document.getElementById("idade").value;
-            const peso = document.getElementById("peso").value;
-            const observacoes = document.getElementById("observacoes").value;
-            const arquivo = document.getElementById("fotoPet").files[0];
+            const novoPet = {
+                usuario_id: usuarioId,
+                nome: document.getElementById("nomePet").value,
+                especie: document.getElementById("animal").value,
+                raca: document.getElementById("raca").value,
+                sexo: document.getElementById("sexo").value,
+                idade: document.getElementById("idade").value,
+                peso: document.getElementById("peso").value,
+                status_atual: 'Ativo'
+            };
 
-            function salvarPet(foto) {
+            try {
+                const resposta = await fetch('/api/animais', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(novoPet)
+                });
 
-                const pet = {
-                    nome: nome,
-                    animal: animal,
-                    raca: raca,
-                    sexo: sexo,
-                    idade: idade,
-                    peso: peso,
-                    observacoes: observacoes,
-                    foto: foto
-                };
+                const resultado = await resposta.json();
 
-                pets.push(pet);
-
-                localStorage.setItem(
-                    "pets",
-                    JSON.stringify(pets)
-                );
-
-                fecharFormulario();
-
-                mostrarPets();
-
-                alert("Pet cadastrado com sucesso!");
-
+                if (resposta.ok) {
+                    alert("Pet cadastrado com sucesso no banco de dados!");
+                    fecharFormulario();
+                    mostrarPets();
+                } else {
+                    alert("Erro ao cadastrar: " + resultado.erro);
+                }
+            } catch (error) {
+                console.error("Erro na requisição:", error);
+                alert("Erro de conexão com o servidor.");
             }
-
-            if (arquivo) {
-
-                const reader = new FileReader();
-
-                reader.onload = function(e) {
-                    salvarPet(e.target.result);
-                };
-
-                reader.readAsDataURL(arquivo);
-
-            } else {
-
-                salvarPet("");
-
-            }
-
         });
 
-        function excluirPet(index) {
-
-            const confirmar = confirm(
-                "Tem certeza que deseja excluir este pet?"
-            );
-
+        function excluirPet(id) {
+            const confirmar = confirm("Tem certeza que deseja excluir este pet?");
             if (!confirmar) {
                 return;
             }
-
-            pets.splice(index, 1);
-
-            localStorage.setItem(
-                "pets",
-                JSON.stringify(pets)
-            );
-
-            mostrarPets();
-
+            alert("ID do pet selecionado para exclusão: " + id);
         }
 
-        const tutor = JSON.parse(
-            localStorage.getItem("tutor")
-        );
-
-        if (tutor && tutor.nome) {
-
-            document.getElementById("nomePerfil").textContent =
-                tutor.nome;
-
-            const partes = tutor.nome.trim().split(" ");
-
-            const iniciais =
-                partes[0].charAt(0) +
-                (partes.length > 1
-                    ? partes[partes.length - 1].charAt(0)
-                    : "");
-
-            document.getElementById("avatarNome").textContent =
-                iniciais.toUpperCase();
-
-        }
-
-        mostrarPets();
-
+        // Inicia a aplicação buscando os dados do usuário no Banco de Dados
+        carregarDadosUsuario();
     </script>
 
 </body>

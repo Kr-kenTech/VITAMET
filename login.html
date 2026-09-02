@@ -42,7 +42,7 @@
 
             <p>Não possui uma conta?</p>
 
-            <a href="cadastro.html" class="criar">
+            <a href="/cadastro.html" class="criar">
                 Criar conta de tutor
             </a>
 
@@ -56,7 +56,7 @@
 
     <script>
         async function entrar() {
-            let email = document.getElementById("email").value;
+            let email = document.getElementById("email").value.trim();
             let senha = document.getElementById("senha").value;
 
             if (!email || !senha) {
@@ -74,13 +74,17 @@
                 let resultado = await resposta.json();
 
                 if (resposta.ok) {
-                    alert(resultado.mensagem);
-                    sessionStorage.setItem("usuario", JSON.stringify(resultado.usuario));
-                    window.location.href = "/tutor.html";
+                    // Removemos o alert para evitar bloqueios de redirecionamento no navegador
+                    console.log(resultado.mensagem);
+                    
+                    // Pega o ID que veio do banco e direciona para o painel do tutor
+                    const usuarioId = resultado.usuario.id;
+                    window.location.href = `/tutor.html?id=${usuarioId}`;
                 } else {
                     alert(resultado.erro || "E-mail ou senha incorretos!");
                 }
             } catch (error) {
+                console.error("Erro no login:", error);
                 alert("Erro de conexão com o servidor.");
             }
         }
