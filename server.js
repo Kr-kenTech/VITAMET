@@ -271,6 +271,28 @@ app.get('/api/agendamentos/tutor/:usuarioId', (req, res) => {
     });
 });
 
+app.post('/api/consultas', (req, res) => {
+    const { animal_id, veterinario_id, data, hora, tipo, status, observacoes } = req.body;
+
+    if (!animal_id || !data || !hora || !tipo) {
+        return res.status(400).json({ erro: 'Preencha todos os campos obrigatórios do agendamento.' });
+    }
+
+    // Altere para 'consultas' ou 'consulta' conforme o nome real da tabela no seu MySQL
+    const query = `INSERT INTO consultas (animal_id, veterinario_id, data, hora, tipo, status, observacoes) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+    const vetId = veterinario_id || 1; 
+    const statusConsulta = status || 'Agendado';
+    const obsText = observacoes || '';
+
+    connection.query(query, [animal_id, vetId, data, hora, tipo, statusConsulta, obsText], (err, results) => {
+        if (err) {
+            console.error("Erro detalhado ao salvar consulta no MySQL:", err);
+            return res.status(500).json({ erro: 'Erro ao salvar agendamento no banco.' });
+        }
+        return res.status(201).json({ mensagem: 'Consulta agendada com sucesso!', id: results.insertId });
+    });
+});
+
 app.listen(3000, () => {
     console.log('Servidor rodando na porta 3000 em http://localhost:3000');
 });

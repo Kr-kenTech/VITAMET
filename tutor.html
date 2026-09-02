@@ -32,7 +32,7 @@
                     Início
                 </a>
 
-                <a href="#pets" class="menu-item">
+                <a href="#pets" class="menu-item" id="linkPets">
                     <span>🐾</span>
                     Meus Pets
                 </a>
@@ -42,22 +42,22 @@
                     Agendamento
                 </a>
 
-                <a href="#" class="menu-item">
+                <a href="#" class="menu-item" id="linkConsultas">
                     <span>📋</span>
                     Consultas
                 </a>
 
-                <a href="#" class="menu-item">
+                <a href="#" class="menu-item" id="linkComunidade">
                     <span>👥</span>
                     Comunidade
                 </a>
 
-                <a href="#" class="menu-item">
+                <a href="#" class="menu-item" id="linkPerfil">
                     <span>👤</span>
                     Meu Perfil
                 </a>
 
-                <a href="#" class="menu-item">
+                <a href="#" class="menu-item" id="linkConfiguracoes">
                     <span>⚙️</span>
                     Configurações
                 </a>
@@ -377,6 +377,12 @@
 
         // Mantém os links do menu dinâmicos levando o ID junto
         document.getElementById("linkInicio").href = `tutor.html?id=${usuarioId}`;
+        document.getElementById("linkPets").href = `tutor.html?id=${usuarioId}`;
+        document.getElementById("linkAgendamento").href = `agendamento.html?id=${usuarioId}`;
+        document.getElementById("linkConsultas").href = `consultas.html?id=${usuarioId}`;
+        document.getElementById("linkComunidade").href = `comunidade.html?id=${usuarioId}`; // Crie a página se precisar
+        document.getElementById("linkPerfil").href = `perfil.html?id=${usuarioId}`; // Crie a página se precisar
+        document.getElementById("linkConfiguracoes").href = `configuracoes.html?id=${usuarioId}`; // Crie a página se precisar
 
         let usuarioLogado = {};
 
