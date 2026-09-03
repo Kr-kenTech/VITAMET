@@ -22,22 +22,22 @@
 
         <nav class="menu">
 
-            <a href="tutor.html" class="menu-item">
+            <a href="tutor.html" id="menuInicio" class="menu-item">
                 <span>🏠</span>
                 Início
             </a>
 
-            <a href="tutor.html#pets" class="menu-item">
+            <a href="tutor.html#pets" id="menuPets" class="menu-item">
                 <span>🐾</span>
                 Meus Pets
             </a>
 
-            <a href="agendamentos.html" class="menu-item">
+            <a href="agendamento.html" id="menuAgendamento" class="menu-item">
                 <span>📅</span>
                 Agendamento
             </a>
 
-            <a href="consultas.html" class="menu-item active">
+            <a href="consultas.html" id="menuConsultas" class="menu-item active">
                 <span>📋</span>
                 Consultas
             </a>
@@ -92,7 +92,7 @@
                     <p>Acompanhe as consultas e os gastos do seu pet.</p>
                 </div>
 
-                <a href="agendamento.html" class="btn-primary">
+                <a href="agendamento.html" id="btnNovaConsulta" class="btn-primary">
                     + Nova consulta
                 </a>
             </div>
@@ -183,7 +183,6 @@
     </main>
 
     <script>
-
         const tutor = JSON.parse(localStorage.getItem("tutor"));
 
         if (tutor && tutor.nome) {
@@ -199,8 +198,6 @@
             document.getElementById("avatarNome").textContent = iniciais.toUpperCase();
         }
 
-        const agendamentos = JSON.parse(localStorage.getItem("agendamentos")) || [];
-
         const proximasConsultas = document.getElementById("proximasConsultas");
         const historicoConsultas = document.getElementById("historicoConsultas");
 
@@ -213,55 +210,50 @@
         const hoje = new Date();
         hoje.setHours(0, 0, 0, 0);
 
+        // Captura o ID da URL atual
+        const urlParams = new URLSearchParams(window.location.search);
+        const usuarioId = urlParams.get('id');
+
+        if (usuarioId) {
+            const btnNovaConsulta = document.getElementById("btnNovaConsulta");
+            if (btnNovaConsulta) btnNovaConsulta.href = `agendamento.html?id=${usuarioId}`;
+
+            const menuInicio = document.getElementById("menuInicio");
+            if (menuInicio) menuInicio.href = `tutor.html?id=${usuarioId}`;
+
+            const menuPets = document.getElementById("menuPets");
+            if (menuPets) menuPets.href = `tutor.html?id=${usuarioId}#pets`;
+
+            const menuAgendamento = document.getElementById("menuAgendamento");
+            if (menuAgendamento) menuAgendamento.href = `agendamento.html?id=${usuarioId}`;
+
+            const menuConsultas = document.getElementById("menuConsultas");
+            if (menuConsultas) menuConsultas.href = `consultas.html?id=${usuarioId}`;
+        }
+
         function formatarData(data) {
             if (!data) return "-";
-
-            const partes = data.split("-");
-
-            if (partes.length !== 3) {
-                return data;
-            }
-
+            // Pega apenas os primeiros 10 caracteres da data (YYYY-MM-DD), ignorando a parte do horário UTC do banco
+            const dataLimpa = data.split('T')[0];
+            const partes = dataLimpa.split("-");
+            if (partes.length !== 3) return data;
             return `${partes[2]}/${partes[1]}/${partes[0]}`;
         }
 
-        function formatarValor(valor) {
-            const numero = Number(valor) || 0;
-
-            return numero.toLocaleString("pt-BR", {
-                style: "currency",
-                currency: "BRL"
-            });
-        }
-
-        function obterValor(agendamento) {
-            if (agendamento.valor !== undefined) {
-                return Number(agendamento.valor) || 0;
-            }
-
-            if (agendamento.preco !== undefined) {
-                return Number(agendamento.preco) || 0;
-            }
-
-            return 0;
-        }
-
         function criarConsulta(agendamento, passada) {
-
             const valor = obterValor(agendamento);
-
             const card = document.createElement("div");
             card.className = "consulta-card";
 
             card.innerHTML = `
                 <div class="data-card">
                     <span>${formatarData(agendamento.data)}</span>
-                    <strong>${agendamento.horario || "--:--"}</strong>
+                    <strong>${agendamento.horario ? agendamento.horario.substring(0, 5) : "--:--"}</strong>
                 </div>
 
                 <div class="consulta-info">
                     <div class="consulta-topo">
-                        <h3>${agendamento.servico || "Consulta veterinária"}</h3>
+                        <h3>${agendamento.servico || agendamento.tipo || "Consulta veterinária"}</h3>
                         <span class="${passada ? "status concluida" : "status agendada"}">
                             ${passada ? "Concluída" : "Agendada"}
                         </span>
@@ -269,11 +261,7 @@
 
                     <p>🐾 ${agendamento.pet || "Meu pet"}</p>
 
-                    ${
-                        agendamento.observacoes
-                        ? `<small>${agendamento.observacoes}</small>`
-                        : ""
-                    }
+                    ${agendamento.observacoes ? `<small>${agendamento.observacoes}</small>` : ""}
                 </div>
 
                 <div class="consulta-valor">
@@ -285,87 +273,89 @@
             return card;
         }
 
-        function mostrarVazio(elemento, mensagem, botao) {
+        function formatarValor(valor) {
+            const numero = Number(valor) || 0;
+            return numero.toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL"
+            });
+        }
 
+        function obterValor(agendamento) {
+            return Number(agendamento.valor || agendamento.preco) || 0;
+        }
+
+        function mostrarVazio(elemento, mensagem, botao) {
             elemento.innerHTML = `
                 <div class="empty-consultas">
                     <div class="empty-icon">📋</div>
                     <h3>${mensagem}</h3>
                     <p>Quando houver consultas registradas, elas aparecerão aqui.</p>
-                    ${
-                        botao
-                        ? `<a href="agendamento.html" class="btn-secondary">Agendar consulta</a>`
-                        : ""
-                    }
+                    ${botao ? `<a href="agendamento.html${usuarioId ? '?id=' + usuarioId : ''}" class="btn-secondary">Agendar consulta</a>` : ""}
                 </div>
             `;
         }
 
-        agendamentos.forEach(agendamento => {
+        // Busca os agendamentos direto do servidor Node.js (Banco de Dados)
+        async function carregarConsultasDoBanco() {
+            if (!usuarioId) return;
 
-            const valor = obterValor(agendamento);
-            const servico = (agendamento.servico || "").toLowerCase();
+            try {
+                const resposta = await fetch(`/api/agendamentos/tutor/${usuarioId}`);
+                if (!resposta.ok) throw new Error('Erro ao buscar consultas');
 
-            totalGasto += valor;
+                const agendamentos = await resposta.json();
 
-            if (servico.includes("consulta")) {
-                gastoConsultas += valor;
-            } else if (servico.includes("vacina")) {
-                gastoVacinas += valor;
-            } else if (servico.includes("exame")) {
-                gastoExames += valor;
-            } else if (
-                servico.includes("higiene") ||
-                servico.includes("cuidado")
-            ) {
-                gastoHigiene += valor;
+                proximasConsultas.innerHTML = "";
+                historicoConsultas.innerHTML = "";
+
+                agendamentos.forEach(agendamento => {
+                    const valor = obterValor(agendamento);
+                    const servico = (agendamento.servico || agendamento.tipo || "").toLowerCase();
+
+                    totalGasto += valor;
+
+                    if (servico.includes("consulta")) {
+                        gastoConsultas += valor;
+                    } else if (servico.includes("vacina")) {
+                        gastoVacinas += valor;
+                    } else if (servico.includes("exame")) {
+                        gastoExames += valor;
+                    } else if (servico.includes("higiene") || servico.includes("cuidado")) {
+                        gastoHigiene += valor;
+                    }
+
+                    // Trata a data para comparação
+                    const dataFormatada = agendamento.data ? agendamento.data.split('T')[0] : "";
+                    const dataConsulta = new Date(dataFormatada + "T00:00:00");
+
+                    if (dataConsulta >= hoje) {
+                        proximasConsultas.appendChild(criarConsulta(agendamento, false));
+                    } else {
+                        historicoConsultas.appendChild(criarConsulta(agendamento, true));
+                    }
+                });
+
+                if (!proximasConsultas.children.length) {
+                    mostrarVazio(proximasConsultas, "Nenhuma consulta próxima", true);
+                }
+
+                if (!historicoConsultas.children.length) {
+                    mostrarVazio(historicoConsultas, "Nenhuma consulta no histórico", false);
+                }
+
+                document.getElementById("totalGasto").textContent = formatarValor(totalGasto);
+                document.getElementById("gastoConsultas").textContent = formatarValor(gastoConsultas);
+                document.getElementById("gastoVacinas").textContent = formatarValor(gastoVacinas);
+                document.getElementById("gastoExames").textContent = formatarValor(gastoExames);
+                document.getElementById("gastoHigiene").textContent = formatarValor(gastoHigiene);
+
+            } catch (erro) {
+                console.error("Erro ao carregar agendamentos:", erro);
             }
-
-            const dataConsulta = new Date(agendamento.data + "T00:00:00");
-
-            if (dataConsulta >= hoje) {
-                proximasConsultas.appendChild(
-                    criarConsulta(agendamento, false)
-                );
-            } else {
-                historicoConsultas.appendChild(
-                    criarConsulta(agendamento, true)
-                );
-            }
-
-        });
-
-        if (!proximasConsultas.children.length) {
-            mostrarVazio(
-                proximasConsultas,
-                "Nenhuma consulta próxima",
-                true
-            );
         }
 
-        if (!historicoConsultas.children.length) {
-            mostrarVazio(
-                historicoConsultas,
-                "Nenhuma consulta no histórico",
-                false
-            );
-        }
-
-        document.getElementById("totalGasto").textContent =
-            formatarValor(totalGasto);
-
-        document.getElementById("gastoConsultas").textContent =
-            formatarValor(gastoConsultas);
-
-        document.getElementById("gastoVacinas").textContent =
-            formatarValor(gastoVacinas);
-
-        document.getElementById("gastoExames").textContent =
-            formatarValor(gastoExames);
-
-        document.getElementById("gastoHigiene").textContent =
-            formatarValor(gastoHigiene);
-
+        carregarConsultasDoBanco();
     </script>
 
 </body>

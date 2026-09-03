@@ -529,13 +529,30 @@
             }
         });
 
-        function excluirPet(id) {
-            const confirmar = confirm("Tem certeza que deseja excluir este pet?");
-            if (!confirmar) {
-                return;
-            }
-            alert("ID do pet selecionado para exclusão: " + id);
+        async function excluirPet(id) {
+    const confirmar = confirm("Tem certeza que deseja excluir este pet?");
+    if (!confirmar) {
+        return;
+    }
+
+    try {
+        const resposta = await fetch(`/api/animais/${id}`, {
+            method: 'DELETE'
+        });
+
+        const resultado = await resposta.json();
+
+        if (resposta.ok) {
+            alert("Animal excluído com sucesso!");
+            mostrarPets(); // Atualiza a lista na tela
+        } else {
+            alert("Erro ao excluir: " + (resultado.erro || "Erro desconhecido."));
         }
+    } catch (error) {
+        console.error("Erro na requisição de exclusão:", error);
+        alert("Erro de conexão com o servidor.");
+    }
+}
 
         // Inicia a aplicação buscando os dados do usuário no Banco de Dados
         carregarDadosUsuario();

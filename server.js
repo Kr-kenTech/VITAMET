@@ -209,12 +209,7 @@ app.post('/api/animais', (req, res) => {
 app.get('/api/animais/tutor/:usuarioId', (req, res) => {
     const { usuarioId } = req.params;
 
-    const query = `
-        SELECT a.id, a.nome, a.especie, a.raca, a.idade, a.sexo, a.peso, a.status_atual
-        FROM animal a
-        JOIN tutor t ON a.tutor_id = t.id
-        WHERE t.usuario_id = ?
-    `;
+    const query = "SELECT a.id, a.nome, a.especie, a.raca, a.idade, a.sexo, a.peso, a.status_atual FROM animal a JOIN tutor t ON a.tutor_id = t.id WHERE t.usuario_id = ?";
 
     connection.query(query, [usuarioId], (err, results) => {
         if (err) {
@@ -229,24 +224,72 @@ app.get('/api/animais/tutor/:usuarioId', (req, res) => {
 // ROTAS DE AGENDAMENTOS E CONSULTAS
 // ==========================================
 
-// Cadastrar nova consulta
+// Cadastrar nova consulta / agendamento básico
 app.post('/api/agendamentos', (req, res) => {
-    const { animal_id, veterinario_id, data, hora, tipo, status } = req.body;
+    const { animal_id, data, hora, tipo, observacoes } = req.body;
 
     if (!animal_id || !data || !hora || !tipo) {
         return res.status(400).json({ erro: 'Preencha todos os campos obrigatórios do agendamento.' });
     }
 
-    const query = `INSERT INTO consulta (animal_id, veterinario_id, data, hora, tipo, status) VALUES (?, ?, ?, ?, ?, ?)`;
-    const vetId = veterinario_id || 1; 
-    const statusConsulta = status || 'Agendado';
+    // Buscamos o usuário através do tutor vinculado ao pet
+    const queryTutorPet = `
+        SELECT t.usuario_id 
+        FROM animal a 
+        JOIN tutor t ON a.tutor_id = t.id 
+        WHERE a.id = ?
+    `;
 
-    connection.query(query, [animal_id, vetId, data, hora, tipo, statusConsulta], (err, results) => {
-        if (err) {
-            console.error("Erro ao salvar consulta:", err);
-            return res.status(500).json({ erro: 'Erro ao salvar agendamento no banco.' });
+    connection.query(queryTutorPet, [animal_id], (err, resultsPet) => {
+        if (err || resultsPet.length === 0) {
+            return res.status(404).json({ erro: 'Pet ou tutor não encontrado.' });
         }
-        return res.status(201).json({ mensagem: 'Consulta agendada com sucesso!', id: results.insertId });
+
+        const usuarioId = resultsPet[0].usuario_id;
+        const obsText = observacoes || '';
+        const queryInsert = "INSERT INTO consultas (tutor_id, pet_id, servico, data, horario, observacoes) VALUES (?, ?, ?, ?, ?, ?)";
+
+        connection.query(queryInsert, [usuarioId, animal_id, tipo, data, hora, obsText], (errInsert, results) => {
+            if (errInsert) {
+                console.error("Erro ao salvar consulta:", errInsert);
+                return res.status(500).json({ erro: 'Erro ao salvar agendamento no banco.' });
+            }
+            return res.status(201).json({ mensagem: 'Consulta agendada com sucesso!', id: results.insertId });
+        });
+    });
+});
+
+// Cadastrar nova consulta completa
+app.post('/api/consultas', (req, res) => {
+    const { animal_id, data, hora, tipo, observacoes } = req.body;
+
+    if (!animal_id || !data || !hora || !tipo) {
+        return res.status(400).json({ erro: 'Preencha todos os campos obrigatórios do agendamento.' });
+    }
+
+    const queryTutorPet = `
+        SELECT t.usuario_id 
+        FROM animal a 
+        JOIN tutor t ON a.tutor_id = t.id 
+        WHERE a.id = ?
+    `;
+
+    connection.query(queryTutorPet, [animal_id], (err, resultsPet) => {
+        if (err || resultsPet.length === 0) {
+            return res.status(404).json({ erro: 'Pet ou tutor não encontrado.' });
+        }
+
+        const usuarioId = resultsPet[0].usuario_id;
+        const obsText = observacoes || '';
+        const queryInsert = "INSERT INTO consultas (tutor_id, pet_id, servico, data, horario, observacoes) VALUES (?, ?, ?, ?, ?, ?)";
+
+        connection.query(queryInsert, [usuarioId, animal_id, tipo, data, hora, obsText], (errInsert, results) => {
+            if (errInsert) {
+                console.error("Erro detalhado ao salvar consulta no MySQL:", errInsert);
+                return res.status(500).json({ erro: 'Erro ao salvar agendamento no banco.' });
+            }
+            return res.status(201).json({ mensagem: 'Consulta agendada com sucesso!', id: results.insertId });
+        });
     });
 });
 
@@ -255,11 +298,10 @@ app.get('/api/agendamentos/tutor/:usuarioId', (req, res) => {
     const { usuarioId } = req.params;
 
     const query = `
-        SELECT c.id, a.nome AS pet, c.tipo AS servico, c.data, c.hora, c.status 
-        FROM consulta c
-        JOIN animal a ON c.animal_id = a.id
-        JOIN tutor t ON a.tutor_id = t.id
-        WHERE t.usuario_id = ?
+        SELECT c.id, a.nome AS pet, c.servico, c.data, c.horario, c.observacoes, 'Agendado' AS status 
+        FROM consultas c 
+        JOIN animal a ON c.pet_id = a.id 
+        WHERE c.tutor_id = ?
     `;
 
     connection.query(query, [usuarioId], (err, results) => {
@@ -271,25 +313,22 @@ app.get('/api/agendamentos/tutor/:usuarioId', (req, res) => {
     });
 });
 
-app.post('/api/consultas', (req, res) => {
-    const { animal_id, veterinario_id, data, hora, tipo, status, observacoes } = req.body;
+// Rota para excluir um animal pelo ID
+app.delete('/api/animais/:id', (req, res) => {
+    const { id } = req.params;
+    const query = 'DELETE FROM animal WHERE id = ?';
 
-    if (!animal_id || !data || !hora || !tipo) {
-        return res.status(400).json({ erro: 'Preencha todos os campos obrigatórios do agendamento.' });
-    }
-
-    // Altere para 'consultas' ou 'consulta' conforme o nome real da tabela no seu MySQL
-    const query = `INSERT INTO consultas (animal_id, veterinario_id, data, hora, tipo, status, observacoes) VALUES (?, ?, ?, ?, ?, ?, ?)`;
-    const vetId = veterinario_id || 1; 
-    const statusConsulta = status || 'Agendado';
-    const obsText = observacoes || '';
-
-    connection.query(query, [animal_id, vetId, data, hora, tipo, statusConsulta, obsText], (err, results) => {
+    connection.query(query, [id], (err, results) => {
         if (err) {
-            console.error("Erro detalhado ao salvar consulta no MySQL:", err);
-            return res.status(500).json({ erro: 'Erro ao salvar agendamento no banco.' });
+            console.error("Erro ao excluir animal:", err);
+            return res.status(500).json({ erro: 'Erro ao excluir o animal do banco de dados.' });
         }
-        return res.status(201).json({ mensagem: 'Consulta agendada com sucesso!', id: results.insertId });
+
+        if (results.affectedRows === 0) {
+            return res.status(404).json({ erro: 'Animal não encontrado.' });
+        }
+
+        return res.status(200).json({ mensagem: 'Animal excluído com sucesso!' });
     });
 });
 
