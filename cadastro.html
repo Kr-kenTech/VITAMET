@@ -112,7 +112,6 @@
             }
         });
 
-
         async function cadastrar() {
             let nome = document.getElementById("nome").value;
             let cpf = document.getElementById("cpf").value;
@@ -183,6 +182,19 @@
    
         this.value = this.value.replace(/[^a-zA-ZáàâãéêíóôõúçÁÀÂÃÉÊÍÓÔÕÚÇ\s]/g, '');
     });
+
+    function validar(event) {
+      event.preventDefault();
+      
+      const email = event.target.querySelector('input').value;
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (regex.test(email)) {
+        alert("E-mail válido!");
+      } else {
+        alert("E-mail inválido! Use @ e um domínio (ex: .com).");
+      }
+    }
 
     </script>
 </body>
