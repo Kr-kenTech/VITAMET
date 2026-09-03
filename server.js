@@ -312,6 +312,63 @@ app.get('/api/agendamentos/tutor/:usuarioId', (req, res) => {
     });
 });
 
+// Listar todas as publicações
+app.get('/api/publicacoes', (req, res) => {
+    const query = "SELECT * FROM publicacoes ORDER BY data DESC";
+    connection.query(query, (err, results) => {
+        if (err) {
+            console.error("Erro ao buscar publicações:", err);
+            return res.status(500).json({ erro: 'Erro interno no servidor.' });
+        }
+        res.status(200).json(results);
+    });
+});
+
+// Criar nova publicação
+app.post('/api/publicacoes', (req, res) => {
+    const { autor, iniciais, texto, categoria } = req.body;
+    const query = "INSERT INTO publicacoes (autor, iniciais, texto, categoria, curtidas) VALUES (?, ?, ?, ?, 0)";
+    
+    connection.query(query, [autor, iniciais, texto, categoria], (err, results) => {
+        if (err) {
+            console.error("Erro ao criar publicação:", err);
+            return res.status(500).json({ erro: 'Erro interno no servidor.' });
+        }
+        res.status(201).json({ id: results.insertId, mensagem: 'Publicação criada com sucesso!' });
+    });
+});
+
+// Curtir / Atualizar curtidas
+app.put('/api/publicacoes/:id/curtir', (req, res) => {
+    const { id } = req.params;
+    const { acao } = req.body; // 'incrementar' ou 'decrementar'
+    
+    const incremento = acao === 'decrementar' ? -1 : 1;
+    const query = "UPDATE publicacoes SET curtidas = GREATEST(0, curtidas + ?) WHERE id = ?";
+
+    connection.query(query, [incremento, id], (err, results) => {
+        if (err) {
+            console.error("Erro ao atualizar curtidas:", err);
+            return res.status(500).json({ erro: 'Erro interno no servidor.' });
+        }
+        res.status(200).json({ mensagem: 'Curtida atualizada!' });
+    });
+});
+
+// Excluir publicação
+app.delete('/api/publicacoes/:id', (req, res) => {
+    const { id } = req.params;
+    const query = "DELETE FROM publicacoes WHERE id = ?";
+
+    connection.query(query, [id], (err, results) => {
+        if (err) {
+            console.error("Erro ao excluir publicação:", err);
+            return res.status(500).json({ erro: 'Erro interno no servidor.' });
+        }
+        res.status(200).json({ mensagem: 'Publicação excluída com sucesso!' });
+    });
+});
+
 // Rota para excluir um animal pelo ID
 app.delete('/api/animais/:id', (req, res) => {
     const { id } = req.params;
