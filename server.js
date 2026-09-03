@@ -27,7 +27,6 @@ app.use(express.json());
 // Servir arquivos estáticos da pasta atual
 app.use(express.static(path.join(__dirname)));
 
-// Rotas para as páginas principais
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'login.html'));
 });
