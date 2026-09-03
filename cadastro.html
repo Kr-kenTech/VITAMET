@@ -26,7 +26,7 @@
 
             <input type="text" id="cpf" placeholder="CPF">
 
-            <input type="tel" id="telefone" placeholder="Telefone">
+            <input type="tel" id="telefone" placeholder="Telefone" maxlength="14">
 
             <input type="email" id="email" placeholder="E-mail">
 
@@ -54,7 +54,7 @@
 
         const cpfInput = document.getElementById("cpf");
 
-        // Máscara progressiva do CPF
+        
         cpfInput.addEventListener("input", () => {
             let valor = cpfInput.value.replace(/\D/g, "");
             valor = valor.substring(0, 11);
@@ -66,7 +66,7 @@
             cpfInput.value = valor;
         });
 
-        // Função para calcular os dígitos verificadores
+        
         function validarCPF(cpfValor) {
             cpfValor = cpfValor.replace(/\D/g, "");
 
@@ -97,7 +97,7 @@
             return true;
         }
 
-        // Feedback visual ao sair do campo (blur)
+       
         cpfInput.addEventListener("blur", () => {
             if (cpfInput.value.trim() === "") {
                 cpfInput.style.border = "";
@@ -162,6 +162,28 @@
                 alert("Erro de conexão com o servidor.");
             }
         }
+        const telefone = document.querySelector("#telefone");
+     
+        telefone.addEventListener('input', (event) => {
+            let valor = event.target.value;
+
+        
+            valor = valor.replace(/\D/g, "");
+
+            
+            valor = valor.replace(/^(\d{2})(\d)/g, "($1) $2");
+            valor = valor.replace(/(\d{5})(\d)/, "$1-$2");   
+
+           
+            event.target.value = valor;
+        });
+
+        const campo = document.getElementById('nome');
+        campo.addEventListener('input', function() {
+   
+        this.value = this.value.replace(/[^a-zA-ZáàâãéêíóôõúçÁÀÂÃÉÊÍÓÔÕÚÇ\s]/g, '');
+    });
+
     </script>
 </body>
 
