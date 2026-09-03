@@ -26,10 +26,6 @@ textarea {
     font-family: Arial, Helvetica, sans-serif;
 }
 
-.layout {
-    min-height: 100vh;
-}
-
 .sidebar {
     position: fixed;
     left: 0;
@@ -283,153 +279,158 @@ textarea {
     font-size: 14px;
 }
 
-.btn-primary {
-    min-height: 44px;
-    padding: 0 20px;
-    border: 2px solid #8ed8f8;
-    border-radius: 25px;
-    background: #8ed8f8;
-    color: #17445c;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: .3s;
-}
-
-.btn-primary:hover {
-    transform: translateY(-3px);
-    background: #55a9cc;
-    border-color: #55a9cc;
-    color: white;
-}
-
-.empty-state {
-    min-height: 330px;
+.profile-card {
     background: white;
     border: 1px solid #d9eef7;
     border-radius: 16px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 40px;
+    padding: 30px;
 }
 
-.empty-icon {
-    width: 68px;
-    height: 68px;
+.profile-top {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.profile-avatar {
+    width: 76px;
+    height: 76px;
     border-radius: 50%;
     background: #e8f8ff;
+    color: #397a99;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 28px;
-    margin-bottom: 18px;
-}
-
-.empty-state h2 {
     font-size: 20px;
+    font-weight: bold;
+}
+
+.profile-name h2 {
     color: #28556b;
+    font-size: 22px;
 }
 
-.empty-state p {
-    max-width: 470px;
-    margin: 10px 0 22px;
+.profile-name p {
+    margin-top: 5px;
     color: #607d8b;
-    font-size: 13px;
-    line-height: 1.6;
+    font-size: 12px;
 }
 
-.appointments-list {
+.profile-divider {
+    height: 1px;
+    background: #e8f8ff;
+    margin: 28px 0;
+}
+
+.profile-section {
+    width: 100%;
+}
+
+.section-title h3 {
+    color: #28556b;
+    font-size: 17px;
+}
+
+.section-title p {
+    margin-top: 5px;
+    color: #607d8b;
+    font-size: 12px;
+}
+
+.profile-grid {
+    margin-top: 22px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.profile-field {
+    min-height: 72px;
+    padding: 15px;
+    background: #fafdff;
+    border: 1px solid #d9eef7;
+    border-radius: 10px;
+}
+
+.profile-field label {
+    display: block;
+    color: #607d8b;
+    font-size: 11px;
+    margin-bottom: 8px;
+}
+
+.field-value {
+    color: #28556b;
+    font-size: 13px;
+    font-weight: bold;
+    word-break: break-word;
+}
+
+.account-options {
+    margin-top: 22px;
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 12px;
 }
 
-.appointment-card {
-    min-height: 105px;
-    padding: 18px 22px;
-    background: white;
+.account-item {
+    min-height: 68px;
+    padding: 13px 15px;
     border: 1px solid #d9eef7;
-    border-radius: 14px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
-    gap: 20px;
-    transition: .3s;
+    gap: 13px;
 }
 
-.appointment-card:hover {
-    border-color: #8ed8f8;
-    transform: translateY(-2px);
-}
-
-.appointment-date {
-    width: 68px;
-    height: 68px;
-    border-radius: 12px;
+.account-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
     background: #e8f8ff;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
 }
 
-.appointment-date strong {
-    font-size: 22px;
-    color: #28556b;
-}
-
-.appointment-date span {
-    margin-top: 3px;
-    color: #55a9cc;
-    font-size: 10px;
-    font-weight: bold;
-}
-
-.appointment-info {
+.account-item > div:nth-child(2) {
     flex: 1;
 }
 
-.appointment-info h3 {
-    color: #28556b;
-    font-size: 16px;
-}
-
-.appointment-info p {
-    margin-top: 5px;
-    color: #397a99;
-    font-size: 13px;
-    font-weight: bold;
-}
-
-.appointment-info span {
+.account-item strong {
     display: block;
-    margin-top: 5px;
+    color: #28556b;
+    font-size: 13px;
+}
+
+.account-item span {
+    display: block;
+    margin-top: 4px;
     color: #607d8b;
     font-size: 11px;
 }
 
-.appointment-time {
-    min-width: 80px;
-    text-align: right;
+.option-button {
+    min-height: 34px;
+    padding: 0 15px;
+    border: 1px solid #cdeefa;
+    border-radius: 18px;
+    background: #e8f8ff;
+    color: #397a99;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: .3s;
 }
 
-.appointment-time strong {
-    display: block;
-    color: #28556b;
-    font-size: 16px;
-}
-
-.appointment-time span {
-    display: block;
-    margin-top: 5px;
-    color: #55a9cc;
-    font-size: 10px;
+.option-button:hover {
+    background: #8ed8f8;
+    border-color: #8ed8f8;
+    color: #17445c;
 }
 
 @media (max-width: 1100px) {
@@ -474,12 +475,12 @@ textarea {
         gap: 18px;
     }
 
-    .page-header .btn-primary {
-        width: 100%;
+    .profile-card {
+        padding: 22px;
     }
 
-    .appointment-card {
-        align-items: flex-start;
+    .profile-grid {
+        grid-template-columns: 1fr;
     }
 }
 
@@ -489,19 +490,30 @@ textarea {
         font-size: 26px;
     }
 
-    .appointment-card {
+    .profile-card {
+        padding: 18px;
+    }
+
+    .profile-top {
+        align-items: flex-start;
+    }
+
+    .profile-avatar {
+        width: 64px;
+        height: 64px;
+    }
+
+    .profile-name h2 {
+        font-size: 18px;
+    }
+
+    .account-item {
+        align-items: flex-start;
         flex-wrap: wrap;
-        padding: 16px;
     }
 
-    .appointment-info {
-        min-width: calc(100% - 88px);
-    }
-
-    .appointment-time {
-        width: 100%;
-        text-align: left;
-        padding-left: 88px;
+    .option-button {
+        margin-left: 51px;
     }
 }
 
@@ -517,14 +529,5 @@ textarea {
 
     .content {
         padding: 20px 15px;
-    }
-
-    .empty-state {
-        padding: 30px 20px;
-    }
-
-    .appointment-date {
-        width: 60px;
-        height: 60px;
     }
 }

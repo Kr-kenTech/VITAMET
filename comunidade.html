@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comunidade | VITAMET</title>
+    <link rel="stylesheet" href="comunidade.css">
+</head>
+<body>
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <div class="logo-icon">
+                <img src="foto.jpeg" alt="VITAMET">
+            </div>
+
+            <div>
+                <h2>Vita<span>Met</span></h2>
+                <p>Clínica Veterinária</p>
+            </div>
+        </div>
+
+        <nav class="menu">
+
+            <a href="tutor.html" class="menu-item">
+                <span>🏠</span>
+                Início
+            </a>
+
+            <a href="tutor.html#pets" class="menu-item">
+                <span>🐾</span>
+                Meus Pets
+            </a>
+
+            <a href="agendamentos.html" class="menu-item">
+                <span>📅</span>
+                Agendamento
+            </a>
+
+            <a href="consultas.html" class="menu-item">
+                <span>📋</span>
+                Consultas
+            </a>
+
+            <a href="comunidade.html" class="menu-item active">
+                <span>👥</span>
+                Comunidade
+            </a>
+
+            <a href="#" class="menu-item">
+                <span>👤</span>
+                Meu Perfil
+            </a>
+
+            <a href="#" class="menu-item">
+                <span>⚙️</span>
+                Configurações
+            </a>
+
+        </nav>
+
+    </aside>
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <div></div>
+
+            <div class="top-user">
+
+                <button class="notification">🔔</button>
+
+                <div class="avatar">
+                    <span id="avatarNome">TU</span>
+                </div>
+
+                <div class="user-info">
+                    <strong id="nomePerfil">Tutor</strong>
+                    <span>Tutor</span>
+                </div>
+
+                <span class="arrow">⌄</span>
+
+            </div>
+
+        </header>
+
+        <section class="content">
+
+            <div class="page-header">
+
+                <div>
+                    <h1>Comunidade</h1>
+                    <p>Compartilhe experiências, dicas e momentos com outros tutores.</p>
+                </div>
+
+            </div>
+
+            <div class="community-layout">
+
+                <section class="feed">
+
+                    <div class="create-card">
+
+                        <div class="create-top">
+
+                            <div class="avatar small">
+                                <span id="avatarCriar">TU</span>
+                            </div>
+
+                            <div>
+                                <strong>Compartilhe algo com a comunidade</strong>
+                                <span>Conte uma experiência ou dê uma dica para outros tutores.</span>
+                            </div>
+
+                        </div>
+
+                        <textarea
+                            id="textoPublicacao"
+                            placeholder="O que você gostaria de compartilhar?"
+                            maxlength="500"
+                        ></textarea>
+
+                        <div class="create-bottom">
+
+                            <select id="categoriaPublicacao">
+                                <option value="Geral">🐾 Geral</option>
+                                <option value="Dicas">💡 Dicas</option>
+                                <option value="Saúde">🩺 Saúde</option>
+                                <option value="Alimentação">🍖 Alimentação</option>
+                                <option value="Comportamento">❤️ Comportamento</option>
+                                <option value="Passeios">🌳 Passeios</option>
+                            </select>
+
+                            <button class="btn-publicar" onclick="publicar()">
+                                Publicar
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="feed-header">
+                        <div>
+                            <h2>Publicações recentes</h2>
+                            <p>Veja o que outros tutores estão compartilhando.</p>
+                        </div>
+
+                        <select id="filtroCategoria" onchange="carregarPublicacoes()">
+                            <option value="Todas">Todas</option>
+                            <option value="Geral">Geral</option>
+                            <option value="Dicas">Dicas</option>
+                            <option value="Saúde">Saúde</option>
+                            <option value="Alimentação">Alimentação</option>
+                            <option value="Comportamento">Comportamento</option>
+                            <option value="Passeios">Passeios</option>
+                        </select>
+                    </div>
+
+                    <div id="listaPublicacoes"></div>
+
+                </section>
+
+                <aside class="community-side">
+
+                    <div class="side-card">
+
+                        <div class="side-title">
+                            <span class="side-icon">💡</span>
+
+                            <div>
+                                <h3>Dicas para tutores</h3>
+                                <p>Cuidados importantes</p>
+                            </div>
+                        </div>
+
+                        <div class="dica">
+                            <span>💧</span>
+                            <div>
+                                <strong>Água sempre disponível</strong>
+                                <p>Mantenha seu pet hidratado durante todo o dia.</p>
+                            </div>
+                        </div>
+
+                        <div class="dica">
+                            <span>🩺</span>
+                            <div>
+                                <strong>Acompanhe a saúde</strong>
+                                <p>Faça consultas veterinárias regularmente.</p>
+                            </div>
+                        </div>
+
+                        <div class="dica">
+                            <span>🥗</span>
+                            <div>
+                                <strong>Alimentação adequada</strong>
+                                <p>Ofereça uma alimentação indicada para seu pet.</p>
+                            </div>
+                        </div>
+
+                        <div class="dica">
+                            <span>❤️</span>
+                            <div>
+                                <strong>Dê atenção e carinho</strong>
+                                <p>Momentos juntos também fazem parte dos cuidados.</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="side-card community-info">
+
+                        <div class="side-title">
+                            <span class="side-icon">👥</span>
+
+                            <div>
+                                <h3>Sobre a comunidade</h3>
+                                <p>Um espaço para tutores</p>
+                            </div>
+                        </div>
+
+                        <p>
+                            Compartilhe experiências, tire dúvidas e
+                            aprenda com outros tutores que também amam
+                            seus pets.
+                        </p>
+
+                        <div class="community-stats">
+                            <div>
+                                <strong id="contadorPublicacoes">0</strong>
+                                <span>Publicações</span>
+                            </div>
+
+                            <div>
+                                <strong>🐾</strong>
+                                <span>Amor pelos pets</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </aside>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script>
+
+        const tutor = JSON.parse(localStorage.getItem("tutor"));
+
+        let nomeTutor = "Tutor";
+
+        if (tutor && tutor.nome) {
+            nomeTutor = tutor.nome;
+        }
+
+        document.getElementById("nomePerfil").textContent = nomeTutor;
+
+        const partesNome = nomeTutor.trim().split(" ");
+
+        let iniciais = partesNome[0]
+            ? partesNome[0].charAt(0)
+            : "T";
+
+        if (partesNome.length > 1) {
+            iniciais += partesNome[partesNome.length - 1].charAt(0);
+        }
+
+        iniciais = iniciais.toUpperCase();
+
+        document.getElementById("avatarNome").textContent = iniciais;
+        document.getElementById("avatarCriar").textContent = iniciais;
+
+        function obterPublicacoes() {
+            return JSON.parse(localStorage.getItem("publicacoes")) || [];
+        }
+
+        function salvarPublicacoes(publicacoes) {
+            localStorage.setItem(
+                "publicacoes",
+                JSON.stringify(publicacoes)
+            );
+        }
+
+        function formatarData(data) {
+
+            const dataAtual = new Date(data);
+
+            const dia = String(dataAtual.getDate()).padStart(2, "0");
+            const mes = String(dataAtual.getMonth() + 1).padStart(2, "0");
+            const ano = dataAtual.getFullYear();
+
+            const hora = String(dataAtual.getHours()).padStart(2, "0");
+            const minuto = String(dataAtual.getMinutes()).padStart(2, "0");
+
+            return `${dia}/${mes}/${ano} às ${hora}:${minuto}`;
+        }
+
+        function publicar() {
+
+            const texto = document
+                .getElementById("textoPublicacao")
+                .value
+                .trim();
+
+            const categoria = document
+                .getElementById("categoriaPublicacao")
+                .value;
+
+            if (!texto) {
+                alert("Digite algo para publicar.");
+                return;
+            }
+
+            const publicacoes = obterPublicacoes();
+
+            const novaPublicacao = {
+                id: Date.now(),
+                autor: nomeTutor,
+                iniciais: iniciais,
+                texto: texto,
+                categoria: categoria,
+                data: new Date().toISOString(),
+                curtidas: 0,
+                curtido: false
+            };
+
+            publicacoes.unshift(novaPublicacao);
+
+            salvarPublicacoes(publicacoes);
+
+            document.getElementById("textoPublicacao").value = "";
+
+            document.getElementById("categoriaPublicacao").value = "Geral";
+
+            carregarPublicacoes();
+        }
+
+        function curtir(id) {
+
+            const publicacoes = obterPublicacoes();
+
+            const publicacao = publicacoes.find(
+                item => item.id === id
+            );
+
+            if (!publicacao) {
+                return;
+            }
+
+            if (publicacao.curtido) {
+                publicacao.curtidas = Math.max(
+                    0,
+                    publicacao.curtidas - 1
+                );
+
+                publicacao.curtido = false;
+
+            } else {
+
+                publicacao.curtidas++;
+
+                publicacao.curtido = true;
+            }
+
+            salvarPublicacoes(publicacoes);
+
+            carregarPublicacoes();
+        }
+
+        function excluirPublicacao(id) {
+
+            const publicacoes = obterPublicacoes();
+
+            const novaLista = publicacoes.filter(
+                item => item.id !== id
+            );
+
+            salvarPublicacoes(novaLista);
+
+            carregarPublicacoes();
+        }
+
+        function carregarPublicacoes() {
+
+            const lista = document.getElementById("listaPublicacoes");
+
+            const filtro = document.getElementById("filtroCategoria").value;
+
+            const publicacoes = obterPublicacoes();
+
+            const filtradas = filtro === "Todas"
+                ? publicacoes
+                : publicacoes.filter(
+                    item => item.categoria === filtro
+                );
+
+            lista.innerHTML = "";
+
+            document.getElementById("contadorPublicacoes").textContent =
+                publicacoes.length;
+
+            if (!filtradas.length) {
+
+                lista.innerHTML = `
+                    <div class="empty-community">
+                        <div class="empty-community-icon">🐾</div>
+                        <h3>Nenhuma publicação encontrada</h3>
+                        <p>
+                            Seja o primeiro a compartilhar algo
+                            com a comunidade.
+                        </p>
+                    </div>
+                `;
+
+                return;
+            }
+
+            filtradas.forEach(publicacao => {
+
+                const card = document.createElement("article");
+
+                card.className = "post-card";
+
+                const ehMinha =
+                    publicacao.autor === nomeTutor;
+
+                card.innerHTML = `
+
+                    <div class="post-header">
+
+                        <div class="post-user">
+
+                            <div class="avatar post-avatar">
+                                ${publicacao.iniciais || "TU"}
+                            </div>
+
+                            <div>
+                                <strong>${escaparHTML(publicacao.autor)}</strong>
+                                <span>${formatarData(publicacao.data)}</span>
+                            </div>
+
+                        </div>
+
+                        <div class="post-category">
+                            ${escaparHTML(publicacao.categoria)}
+                        </div>
+
+                    </div>
+
+                    <div class="post-content">
+                        <p>${escaparHTML(publicacao.texto)}</p>
+                    </div>
+
+                    <div class="post-actions">
+
+                        <button
+                            class="action-button ${publicacao.curtido ? "liked" : ""}"
+                            onclick="curtir(${publicacao.id})"
+                        >
+                            ${publicacao.curtido ? "❤️" : "♡"}
+                            ${publicacao.curtidas || 0}
+                        </button>
+
+                        ${
+                            ehMinha
+                            ? `
+                                <button
+                                    class="delete-button"
+                                    onclick="excluirPublicacao(${publicacao.id})"
+                                >
+                                    🗑️ Excluir
+                                </button>
+                            `
+                            : ""
+                        }
+
+                    </div>
+
+                `;
+
+                lista.appendChild(card);
+
+            });
+        }
+
+        function escaparHTML(texto) {
+
+            const div = document.createElement("div");
+
+            div.textContent = texto;
+
+            return div.innerHTML;
+        }
+
+        carregarPublicacoes();
+
+    </script>
+
+</body>
+</html>

@@ -10,7 +10,7 @@ html {
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     background: #f4fbff;
     color: #263238;
 }
@@ -23,7 +23,11 @@ button,
 input,
 select,
 textarea {
-    font-family: Arial, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.layout {
+    min-height: 100vh;
 }
 
 .sidebar {
@@ -95,7 +99,7 @@ textarea {
     gap: 13px;
     color: #607d8b;
     font-size: 14px;
-    transition: .3s;
+    transition: 0.3s;
 }
 
 .menu-item:hover {
@@ -139,6 +143,7 @@ textarea {
     align-items: center;
     justify-content: center;
     font-weight: bold;
+    flex-shrink: 0;
 }
 
 .help strong {
@@ -160,7 +165,7 @@ textarea {
     color: #607d8b;
     font-size: 13px;
     border-radius: 10px;
-    transition: .3s;
+    transition: 0.3s;
 }
 
 .logout:hover {
@@ -200,7 +205,7 @@ textarea {
     border: 1px solid #d9eef7;
     border-radius: 10px;
     cursor: pointer;
-    transition: .3s;
+    transition: 0.3s;
 }
 
 .notification:hover {
@@ -286,7 +291,7 @@ textarea {
     font-size: 13px;
     font-weight: bold;
     cursor: pointer;
-    transition: .3s;
+    transition: 0.3s;
 }
 
 .btn-primary:hover {
@@ -296,203 +301,249 @@ textarea {
     color: white;
 }
 
-.gastos {
+.community-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 24px;
+    align-items: start;
+}
+
+.feed {
+    min-width: 0;
+}
+
+.create-card {
+    padding: 24px;
+    background: white;
+    border: 1px solid #d9eef7;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(80, 160, 200, 0.08);
     margin-bottom: 30px;
 }
 
-.section-title {
+.create-top {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 18px;
+}
+
+.create-top div:last-child {
+    display: flex;
+    flex-direction: column;
+}
+
+.create-top strong {
+    color: #28556b;
+    font-size: 13px;
+}
+
+.create-top span {
+    margin-top: 5px;
+    color: #607d8b;
+    font-size: 11px;
+}
+
+.create-card textarea {
+    width: 100%;
+    min-height: 105px;
+    padding: 12px;
+    border: 1px solid #cdeefa;
+    border-radius: 8px;
+    outline: none;
+    background: #f4fbff;
+    color: #263238;
+    font-size: 12px;
+    resize: vertical;
+}
+
+.create-card textarea:focus {
+    border-color: #8ed8f8;
+    box-shadow: 0 0 0 3px #e8f8ff;
+}
+
+.create-bottom {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.create-bottom select {
+    padding: 10px 12px;
+    border: 1px solid #cdeefa;
+    border-radius: 8px;
+    background: #f4fbff;
+    color: #397a99;
+    font-size: 11px;
+    outline: none;
+}
+
+.btn-publicar {
+    min-height: 40px;
+    padding: 0 20px;
+    border: 2px solid #8ed8f8;
+    border-radius: 25px;
+    background: #8ed8f8;
+    color: #17445c;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-publicar:hover {
+    background: #55a9cc;
+    border-color: #55a9cc;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.feed-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    margin-bottom: 15px;
+    margin-bottom: 18px;
 }
 
-.section-title h2 {
+.feed-header h2 {
     color: #28556b;
     font-size: 20px;
 }
 
-.section-title p {
+.feed-header p {
     margin-top: 5px;
     color: #607d8b;
     font-size: 12px;
 }
 
-.gastos-grid {
-    display: grid;
-    grid-template-columns: 1.4fr repeat(4, 1fr);
+.feed-header select {
+    padding: 9px 12px;
+    border: 1px solid #cdeefa;
+    border-radius: 8px;
+    background: white;
+    color: #397a99;
+    font-size: 11px;
+    outline: none;
+}
+
+#listaPublicacoes {
+    display: flex;
+    flex-direction: column;
     gap: 15px;
 }
 
-.gasto-card {
-    min-height: 95px;
-    padding: 18px;
+.post-card {
+    padding: 20px;
     background: white;
     border: 1px solid #d9eef7;
     border-radius: 15px;
-    display: flex;
-    align-items: center;
-    gap: 13px;
-    box-shadow: 0 5px 20px rgba(80, 160, 200, .08);
+    box-shadow: 0 5px 20px rgba(80, 160, 200, 0.08);
 }
 
-.gasto-card.total {
-    background: #e8f8ff;
-    border-color: #cdeefa;
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
 }
 
-.gasto-icon {
-    width: 42px;
-    height: 42px;
-    border-radius: 12px;
-    background: #e8f8ff;
+.post-user {
     display: flex;
     align-items: center;
-    justify-content: center;
-    font-size: 19px;
+    gap: 11px;
+}
+
+.post-avatar {
+    width: 40px;
+    height: 40px;
     flex-shrink: 0;
 }
 
-.gasto-card.total .gasto-icon {
-    background: white;
-}
-
-.gasto-card span {
+.post-user strong {
     display: block;
-    color: #607d8b;
-    font-size: 10px;
-}
-
-.gasto-card strong {
-    display: block;
-    margin-top: 5px;
     color: #28556b;
-    font-size: 17px;
+    font-size: 13px;
 }
 
-.gasto-card.total strong {
-    color: #397a99;
-}
-
-.consultas-section {
-    margin-bottom: 30px;
-}
-
-.consultas-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.consulta-card {
-    min-height: 90px;
-    padding: 18px;
-    background: white;
-    border: 1px solid #d9eef7;
-    border-radius: 15px;
-    display: grid;
-    grid-template-columns: 90px 1fr auto;
-    align-items: center;
-    gap: 18px;
-    box-shadow: 0 5px 20px rgba(80, 160, 200, .08);
-}
-
-.data-card {
-    padding-right: 18px;
-    border-right: 1px solid #d9eef7;
-    text-align: center;
-}
-
-.data-card span {
+.post-user span {
     display: block;
+    margin-top: 4px;
     color: #607d8b;
     font-size: 10px;
 }
 
-.data-card strong {
-    display: block;
-    margin-top: 6px;
+.post-category {
+    padding: 6px 10px;
+    border-radius: 20px;
+    background: #e8f8ff;
     color: #397a99;
-    font-size: 16px;
+    font-size: 10px;
+    font-weight: bold;
 }
 
-.consulta-info {
-    min-width: 0;
+.post-content {
+    padding: 18px 0;
 }
 
-.consulta-topo {
+.post-content p {
+    color: #607d8b;
+    font-size: 13px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.post-actions {
+    padding-top: 12px;
+    border-top: 1px solid #d9eef7;
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-.consulta-info h3 {
-    color: #28556b;
-    font-size: 14px;
-}
-
-.consulta-info p {
-    margin-top: 6px;
+.action-button,
+.delete-button {
+    padding: 8px 10px;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
     color: #607d8b;
     font-size: 11px;
+    cursor: pointer;
+    transition: 0.3s;
 }
 
-.consulta-info small {
-    display: block;
-    margin-top: 6px;
-    color: #607d8b;
-    font-size: 10px;
-    line-height: 1.4;
-}
-
-.status {
-    padding: 5px 9px;
-    border-radius: 20px;
+.action-button:hover,
+.delete-button:hover {
     background: #e8f8ff;
     color: #397a99;
-    font-size: 9px;
+}
+
+.action-button.liked {
+    color: #397a99;
     font-weight: bold;
-    white-space: nowrap;
 }
 
-.status.concluida {
-    background: #f4fbff;
-    color: #607d8b;
-}
-
-.consulta-valor {
-    min-width: 90px;
-    padding-left: 18px;
-    border-left: 1px solid #d9eef7;
-    text-align: right;
-}
-
-.consulta-valor span {
-    display: block;
-    color: #607d8b;
-    font-size: 10px;
-}
-
-.consulta-valor strong {
-    display: block;
-    margin-top: 5px;
-    color: #28556b;
-    font-size: 14px;
-}
-
-.empty-consultas {
-    padding: 45px 25px;
+.empty-community {
+    min-height: 280px;
+    padding: 40px 25px;
     background: white;
     border: 1px solid #d9eef7;
     border-radius: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    box-shadow: 0 5px 20px rgba(80, 160, 200, .08);
+    box-shadow: 0 5px 20px rgba(80, 160, 200, 0.08);
 }
 
-.empty-icon {
+.empty-community-icon {
     width: 70px;
     height: 70px;
-    margin: 0 auto 18px;
+    margin-bottom: 18px;
     border-radius: 50%;
     background: #e8f8ff;
     display: flex;
@@ -501,53 +552,152 @@ textarea {
     font-size: 32px;
 }
 
-.empty-consultas h3 {
+.empty-community h3 {
     color: #397a99;
     font-size: 20px;
 }
 
-.empty-consultas p {
-    max-width: 500px;
-    margin: 10px auto 22px;
+.empty-community p {
+    max-width: 450px;
+    margin-top: 9px;
     color: #607d8b;
     font-size: 12px;
     line-height: 1.6;
 }
 
-.btn-secondary {
-    min-height: 40px;
-    padding: 0 18px;
-    border: 1px solid #8ed8f8;
-    border-radius: 22px;
+.community-side {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.side-card {
+    padding: 20px;
     background: white;
-    color: #397a99;
-    display: inline-flex;
+    border: 1px solid #d9eef7;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(80, 160, 200, 0.08);
+}
+
+.side-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.side-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: #e8f8ff;
+    display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 11px;
-    font-weight: bold;
-    transition: .3s;
+    font-size: 17px;
 }
 
-.btn-secondary:hover {
+.side-title h3 {
+    color: #28556b;
+    font-size: 14px;
+}
+
+.side-title p {
+    margin-top: 3px;
+    color: #607d8b;
+    font-size: 10px;
+}
+
+.dica {
+    padding: 12px 0;
+    border-top: 1px solid #d9eef7;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.dica:first-of-type {
+    border-top: none;
+    padding-top: 0;
+}
+
+.dica > span {
+    width: 29px;
+    height: 29px;
+    border-radius: 9px;
     background: #e8f8ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 14px;
 }
 
-.historico-section {
-    margin-top: 35px;
+.dica strong {
+    display: block;
+    color: #28556b;
+    font-size: 11px;
+}
+
+.dica p {
+    margin-top: 4px;
+    color: #607d8b;
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+.community-info > p {
+    color: #607d8b;
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+.community-stats {
+    margin-top: 18px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.community-stats div {
+    padding: 12px;
+    background: #f4fbff;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.community-stats strong {
+    display: block;
+    color: #397a99;
+    font-size: 17px;
+}
+
+.community-stats span {
+    display: block;
+    margin-top: 4px;
+    color: #607d8b;
+    font-size: 9px;
 }
 
 @media (max-width: 1100px) {
+
     .content {
         padding: 35px;
     }
 
-    .gastos-grid {
-        grid-template-columns: repeat(3, 1fr);
+    .community-layout {
+        grid-template-columns: 1fr;
     }
+
+    .community-side {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
 }
 
 @media (max-width: 800px) {
+
     .sidebar {
         display: none;
     }
@@ -576,70 +726,65 @@ textarea {
     }
 
     .page-header {
-        flex-direction: column;
         align-items: flex-start;
+        flex-direction: column;
         gap: 18px;
     }
 
-    .btn-primary {
+    .page-header .btn-primary {
         width: 100%;
     }
 
-    .gastos-grid {
-        grid-template-columns: repeat(2, 1fr);
+    .community-side {
+        grid-template-columns: 1fr;
     }
 
-    .consulta-card {
-        grid-template-columns: 75px 1fr;
-    }
-
-    .consulta-valor {
-        grid-column: 2;
-        padding-left: 0;
-        border-left: none;
-        border-top: 1px solid #d9eef7;
-        padding-top: 12px;
-        text-align: left;
-    }
 }
 
 @media (max-width: 550px) {
+
     .page-header h1 {
         font-size: 26px;
     }
 
-    .gastos-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .consulta-card {
-        grid-template-columns: 1fr;
-        gap: 12px;
-    }
-
-    .data-card {
-        padding-right: 0;
-        padding-bottom: 12px;
-        border-right: none;
-        border-bottom: 1px solid #d9eef7;
-        text-align: left;
-    }
-
-    .consulta-topo {
-        align-items: flex-start;
+    .create-bottom {
+        align-items: stretch;
         flex-direction: column;
     }
 
-    .consulta-valor {
-        grid-column: 1;
+    .create-bottom select,
+    .btn-publicar {
+        width: 100%;
     }
 
-    .empty-consultas {
-        padding: 40px 20px;
+    .feed-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
     }
+
+    .feed-header select {
+        width: 100%;
+    }
+
+    .post-header {
+        flex-direction: column;
+    }
+
+    .post-category {
+        align-self: flex-start;
+    }
+
+    .create-card,
+    .post-card,
+    .side-card {
+        padding: 18px;
+    }
+
 }
 
 @media (max-width: 450px) {
+
     .topbar {
         padding: 0 15px;
     }
@@ -651,4 +796,5 @@ textarea {
     .content {
         padding: 20px 15px;
     }
+
 }

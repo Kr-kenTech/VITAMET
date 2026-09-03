@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VitaMet - Agendamentos</title>
     <link rel="stylesheet" href="agendamentos.css">
 </head>
-
 <body>
 
     <div class="layout">
@@ -15,7 +13,6 @@
         <aside class="sidebar">
 
             <div class="logo">
-
                 <div class="logo-icon">
                     <img src="foto.jpeg" alt="VitaMet">
                 </div>
@@ -24,7 +21,6 @@
                     <h2>Vita<span>Met</span></h2>
                     <p>Clínica Veterinária</p>
                 </div>
-
             </div>
 
             <nav class="menu">
@@ -44,15 +40,12 @@
                     Agendamento
                 </a>
 
-                <a href="#" class="menu-item">
+                <a href="consultas.html" class="menu-item">
                     <span>📋</span>
                     Consultas
                 </a>
 
-                <a href="#" class="menu-item">
-                    <span>👥</span>
-                    Comunidade
-                </a>
+         <a href="comunidade.html" class="menu-item"><span>👥</span>Comunidade</a>
 
                 <a href="#" class="menu-item">
                     <span>👤</span>
@@ -69,7 +62,6 @@
             <div class="sidebar-bottom">
 
                 <div class="help">
-
                     <div class="help-icon">
                         ?
                     </div>
@@ -78,7 +70,6 @@
                         <strong>Precisa de ajuda?</strong>
                         <p>Entre em contato com a VitaMet.</p>
                     </div>
-
                 </div>
 
                 <a href="login.html" class="logout">
@@ -124,7 +115,6 @@
                 <div class="page-header">
 
                     <div>
-
                         <span class="breadcrumb">
                             ÁREA DO TUTOR
                         </span>
@@ -134,7 +124,6 @@
                         <p>
                             Acompanhe as consultas e cuidados dos seus pets.
                         </p>
-
                     </div>
 
                     <a href="agendamento.html" class="btn-primary">
@@ -143,7 +132,7 @@
 
                 </div>
 
-                <div id="emptyState" class="empty-pets">
+                <div id="emptyState" class="empty-state">
 
                     <div class="empty-icon">
                         📅
@@ -181,8 +170,7 @@
             document.getElementById("nomePerfil").textContent =
                 tutor.nome;
 
-            const partes =
-                tutor.nome.trim().split(" ");
+            const partes = tutor.nome.trim().split(" ");
 
             const iniciais =
                 partes[0].charAt(0) +
@@ -207,6 +195,40 @@
         const appointmentsList =
             document.getElementById("appointmentsList");
 
+        function formatarData(dataString) {
+
+            if (!dataString) {
+                return `
+                    <div class="appointment-date">
+                        <strong>--</strong>
+                        <span>---</span>
+                    </div>
+                `;
+            }
+
+            const data = new Date(
+                dataString + "T00:00:00"
+            );
+
+            const dia =
+                String(data.getDate()).padStart(2, "0");
+
+            const mes =
+                data.toLocaleDateString(
+                    "pt-BR",
+                    {
+                        month: "short"
+                    }
+                ).replace(".", "").toUpperCase();
+
+            return `
+                <div class="appointment-date">
+                    <strong>${dia}</strong>
+                    <span>${mes}</span>
+                </div>
+            `;
+        }
+
         function mostrarAgendamentos() {
 
             appointmentsList.innerHTML = "";
@@ -224,42 +246,25 @@
 
             agendamentos.forEach(function(agendamento) {
 
-                let dataFormatada = "";
+                const dataFormatada =
+                    formatarData(agendamento.data);
 
-                if (agendamento.data) {
+                const horario =
+                    agendamento.horario ||
+                    agendamento.hora ||
+                    "--:--";
 
-                    const data = new Date(
-                        agendamento.data + "T00:00:00"
-                    );
+                const pet =
+                    agendamento.pet ||
+                    "Meu pet";
 
-                    const dia =
-                        String(data.getDate()).padStart(2, "0");
+                const servico =
+                    agendamento.servico ||
+                    "Consulta veterinária";
 
-                    const mes =
-                        data.toLocaleDateString(
-                            "pt-BR",
-                            {
-                                month: "short"
-                            }
-                        ).replace(".", "").toUpperCase();
-
-                    dataFormatada = `
-                        <div class="appointment-date">
-                            <strong>${dia}</strong>
-                            <span>${mes}</span>
-                        </div>
-                    `;
-
-                } else {
-
-                    dataFormatada = `
-                        <div class="appointment-date">
-                            <strong>--</strong>
-                            <span>---</span>
-                        </div>
-                    `;
-
-                }
+                const observacoes =
+                    agendamento.observacoes ||
+                    "Agendamento realizado pela VitaMet.";
 
                 appointmentsList.innerHTML += `
 
@@ -270,15 +275,15 @@
                         <div class="appointment-info">
 
                             <h3>
-                                ${agendamento.pet || "Meu pet"}
+                                ${pet}
                             </h3>
 
                             <p>
-                                ${agendamento.servico || "Consulta veterinária"}
+                                ${servico}
                             </p>
 
                             <span>
-                                ${agendamento.observacoes || "Agendamento realizado pela VitaMet."}
+                                ${observacoes}
                             </span>
 
                         </div>
@@ -286,7 +291,7 @@
                         <div class="appointment-time">
 
                             <strong>
-                                ${agendamento.horario || agendamento.hora || "--:--"}
+                                ${horario}
                             </strong>
 
                             <span>
@@ -298,7 +303,6 @@
                     </div>
 
                 `;
-
             });
         }
 
@@ -307,5 +311,4 @@
     </script>
 
 </body>
-
 </html>
