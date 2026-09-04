@@ -183,6 +183,21 @@
                 console.error("Erro ao carregar pets para o agendamento:", error);
             }
         }
+        function configurarDataMinima() {
+            const hoje = new Date();
+            hoje.setDate(hoje.getDate() + 1); // Define amanhã como o dia mínimo (futuro)
+
+            const ano = hoje.getFullYear();
+            const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+            const dia = String(hoje.getDate()).padStart(2, '0');
+
+            const dataMinima = `${ano}-${mes}-${dia}`;
+            
+            const inputData = document.getElementById('data');
+            if (inputData) {
+                inputData.min = dataMinima;
+            }
+        }
 
         async function confirmarAgendamento(event) {
             event.preventDefault(); // Evita o recarregamento da página
