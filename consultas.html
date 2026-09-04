@@ -238,49 +238,83 @@
         }
 
         function criarConsulta(agendamento, passada) {
-            const valor = obterValor(agendamento);
-            const card = document.createElement("div");
-            card.className = "consulta-card";
+    const card = document.createElement("div");
+    card.className = "consulta-card";
 
-            card.innerHTML = `
-                <div class="data-card">
-                    <span>${formatarData(agendamento.data)}</span>
-                    <strong>${agendamento.horario ? agendamento.horario.substring(0, 5) : "--:--"}</strong>
-                </div>
+    // Descobre o tipo de serviço pelo nome que já aparece na tela
+    const nomeServico = (agendamento.servico || agendamento.tipo || "").toLowerCase();
+    
+    // Define o preço de forma direta
+    let valorForçado = 0;
+    if (nomeServico.includes("consulta")) {
+        valorForçado = 150.00;
+    } else if (nomeServico.includes("vacina")) {
+        valorForçado = 80.00;
+    } else if (nomeServico.includes("exame")) {
+        valorForçado = 200.00;
+    } else if (nomeServico.includes("higiene") || nomeServico.includes("cuidado") || nomeServico.includes("banho") || nomeServico.includes("tosa")) {
+        valorForçado = 90.00;
+    } else {
+        valorForçado = 150.00; // Padrão se não achar nada
+    }
 
-                <div class="consulta-info">
-                    <div class="consulta-topo">
-                        <h3>${agendamento.servico || agendamento.tipo || "Consulta veterinária"}</h3>
-                        <span class="${passada ? "status concluida" : "status agendada"}">
-                            ${passada ? "Concluída" : "Agendada"}
-                        </span>
-                    </div>
+    const valorFormatado = `R$ ${valorForçado.toFixed(2).replace('.', ',')}`;
 
-                    <p>🐾 ${agendamento.pet || "Meu pet"}</p>
+    card.innerHTML = `
+        <div class="data-card">
+            <span>${formatarData(agendamento.data)}</span>
+            <strong>${agendamento.horario ? agendamento.horario.substring(0, 5) : "--:--"}</strong>
+        </div>
 
-                    ${agendamento.observacoes ? `<small>${agendamento.observacoes}</small>` : ""}
-                </div>
+        <div class="consulta-info">
+            <div class="consulta-topo">
+                <h3>${agendamento.servico || agendamento.tipo || "Consulta veterinária"}</h3>
+                <span class="${passada ? "status concluida" : "status agendada"}">
+                    ${passada ? "Concluída" : "Agendada"}
+                </span>
+            </div>
 
-                <div class="consulta-valor">
-                    <span>Valor</span>
-                    <strong>${formatarValor(valor)}</strong>
-                </div>
-            `;
+            <p>🐾 ${agendamento.pet || "Meu pet"}</p>
 
-            return card;
-        }
+            ${agendamento.observacoes ? `<small>${agendamento.observacoes}</small>` : ""}
+        </div>
 
-        function formatarValor(valor) {
-            const numero = Number(valor) || 0;
-            return numero.toLocaleString("pt-BR", {
-                style: "currency",
-                currency: "BRL"
-            });
-        }
+        <div class="consulta-valor">
+            <span>Valor</span>
+            <strong>${valorFormatado}</strong>
+        </div>
+    `;
+
+    return card;
+}
 
         function obterValor(agendamento) {
-            return Number(agendamento.valor || agendamento.preco) || 0;
-        }
+    if (agendamento.valor !== undefined && agendamento.valor !== null) {
+        return Number(agendamento.valor);
+    }
+    if (agendamento.preco !== undefined && agendamento.preco !== null) {
+        return Number(agendamento.preco);
+    }
+
+    const servico = (agendamento.servico || agendamento.tipo || "").toLowerCase();
+
+    if (servico.includes("consulta")) {
+        return 150.00;
+    } else if (servico.includes("vacina")) {
+        return 80.00;
+    } else if (servico.includes("exame")) {
+        return 200.00;
+    } else if (servico.includes("higiene") || servico.includes("cuidado") || servico.includes("banho") || servico.includes("tosa")) {
+        return 90.00;
+    }
+
+    return 0.00;
+}
+
+function formatarValor(valor) {
+    const num = Number(valor || 0);
+    return `R$ ${num.toFixed(2).replace('.', ',')}`;
+}
 
         function mostrarVazio(elemento, mensagem, botao) {
             elemento.innerHTML = `
@@ -353,7 +387,72 @@
         }
 
         carregarConsultasDoBanco();
+
+    async function carregarValoresFixos() {
+    try {
+        console.log("Buscando valores do banco...");
+        const resposta = await fetch('/api/tipos-servicos');
+        
+        if (!resposta.ok) {
+            console.error("Erro na resposta do servidor:", resposta.status);
+            return;
+        }
+        
+        const servicos = await resposta.json();
+        console.log("Dados recebidos do banco:", servicos);
+
+        let somaTotal = 0;
+
+        servicos.forEach(servico => {
+            // Ajuste conforme o nome exato da coluna no seu BD (valor_padrao ou valor)
+            const valor = Number(servico.valor_padrao || servico.valor || 0);
+            somaTotal += valor;
+
+            const valorFormatado = `R$ ${valor.toFixed(2).replace('.', ',')}`;
+
+            if (servico.nome === 'Consultas') {
+                const elConsultas = document.getElementById("gastoConsultas");
+                if (elConsultas) {
+                    elConsultas.textContent = valorFormatado;
+                } else {
+                    console.warn("Elemento com ID 'gastoConsultas' não foi encontrado no HTML!");
+                }
+            }
+        });
+
+        const elTotal = document.getElementById("totalGasto");
+        if (elTotal) {
+            elTotal.textContent = `R$ ${somaTotal.toFixed(2).replace('.', ',')}`;
+        } else {
+            console.warn("Elemento com ID 'totalGasto' não foi encontrado no HTML!");
+        }
+
+    } catch (erro) {
+        console.error("Erro na requisição:", erro);
+    }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    carregarValoresFixos();
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+    carregarValoresFixos();
+});
+
+// Exemplo de como puxar o valor fixo antes de salvar a consulta
+async function obterValorPadrao(tipoServico) {
+    try {
+        const resposta = await fetch('/api/tipos-servicos');
+        const servicos = await resposta.json();
+        const encontrado = servicos.find(s => s.nome.toLowerCase() === tipoServico.toLowerCase());
+        return encontrado ? encontrado.valor_padrao : 0.00;
+    } catch {
+        return 0.00;
+    }
+}
     </script>
+
 
 </body>
 </html>

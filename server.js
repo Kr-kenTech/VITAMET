@@ -312,6 +312,33 @@ app.get('/api/agendamentos/tutor/:usuarioId', (req, res) => {
     });
 });
 
+//Calculo de gastos do tutor
+app.get('/api/gastos/:tutor_id', (req, res) => {
+    const { tutor_id } = req.params;
+    
+    const queryTotal = "SELECT SUM(valor) as totalGasto FROM consultas WHERE tutor_id = ?";
+    const queryPorTipo = "SELECT tipo_servico, SUM(valor) as total FROM consultas WHERE tutor_id = ? GROUP BY tipo_servico";
+
+    connection.query(queryTotal, [tutor_id], (err, resultTotal) => {
+        if (err) {
+            console.error("Erro ao buscar total:", err);
+            return res.status(500).json({ erro: 'Erro no servidor' });
+        }
+
+        connection.query(queryPorTipo, [tutor_id], (err, resultTipos) => {
+            if (err) {
+                console.error("Erro ao buscar tipos:", err);
+                return res.status(500).json({ erro: 'Erro no servidor' });
+            }
+
+            res.status(200).json({
+                totalGasto: resultTotal[0].totalGasto || 0,
+                porTipo: resultTipos
+            });
+        });
+    });
+});
+
 // Listar todas as publicações
 app.get('/api/publicacoes', (req, res) => {
     const query = "SELECT * FROM publicacoes ORDER BY data DESC";
@@ -385,6 +412,18 @@ app.delete('/api/animais/:id', (req, res) => {
         }
 
         return res.status(200).json({ mensagem: 'Animal excluído com sucesso!' });
+    });
+});
+
+// Rota para buscar valores fixos do banco
+app.get('/api/tipos-servicos', (req, res) => {
+    const query = "SELECT * FROM tipos_servicos";
+    connection.query(query, (err, results) => {
+        if (err) {
+            console.error("Erro ao buscar tipos de serviços:", err);
+            return res.status(500).json({ erro: 'Erro no servidor' });
+        }
+        res.status(200).json(results);
     });
 });
 
