@@ -147,106 +147,120 @@
     </main>
 
     <script>
-        // Pega o ID do usuário logado através da URL (ex: agendamento.html?id=9)
-        const urlParams = new URLSearchParams(window.location.search);
-        const usuarioId = urlParams.get('id');
+      // Pega o ID do usuário logado através da URL (ex: agendamento.html?id=9)
+    const urlParams = new URLSearchParams(window.location.search);
+    const usuarioId = urlParams.get('id');
 
-        if (!usuarioId) {
-            alert("Usuário não autenticado. Faça login novamente.");
-            window.location.href = "login.html";
+    if (!usuarioId) {
+        alert("Usuário não autenticado. Faça login novamente.");
+        window.location.href = "login.html";
+    }
+
+    // Mantém o link de voltar conectado ao ID do tutor
+    document.getElementById("linkVoltar").href = `tutor.html?id=${usuarioId}`;
+
+    // --- NOVA FUNÇÃO: Bloqueia datas passadas no calendário HTML ---
+    function configurarDataMinima() {
+        const hoje = new Date();
+        hoje.setDate(hoje.getDate() + 1); // Define amanhã como o dia mínimo (futuro)
+
+        const ano = hoje.getFullYear();
+        const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+        const dia = String(hoje.getDate()).padStart(2, '0');
+
+        const dataMinima = `${ano}-${mes}-${dia}`;
+        
+        const inputData = document.getElementById('data');
+        if (inputData) {
+            inputData.min = dataMinima;
         }
+    }
 
-        // Mantém o link de voltar conectado ao ID do tutor
-        document.getElementById("linkVoltar").href = `tutor.html?id=${usuarioId}`;
+    // Carrega os pets do tutor no <select> assim que a página abre
+    async function carregarPetsDoTutor() {
+        try {
+            const resposta = await fetch(`/api/animais/tutor/${usuarioId}`);
+            const pets = await resposta.json();
 
-        // Carrega os pets do tutor no <select> assim que a página abre
-        async function carregarPetsDoTutor() {
-            try {
-                const resposta = await fetch(`/api/animais/tutor/${usuarioId}`);
-                const pets = await resposta.json();
+            const selectPet = document.getElementById("pet");
+            selectPet.innerHTML = '<option value="" selected disabled>Selecione seu pet</option>';
 
-                const selectPet = document.getElementById("pet");
-                selectPet.innerHTML = '<option value="" selected disabled>Selecione seu pet</option>';
-
-                if (!Array.isArray(pets) || pets.length === 0) {
-                    selectPet.innerHTML = '<option value="" disabled>Nenhum pet cadastrado</option>';
-                    return;
-                }
-
-                pets.forEach(pet => {
-                    const option = document.createElement("option");
-                    option.value = pet.id; // Salvamos o ID do pet no value
-                    option.textContent = `${pet.nome} (${pet.especie} - ${pet.raca})`;
-                    selectPet.appendChild(option);
-                });
-            } catch (error) {
-                console.error("Erro ao carregar pets para o agendamento:", error);
-            }
-        }
-        function configurarDataMinima() {
-            const hoje = new Date();
-            hoje.setDate(hoje.getDate() + 1); // Define amanhã como o dia mínimo (futuro)
-
-            const ano = hoje.getFullYear();
-            const mes = String(hoje.getMonth() + 1).padStart(2, '0');
-            const dia = String(hoje.getDate()).padStart(2, '0');
-
-            const dataMinima = `${ano}-${mes}-${dia}`;
-            
-            const inputData = document.getElementById('data');
-            if (inputData) {
-                inputData.min = dataMinima;
-            }
-        }
-
-        async function confirmarAgendamento(event) {
-            event.preventDefault(); // Evita o recarregamento da página
-
-            // Corrigido para buscar pelos IDs corretos definidos no HTML ('pet' e 'horario')
-            const animalId = document.getElementById('pet').value; 
-            const tipo = document.getElementById('servico').value;    
-            const data = document.getElementById('data').value;
-            const hora = document.getElementById('horario').value; // Ajustado de 'hora' para 'horario'
-            const observacoes = document.getElementById('observacoes').value; 
-
-            // Validação apenas dos campos obrigatórios
-            if (!animalId || !tipo || !data || !hora) {
-                alert("Erro ao agendar: Preencha todos os campos obrigatórios do agendamento.");
+            if (!Array.isArray(pets) || pets.length === 0) {
+                selectPet.innerHTML = '<option value="" disabled>Nenhum pet cadastrado</option>';
                 return;
             }
 
-            try {
-                const resposta = await fetch('/api/consultas', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        animal_id: animalId,
-                        tipo: tipo,
-                        data: data,
-                        hora: hora,
-                        observacoes: observacoes
-                    })
-                });
+            pets.forEach(pet => {
+                const option = document.createElement("option");
+                option.value = pet.id; // Salvamos o ID do pet no value
+                option.textContent = `${pet.nome} (${pet.especie} - ${pet.raca})`;
+                selectPet.appendChild(option);
+            });
+        } catch (error) {
+            console.error("Erro ao carregar pets para o agendamento:", error);
+        }
+    }
 
-                const resultado = await resposta.json();
+    async function confirmarAgendamento(event) {
+        event.preventDefault(); // Evita o recarregamento da página
 
-                if (!resposta.ok) {
-                    throw new Error(resultado.erro || 'Erro ao agendar consulta.');
-                }
+        // Corrigido para buscar pelos IDs corretos definidos no HTML ('pet' e 'horario')
+        const animalId = document.getElementById('pet').value; 
+        const tipo = document.getElementById('servico').value;    
+        const data = document.getElementById('data').value;
+        const hora = document.getElementById('horario').value; // Ajustado de 'hora' para 'horario'
+        const observacoes = document.getElementById('observacoes').value; 
 
-                alert('Consulta agendada com sucesso!');
-                window.location.href = `tutor.html?id=${usuarioId}`; // Redireciona de volta para o painel do tutor mantendo o ID
-            } catch (error) {
-                console.error("Erro na requisição:", error);
-                alert(error.message);
-            }
+        // Validação apenas dos campos obrigatórios
+        if (!animalId || !tipo || !data || !hora) {
+            alert("Erro ao agendar: Preencha todos os campos obrigatórios do agendamento.");
+            return;
         }
 
-        // Executa a função ao carregar a página
-        carregarPetsDoTutor();
-    </script>
+        
+        const dataSelecionada = new Date(data + 'T00:00:00'); 
+        const hoje = new Date();
+        hoje.setHours(0, 0, 0, 0);
+
+        if (dataSelecionada <= hoje) {
+            alert("Erro ao agendar: Por favor, selecione apenas datas futuras.");
+            return;
+        }
+
+        try {
+            const resposta = await fetch('/api/consultas', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    animal_id: animalId,
+                    tipo: tipo,
+                    data: data,
+                    hora: hora,
+                    observacoes: observacoes
+                })
+            });
+
+            const resultado = await resposta.json();
+
+            if (!resposta.ok) {
+                throw new Error(resultado.erro || 'Erro ao agendar consulta.');
+            }
+
+            alert('Consulta agendada com sucesso!');
+            window.location.href = `tutor.html?id=${usuarioId}`;
+        } catch (error) {
+            console.error("Erro na requisição:", error);
+            alert(error.message);
+        }
+    }
+
+  
+    configurarDataMinima();
+    carregarPetsDoTutor();
+
+</script>
 
 </body>
 
