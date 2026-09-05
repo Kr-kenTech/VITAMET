@@ -55,40 +55,46 @@
     </div>
 
     <script>
-        async function entrar() {
-            let email = document.getElementById("email").value.trim();
-            let senha = document.getElementById("senha").value;
+    async function entrar() {
+        let email = document.getElementById("email").value.trim();
+        let senha = document.getElementById("senha").value;
 
-            if (!email || !senha) {
-                alert("Preencha o e-mail e a senha!");
-                return;
-            }
-
-            try {
-                let resposta = await fetch('/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, senha })
-                });
-
-                let resultado = await resposta.json();
-
-                if (resposta.ok) {
-                    // Removemos o alert para evitar bloqueios de redirecionamento no navegador
-                    console.log(resultado.mensagem);
-                    
-                    // Pega o ID que veio do banco e direciona para o painel do tutor
-                    const usuarioId = resultado.usuario.id;
-                    window.location.href = `/tutor.html?id=${usuarioId}`;
-                } else {
-                    alert(resultado.erro || "E-mail ou senha incorretos!");
-                }
-            } catch (error) {
-                console.error("Erro no login:", error);
-                alert("Erro de conexão com o servidor.");
-            }
+        if (!email || !senha) {
+            alert("Preencha o e-mail e a senha!");
+            return;
         }
-    </script>
+
+        try {
+            let resposta = await fetch('/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, senha })
+            });
+
+            let resultado = await resposta.json();
+
+            if (resposta.ok) {
+                console.log(resultado.mensagem);
+                
+                // 1. SALVA OS DADOS DO USUÁRIO NO LOCALSTORAGE (Isto corrige o erro do perfil!)
+                // (Verificamos se o backend mandou 'usuario' ou 'tutor' para evitar erros)
+                const dadosUsuario = resultado.usuario || resultado.tutor;
+                if (dadosUsuario) {
+                    localStorage.setItem("tutor", JSON.stringify(dadosUsuario));
+                }
+
+                // 2. Pega o ID que veio do banco e direciona para o painel do tutor mantendo o ID na URL
+                const usuarioId = dadosUsuario ? dadosUsuario.id : "";
+                window.location.href = `tutor.html${usuarioId ? '?id=' + usuarioId : ''}`;
+            } else {
+                alert(resultado.erro || "E-mail ou senha incorretos!");
+            }
+        } catch (error) {
+            console.error("Erro no login:", error);
+            alert("Erro de conexão com o servidor.");
+        }
+    }
+</script>
 
 </body>
 

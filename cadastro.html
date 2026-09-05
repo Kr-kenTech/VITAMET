@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VitaMet - Criar Conta</title>
+    <title>VitaMed - Criar Conta</title>
     <link rel="stylesheet" href="cadastro.css">
 </head>
 
@@ -26,7 +26,7 @@
 
             <input type="text" id="cpf" placeholder="CPF">
 
-            <input type="tel" id="telefone" placeholder="Telefone" maxlength="14">
+            <input type="tel" id="telefone" placeholder="Telefone"  maxlength="15">
 
             <input type="email" id="email" placeholder="E-mail">
 
@@ -54,7 +54,6 @@
 
         const cpfInput = document.getElementById("cpf");
 
-        
         cpfInput.addEventListener("input", () => {
             let valor = cpfInput.value.replace(/\D/g, "");
             valor = valor.substring(0, 11);
@@ -66,7 +65,6 @@
             cpfInput.value = valor;
         });
 
-        
         function validarCPF(cpfValor) {
             cpfValor = cpfValor.replace(/\D/g, "");
 
@@ -97,7 +95,6 @@
             return true;
         }
 
-       
         cpfInput.addEventListener("blur", () => {
             if (cpfInput.value.trim() === "") {
                 cpfInput.style.border = "";
@@ -161,40 +158,36 @@
                 alert("Erro de conexão com o servidor.");
             }
         }
-        const telefone = document.querySelector("#telefone");
+
+        const telefoneInput = document.querySelector("#telefone");
      
-        telefone.addEventListener('input', (event) => {
+        telefoneInput.addEventListener('input', (event) => {
             let valor = event.target.value;
-
-        
             valor = valor.replace(/\D/g, "");
-
             
             valor = valor.replace(/^(\d{2})(\d)/g, "($1) $2");
             valor = valor.replace(/(\d{5})(\d)/, "$1-$2");   
 
-           
             event.target.value = valor;
         });
 
         const campo = document.getElementById('nome');
         campo.addEventListener('input', function() {
-   
-        this.value = this.value.replace(/[^a-zA-ZáàâãéêíóôõúçÁÀÂÃÉÊÍÓÔÕÚÇ\s]/g, '');
-    });
+            this.value = this.value.replace(/[^a-zA-ZáàâãéêíóôõúçÁÀÂÃÉÊÍÓÔÕÚÇ\s]/g, '');
+        });
 
-    function validar(event) {
-      event.preventDefault();
-      
-      const email = event.target.querySelector('input').value;
-      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        function validar(event) {
+          event.preventDefault();
+          
+          const email = event.target.querySelector('input').value;
+          const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-      if (regex.test(email)) {
-        alert("E-mail válido!");
-      } else {
-        alert("E-mail inválido! Use @ e um domínio (ex: .com).");
-      }
-    }
+          if (regex.test(email)) {
+            alert("E-mail válido!");
+          } else {
+            alert("E-mail inválido! Use @ e um domínio (ex: .com).");
+          }
+        }
 
     </script>
 </body>

@@ -43,13 +43,19 @@ app.get('/tutor.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'tutor.html'));
 });
 
-// Rota de Usuário por ID (para preencher o painel)
+// Rota de Usuário por ID (para preencher o painel, buscando dados do tutor e da tabela usuario)
 app.get('/usuario/:id', (req, res) => {
     const { id } = req.params;
-    const query = 'SELECT id, nome, email, perfil FROM usuario WHERE id = ?';
+    const query = `
+        SELECT u.id, u.nome, u.email, u.perfil, t.cpf, t.telefone, t.endereco 
+        FROM usuario u 
+        LEFT JOIN tutor t ON t.usuario_id = u.id 
+        WHERE u.id = ?
+    `;
 
     connection.query(query, [id], (err, results) => {
         if (err) {
+            console.error("Erro ao buscar usuário por ID:", err);
             return res.status(500).json({ erro: 'Erro interno no servidor.' });
         }
 
@@ -107,7 +113,7 @@ app.post('/cadastro', async (req, res) => {
     }
 });
 
-// Rota de Login
+// Rota de Login (atualizada para buscar o tutor_id caso seja tutor)
 app.post('/login', (req, res) => {
     const { email, senha } = req.body;
 
@@ -115,10 +121,16 @@ app.post('/login', (req, res) => {
         return res.status(400).json({ erro: 'E-mail e senha são obrigatórios.' });
     }
 
-    const query = 'SELECT * FROM usuario WHERE email = ?';
+    const query = `
+        SELECT u.*, t.id AS tutor_id, t.cpf, t.telefone 
+        FROM usuario u 
+        LEFT JOIN tutor t ON t.usuario_id = u.id 
+        WHERE u.email = ?
+    `;
 
     connection.query(query, [email], async (err, results) => {
         if (err) {
+            console.error("Erro no login:", err);
             return res.status(500).json({ erro: 'Erro interno no servidor.' });
         }
 
@@ -139,9 +151,12 @@ app.post('/login', (req, res) => {
                 mensagem: 'Login realizado com sucesso!',
                 usuario: {
                     id: usuario.id,
+                    tutor_id: usuario.tutor_id || null,
                     nome: usuario.nome,
                     email: usuario.email,
-                    perfil: usuario.perfil
+                    perfil: usuario.perfil,
+                    cpf: usuario.cpf || null,
+                    telefone: usuario.telefone || null
                 }
             });
         } catch (error) {
@@ -231,7 +246,6 @@ app.post('/api/agendamentos', (req, res) => {
         return res.status(400).json({ erro: 'Preencha todos os campos obrigatórios do agendamento.' });
     }
 
-    // Buscamos o usuário através do tutor vinculado ao pet
     const queryTutorPet = `
         SELECT t.usuario_id 
         FROM animal a 
@@ -292,15 +306,16 @@ app.post('/api/consultas', (req, res) => {
     });
 });
 
-// Listar consultas vinculadas ao tutor logado
+// Listar consultas e agendamentos vinculadas ao tutor logado com o respectivo valor
 app.get('/api/agendamentos/tutor/:usuarioId', (req, res) => {
     const { usuarioId } = req.params;
 
     const query = `
-        SELECT c.id, a.nome AS pet, c.servico, c.data, c.horario, c.observacoes, 'Agendado' AS status 
+        SELECT c.id, a.nome AS pet, c.servico, c.data, c.horario, c.observacoes, c.valor, 'Agendado' AS status 
         FROM consultas c 
         JOIN animal a ON c.pet_id = a.id 
         WHERE c.tutor_id = ?
+        ORDER BY c.data ASC
     `;
 
     connection.query(query, [usuarioId], (err, results) => {

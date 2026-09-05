@@ -22,13 +22,7 @@
         </div>
 
         <nav class="menu">
-
             <a href="tutor.html" class="menu-item">
-                <span>🏠</span>
-                Início
-            </a>
-
-            <a href="tutor.html#pets" class="menu-item">
                 <span>🐾</span>
                 Meus Pets
             </a>
@@ -52,11 +46,6 @@
                 <span>👤</span>
                 Meu Perfil
             </a>
-
-            <a href="configuracoes.html" class="menu-item">
-                <span>⚙️</span>
-                Configurações
-            </a>
         </nav>
 
     </aside>
@@ -64,11 +53,9 @@
     <main class="main">
 
         <header class="topbar">
-
             <div></div>
 
             <div class="top-user">
-
                 <button class="notification">🔔</button>
 
                 <div class="avatar">
@@ -81,20 +68,16 @@
                 </div>
 
                 <span class="arrow">⌄</span>
-
             </div>
-
         </header>
 
         <section class="content">
 
             <div class="page-header">
-
                 <div>
                     <h1>Comunidade</h1>
                     <p>Compartilhe experiências, dicas e momentos com outros tutores.</p>
                 </div>
-
             </div>
 
             <div class="community-layout">
@@ -102,9 +85,7 @@
                 <section class="feed">
 
                     <div class="create-card">
-
                         <div class="create-top">
-
                             <div class="avatar small">
                                 <span id="avatarCriar">TU</span>
                             </div>
@@ -113,7 +94,6 @@
                                 <strong>Compartilhe algo com a comunidade</strong>
                                 <span>Conte uma experiência ou dê uma dica para outros tutores.</span>
                             </div>
-
                         </div>
 
                         <textarea
@@ -123,7 +103,6 @@
                         ></textarea>
 
                         <div class="create-bottom">
-
                             <select id="categoriaPublicacao">
                                 <option value="Geral">🐾 Geral</option>
                                 <option value="Dicas">💡 Dicas</option>
@@ -133,12 +112,16 @@
                                 <option value="Passeios">🌳 Passeios</option>
                             </select>
 
+                            <input type="file" id="imagemPublicacao" accept="image/*" style="display: none;" onchange="mostrarNomeArquivo()">
+                            <button type="button" class="action-button" onclick="document.getElementById('imagemPublicacao').click()">
+                                📷 Foto
+                            </button>
+
                             <button class="btn-publicar" onclick="publicar()">
                                 Publicar
                             </button>
-
                         </div>
-
+                        <span id="nomeArquivoSelecionado" style="font-size: 12px; color: #666; margin-top: 5px; display: block;"></span>
                     </div>
 
                     <div class="feed-header">
@@ -165,7 +148,6 @@
                 <aside class="community-side">
 
                     <div class="side-card">
-
                         <div class="side-title">
                             <span class="side-icon">💡</span>
 
@@ -206,11 +188,9 @@
                                 <p>Momentos juntos também fazem parte dos cuidados.</p>
                             </div>
                         </div>
-
                     </div>
 
                     <div class="side-card community-info">
-
                         <div class="side-title">
                             <span class="side-icon">👥</span>
 
@@ -237,7 +217,6 @@
                                 <span>Amor pelos pets</span>
                             </div>
                         </div>
-
                     </div>
 
                 </aside>
@@ -252,6 +231,7 @@
         const tutor = JSON.parse(localStorage.getItem("tutor"));
 
         let nomeTutor = "Tutor";
+        let tutorId = tutor && tutor.id ? tutor.id : null;
 
         if (tutor && tutor.nome) {
             nomeTutor = tutor.nome;
@@ -285,9 +265,20 @@
             return `${dia}/${mes}/${ano} às ${hora}:${minuto}`;
         }
 
+        function mostrarNomeArquivo() {
+            const input = document.getElementById("imagemPublicacao");
+            const span = document.getElementById("nomeArquivoSelecionado");
+            if (input.files.length > 0) {
+                span.textContent = `Imagem selecionada: ${input.files[0].name}`;
+            } else {
+                span.textContent = "";
+            }
+        }
+
         async function carregarPublicacoes() {
             try {
-                const resposta = await fetch('/api/publicacoes');
+                const queryTutor = tutorId ? `?tutor_id=${tutorId}` : '';
+                const resposta = await fetch(`/api/publicacoes${queryTutor}`);
                 if (!resposta.ok) throw new Error('Erro ao carregar publicações');
 
                 const publicacoes = await resposta.json();
@@ -316,16 +307,33 @@
                     const card = document.createElement("article");
                     card.className = "post-card";
 
-                    const ehMinha = publicacao.autor === nomeTutor;
+                    const ehMinha = publicacao.tutor_id === tutorId || publicacao.autor === nomeTutor;
+
+                    const htmlImagem = publicacao.imagem 
+                        ? `<div class="post-image" style="margin: 10px 0;"><img src="${publicacao.imagem}" alt="Foto da publicação" style="max-width: 100%; border-radius: 8px;"></div>` 
+                        : '';
+
+                    let htmlComentarios = '';
+                    if (publicacao.comentarios && publicacao.comentarios.length > 0) {
+                        publicacao.comentarios.forEach(c => {
+                            htmlComentarios += `
+                                <div class="comment-item" style="font-size: 13px; background: #f9f9f9; padding: 6px 10px; border-radius: 6px; margin-top: 5px;">
+                                    <strong>${escaparHTML(c.autor || 'Tutor')}:</strong> ${escaparHTML(c.texto)}
+                                </div>
+                            `;
+                        });
+                    }
+
+                    const pubIniciais = publicacao.iniciais || (publicacao.autor ? publicacao.autor.substring(0,2).toUpperCase() : "TU");
 
                     card.innerHTML = `
                         <div class="post-header">
                             <div class="post-user">
                                 <div class="avatar post-avatar">
-                                    ${publicacao.iniciais || "TU"}
+                                    ${pubIniciais}
                                 </div>
                                 <div>
-                                    <strong>${escaparHTML(publicacao.autor)}</strong>
+                                    <strong>${escaparHTML(publicacao.autor || nomeTutor)}</strong>
                                     <span>${formatarData(publicacao.data)}</span>
                                 </div>
                             </div>
@@ -336,11 +344,12 @@
 
                         <div class="post-content">
                             <p>${escaparHTML(publicacao.texto)}</p>
+                            ${htmlImagem}
                         </div>
 
                         <div class="post-actions">
-                            <button class="action-button ${publicacao.curtido ? "liked" : ""}" onclick="curtir(${publicacao.id}, ${publicacao.curtido ? true : false})">
-                                ${publicacao.curtido ? "❤️" : "♡"} ${publicacao.curtidas || 0}
+                            <button class="action-button ${publicacao.curtido ? "liked" : ""}" onclick="curtir(${publicacao.id})">
+                                ${publicacao.curtido ? "❤️" : "♡"} <span id="contador-curtidas-${publicacao.id}">${publicacao.curtidas || 0}</span>
                             </button>
 
                             ${ehMinha ? `
@@ -348,6 +357,16 @@
                                     🗑️ Excluir
                                 </button>
                             ` : ""}
+                        </div>
+
+                        <div class="post-comments-section" style="margin-top: 10px; border-top: 1px solid #eee; padding-top: 10px;">
+                            <div class="lista-comentarios">
+                                ${htmlComentarios}
+                            </div>
+                            <div style="display: flex; gap: 5px; margin-top: 8px;">
+                                <input type="text" id="comentario-input-${publicacao.id}" placeholder="Escreva um comentário..." style="flex: 1; padding: 6px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
+                                <button onclick="enviarComentario(${publicacao.id})" style="padding: 6px 12px; background: #4f46e5; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 13px;">Enviar</button>
+                            </div>
                         </div>
                     `;
 
@@ -361,27 +380,35 @@
         async function publicar() {
             const texto = document.getElementById("textoPublicacao").value.trim();
             const categoria = document.getElementById("categoriaPublicacao").value;
+            const imagemInput = document.getElementById("imagemPublicacao");
 
-            if (!texto) {
-                alert("Digite algo para publicar.");
+            if (!texto && imagemInput.files.length === 0) {
+                alert("Digite algo ou adicione uma imagem para publicar.");
                 return;
+            }
+
+            const formData = new FormData();
+            formData.append("tutor_id", tutorId);
+            formData.append("autor", nomeTutor);
+            formData.append("iniciais", iniciais);
+            formData.append("texto", texto);
+            formData.append("categoria", categoria);
+            
+            if (imagemInput.files.length > 0) {
+                formData.append("imagem", imagemInput.files[0]);
             }
 
             try {
                 const resposta = await fetch('/api/publicacoes', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        autor: nomeTutor,
-                        iniciais: iniciais,
-                        texto: texto,
-                        categoria: categoria
-                    })
+                    body: formData
                 });
 
                 if (resposta.ok) {
                     document.getElementById("textoPublicacao").value = "";
                     document.getElementById("categoriaPublicacao").value = "Geral";
+                    imagemInput.value = "";
+                    document.getElementById("nomeArquivoSelecionado").textContent = "";
                     carregarPublicacoes();
                 } else {
                     alert("Erro ao realizar publicação.");
@@ -391,17 +418,51 @@
             }
         }
 
-        async function curtir(id, jaCurtido) {
-            const acao = jaCurtido ? 'decrementar' : 'incrementar';
+        async function curtir(id) {
+            if (!tutorId) {
+                alert("Você precisa estar logado para curtir.");
+                return;
+            }
+
             try {
-                await fetch(`/api/publicacoes/${id}/curtir`, {
-                    method: 'PUT',
+                const resposta = await fetch(`/api/publicacoes/${id}/curtir`, {
+                    method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ acao })
+                    body: JSON.stringify({ tutor_id: tutorId })
                 });
-                carregarPublicacoes();
+                if (resposta.ok) {
+                    carregarPublicacoes();
+                }
             } catch (erro) {
                 console.error("Erro ao curtir:", erro);
+            }
+        }
+
+        async function enviarComentario(publicacaoId) {
+            const input = document.getElementById(`comentario-input-${publicacaoId}`);
+            const texto = input.value.trim();
+
+            if (!texto) return;
+            if (!tutorId) {
+                alert("Você precisa estar logado para comentar.");
+                return;
+            }
+
+            try {
+                const resposta = await fetch(`/api/publicacoes/${publicacaoId}/comentarios`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tutor_id: tutorId, autor: nomeTutor, texto: texto })
+                });
+
+                if (resposta.ok) {
+                    input.value = "";
+                    carregarPublicacoes();
+                } else {
+                    alert("Erro ao enviar comentário.");
+                }
+            } catch (erro) {
+                console.error("Erro ao comentar:", erro);
             }
         }
 
@@ -425,6 +486,19 @@
         }
 
         carregarPublicacoes();
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const paramsAtuais = window.location.search;
+            if (paramsAtuais) {
+                document.querySelectorAll(".menu a").forEach(link => {
+                    const urlOriginal = link.getAttribute("href");
+                    if (urlOriginal && !urlOriginal.includes("?")) {
+                        const partes = urlOriginal.split("#");
+                        link.setAttribute("href", `${partes[0]}${paramsAtuais}${partes[1] ? '#' + partes[1] : ''}`);
+                    }
+                });
+            }
+        });
     </script>
 
 </body>

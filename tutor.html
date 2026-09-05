@@ -27,41 +27,30 @@
 
             <nav class="menu">
 
-                <a href="#" class="menu-item active" id="linkInicio">
-                    <span>🏠</span>
-                    Início
-                </a>
-
-                <a href="#pets" class="menu-item" id="linkPets">
+                <a href="tutor.html" class="menu-item active" id="linkPets">
                     <span>🐾</span>
                     Meus Pets
                 </a>
 
-                <a href="#" class="menu-item" id="linkAgendamento">
+                <a href="agendamento.html" class="menu-item" id="linkAgendamento">
                     <span>📅</span>
                     Agendamento
                 </a>
 
-                <a href="#" class="menu-item" id="linkConsultas">
+                <a href="consultas.html" class="menu-item" id="linkConsultas">
                     <span>📋</span>
                     Consultas
                 </a>
 
-                <a href="#" class="menu-item" id="linkComunidade">
+                <a href="comunidade.html" class="menu-item" id="linkComunidade">
                     <span>👥</span>
                     Comunidade
                 </a>
 
-                <a href="#" class="menu-item" id="linkPerfil">
+                <a href="perfil.html" class="menu-item" id="linkPerfil">
                     <span>👤</span>
                     Meu Perfil
                 </a>
-
-                <a href="#" class="menu-item" id="linkConfiguracoes">
-                    <span>⚙️</span>
-                    Configurações
-                </a>
-
             </nav>
 
             <div class="sidebar-bottom">
@@ -110,8 +99,6 @@
                         <strong id="nomePerfil">Tutor</strong>
                         <span>Tutor</span>
                     </div>
-
-                    <span class="arrow">⌄</span>
 
                 </div>
 
@@ -289,39 +276,47 @@
 
                         </div>
 
-                        <div class="form-group">
-
-                            <label for="idade">
-                                Idade
-                            </label>
-
-                            <input
-                                type="number"
-                                id="idade"
-                                placeholder="Ex: 3"
-                                min="0"
-                                max="50"
-                                required>
-
+                        <div class="form-group full" style="display: flex; gap: 10px;">
+                            <div style="flex: 2;">
+                                <label for="idade">Idade</label>
+                                <input
+                                    type="number"
+                                    id="idade"
+                                    placeholder="Ex: 3 ou 45"
+                                    min="0"
+                                    max="999"
+                                    required>
+                            </div>
+                            <div style="flex: 1;">
+                                <label for="unidadeIdade">Período</label>
+                                <select id="unidadeIdade" required>
+                                    <option value="ano(s)" selected>Anos</option>
+                                    <option value="mes(es)">Meses</option>
+                                    <option value="semana(s)">Semanas</option>
+                                    <option value="dia(s)">Dias</option>
+                                </select>
+                            </div>
                         </div>
 
-                        <div class="form-group weight">
-
-                            <label for="peso">
-                                Peso
-                            </label>
-
-                            <input
-                                type="number"
-                                id="peso"
-                                placeholder="Ex: 12"
-                                min="0"
-                                max="500"
-                                step="0.1"
-                                required>
-
-                            <span>kg</span>
-
+                        <div class="form-group full" style="display: flex; gap: 10px;">
+                            <div style="flex: 2;">
+                                <label for="peso">Peso</label>
+                                <input
+                                    type="number"
+                                    id="peso"
+                                    placeholder="Ex: 12 ou 500"
+                                    min="0"
+                                    max="9999"
+                                    step="0.1"
+                                    required>
+                            </div>
+                            <div style="flex: 1;">
+                                <label for="unidadePeso">Unidade</label>
+                                <select id="unidadePeso" required>
+                                    <option value="kg" selected>kg</option>
+                                    <option value="g">g</option>
+                                </select>
+                            </div>
                         </div>
 
                         <div class="form-group full">
@@ -375,14 +370,12 @@
             window.location.href = "login.html";
         }
 
-        // Mantém os links do menu dinâmicos levando o ID junto
-        document.getElementById("linkInicio").href = `tutor.html?id=${usuarioId}`;
+        // Mantém os links do menu dinâmicos levando o ID junto (removido o linkConfiguracoes que não existe no HTML)
         document.getElementById("linkPets").href = `tutor.html?id=${usuarioId}`;
-        document.getElementById("linkAgendamento").href = `agendamento.html?id=${usuarioId}`;
-        document.getElementById("linkConsultas").href = `consultas.html?id=${usuarioId}`;
-        document.getElementById("linkComunidade").href = `comunidade.html?id=${usuarioId}`; // Crie a página se precisar
-        document.getElementById("linkPerfil").href = `perfil.html?id=${usuarioId}`; // Crie a página se precisar
-        document.getElementById("linkConfiguracoes").href = `configuracoes.html?id=${usuarioId}`; // Crie a página se precisar
+document.getElementById("linkAgendamento").href = `agendamento.html?id=${usuarioId}`;
+document.getElementById("linkConsultas").href = `consultas.html?id=${usuarioId}`;
+document.getElementById("linkComunidade").href = `comunidade.html?id=${usuarioId}`; 
+document.getElementById("linkPerfil").href = `perfil.html?id=${usuarioId}`;
 
         let usuarioLogado = {};
 
@@ -462,7 +455,7 @@
                             <div class="pet-info">
                                 <h3>${pet.nome}</h3>
                                 <p>${pet.especie} • ${pet.raca}</p>
-                                <span>${pet.sexo} • ${pet.idade} ano(s) • ${pet.peso} kg</span>
+                                <span>${pet.sexo} • ${pet.idade} • ${pet.peso}</span>
                             </div>
                             <button type="button" class="btn-excluir" onclick="excluirPet(${pet.id})">
                                 Excluir
@@ -491,8 +484,17 @@
             reader.readAsDataURL(arquivo);
         });
 
-        document.getElementById("petForm").addEventListener("submit", async function(event) {
+       document.getElementById("petForm").addEventListener("submit", async function(event) {
             event.preventDefault();
+
+            // Pega o número e junta com a unidade selecionada apenas uma vez
+            const valorIdade = document.getElementById("idade").value;
+            const unidadeIdade = document.getElementById("unidadeIdade").value;
+            const idadeFinal = `${valorIdade} ${unidadeIdade}`;
+
+            const valorPeso = document.getElementById("peso").value;
+            const unidadePeso = document.getElementById("unidadePeso").value;
+            const pesoFinal = `${valorPeso}${unidadePeso}`;
 
             const novoPet = {
                 usuario_id: usuarioId,
@@ -500,27 +502,27 @@
                 especie: document.getElementById("animal").value,
                 raca: document.getElementById("raca").value,
                 sexo: document.getElementById("sexo").value,
-                idade: document.getElementById("idade").value,
-                peso: document.getElementById("peso").value,
+                idade: idadeFinal, 
+                peso: pesoFinal, 
                 status_atual: 'Ativo'
             };
 
             try {
                 const resposta = await fetch('/api/animais', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(novoPet)
                 });
 
-                const resultado = await resposta.json();
-
                 if (resposta.ok) {
-                    alert("Pet cadastrado com sucesso no banco de dados!");
+                    alert("Pet cadastrado com sucesso!");
                     fecharFormulario();
+                    document.getElementById("petForm").reset();
+                    document.getElementById("unidadePeso").value = "kg";
+                    document.getElementById("unidadeIdade").value = "ano(s)";
                     mostrarPets();
                 } else {
+                    const resultado = await resposta.json();
                     alert("Erro ao cadastrar: " + resultado.erro);
                 }
             } catch (error) {
@@ -530,31 +532,31 @@
         });
 
         async function excluirPet(id) {
-    const confirmar = confirm("Tem certeza que deseja excluir este pet?");
-    if (!confirmar) {
-        return;
-    }
+            const confirmar = confirm("Tem certeza que deseja excluir este pet?");
+            if (!confirmar) {
+                return;
+            }
 
-    try {
-        const resposta = await fetch(`/api/animais/${id}`, {
-            method: 'DELETE'
-        });
+            try {
+                const resposta = await fetch(`/api/animais/${id}`, {
+                    method: 'DELETE'
+                });
 
-        const resultado = await resposta.json();
+                const resultado = await resposta.json();
 
-        if (resposta.ok) {
-            alert("Animal excluído com sucesso!");
-            mostrarPets(); // Atualiza a lista na tela
-        } else {
-            alert("Erro ao excluir: " + (resultado.erro || "Erro desconhecido."));
+                if (resposta.ok) {
+                    alert("Animal excluído com sucesso!");
+                    mostrarPets(); 
+                } else {
+                    alert("Erro ao excluir: " + (resultado.erro || "Erro desconhecido."));
+                }
+            } catch (error) {
+                console.error("Erro na requisição de exclusão:", error);
+                alert("Erro de conexão com o servidor.");
+            }
         }
-    } catch (error) {
-        console.error("Erro na requisição de exclusão:", error);
-        alert("Erro de conexão com o servidor.");
-    }
-}
 
-        // Inicia a aplicação buscando os dados do usuário no Banco de Dados
+        // CHAMA A FUNÇÃO CORRETAMENTE AO ABRIR A PÁGINA
         carregarDadosUsuario();
     </script>
 

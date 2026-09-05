@@ -24,11 +24,6 @@
         <nav class="menu">
 
             <a href="tutor.html" class="menu-item">
-                <span>🏠</span>
-                Início
-            </a>
-
-            <a href="tutor.html#pets" class="menu-item">
                 <span>🐾</span>
                 Meus Pets
             </a>
@@ -51,11 +46,6 @@
             <a href="perfil.html" class="menu-item active">
                 <span>👤</span>
                 Meu Perfil
-            </a>
-
-            <a href="#" class="menu-item">
-                <span>⚙️</span>
-                Configurações
             </a>
 
         </nav>
@@ -206,20 +196,6 @@
                                 Alterar
                             </button>
                         </div>
-
-                        <div class="account-item">
-                            <div class="account-icon">⚙️</div>
-
-                            <div>
-                                <strong>Configurações</strong>
-                                <span>Personalize suas preferências.</span>
-                            </div>
-
-                            <a href="#" class="option-button">
-                                Acessar
-                            </a>
-                        </div>
-
                     </div>
 
                 </div>
@@ -231,70 +207,90 @@
     </main>
 
     <script>
-        const tutor = JSON.parse(
-            localStorage.getItem("tutor")
-        );
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 1. Pega o ID da URL (ex: perfil.html?id=5)
+        const urlParams = new URLSearchParams(window.location.search);
+        const tutorId = urlParams.get("id");
 
+        let tutor = null;
+
+        if (tutorId) {
+            try {
+                // 2. Busca os dados diretamente do Banco de Dados via API do backend
+                const resposta = await fetch(`/api/tutores/${tutorId}`);
+                if (resposta.ok) {
+                    tutor = await resposta.json();
+                } else {
+                    console.error("Tutor não encontrado no banco de dados.");
+                }
+            } catch (erro) {
+                console.error("Erro ao conectar com o servidor:", erro);
+            }
+        }
+
+        // 3. Fallback (Opcional): Se não vier ID na URL, tenta pegar do localStorage caso já estivesse salvo
+        if (!tutor) {
+            try {
+                tutor = JSON.parse(localStorage.getItem("tutor"));
+            } catch (e) {
+                console.error("Erro ao ler do localStorage", e);
+            }
+        }
+
+        // 4. Preenche os campos na tela com os dados vindos do banco
         if (tutor) {
+            const nome = tutor.nome || tutor.nomeCompleto || "Tutor";
+            const email = tutor.email || tutor.eMail || "Não informado";
+            const telefone = tutor.telefone || tutor.celular || "Não informado";
+            const cpf = tutor.cpf || "Não informado";
 
-            const nome =
-                tutor.nome ||
-                tutor.nomeCompleto ||
-                "Tutor";
-
-            const email =
-                tutor.email ||
-                tutor.eMail ||
-                "Não informado";
-
-            const telefone =
-                tutor.telefone ||
-                tutor.celular ||
-                "Não informado";
-
-            const cpf =
-                tutor.cpf ||
-                "Não informado";
-
-            const partes =
-                nome.trim().split(" ");
-
-            let iniciais =
-                partes[0].charAt(0);
+            const partes = nome.trim().split(" ");
+            let iniciais = partes[0] ? partes[0].charAt(0) : "T";
 
             if (partes.length > 1) {
-                iniciais +=
-                    partes[partes.length - 1].charAt(0);
+                iniciais += partes[partes.length - 1].charAt(0);
             }
 
-            const iniciaisFormatadas =
-                iniciais.toUpperCase();
+            const iniciaisFormatadas = iniciais.toUpperCase();
 
-            document.getElementById("nomePerfil").textContent =
-                nome;
+            // Preenche os elementos da tela com segurança
+            const elNomePerfil = document.getElementById("nomePerfil");
+            const elAvatarNome = document.getElementById("avatarNome");
+            const elNomeGrande = document.getElementById("nomeGrande");
+            const elAvatarGrande = document.getElementById("avatarGrande");
+            const elCampoNome = document.getElementById("campoNome");
+            const elCampoEmail = document.getElementById("campoEmail");
+            const elCampoTelefone = document.getElementById("campoTelefone");
+            const elCampoCpf = document.getElementById("campoCpf");
 
-            document.getElementById("avatarNome").textContent =
-                iniciaisFormatadas;
-
-            document.getElementById("nomeGrande").textContent =
-                nome;
-
-            document.getElementById("avatarGrande").textContent =
-                iniciaisFormatadas;
-
-            document.getElementById("campoNome").textContent =
-                nome;
-
-            document.getElementById("campoEmail").textContent =
-                email;
-
-            document.getElementById("campoTelefone").textContent =
-                telefone;
-
-            document.getElementById("campoCpf").textContent =
-                cpf;
+            if (elNomePerfil) elNomePerfil.textContent = nome;
+            if (elAvatarNome) elAvatarNome.textContent = iniciaisFormatadas;
+            if (elNomeGrande) elNomeGrande.textContent = nome;
+            if (elAvatarGrande) elAvatarGrande.textContent = iniciaisFormatadas;
+            if (elCampoNome) elCampoNome.textContent = nome;
+            if (elCampoEmail) elCampoEmail.textContent = email;
+            if (elCampoTelefone) elCampoTelefone.textContent = telefone;
+            if (elCampoCpf) elCampoCpf.textContent = cpf;
+        } else {
+            // Se não houver tutor nem no banco nem no storage, pode redirecionar para o login
+            alert("Sessão expirada ou usuário não encontrado.");
+            window.location.href = "login.html";
+            return;
         }
-    </script>
+
+        // 5. Mantém os parâmetros de URL atual (como o ?id=...) ao navegar pelos links do menu lateral
+        const paramsAtuais = window.location.search; 
+        if (paramsAtuais) {
+            document.querySelectorAll(".menu a").forEach(link => {
+                const urlOriginal = link.getAttribute("href");
+                if (urlOriginal && !urlOriginal.includes("?")) {
+                    const partes = urlOriginal.split("#");
+                    link.setAttribute("href", `${partes[0]}${paramsAtuais}${partes[1] ? '#' + partes[1] : ''}`);
+                }
+            });
+        }
+    });
+</script>
 
 </body>
 </html>
