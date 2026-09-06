@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VitaMed - Recuperar Senha</title>
     <link rel="stylesheet" href="esqueci-senha.css">
+    <link rel="manifest" href="manifest.json">
 </head>
 
 <body>
@@ -66,9 +67,20 @@
 
             alert("E-mail encontrado! Agora você pode redefinir sua senha.");
 
-            window.location.href = "nova-senha.html";
+            window.location.href = "login.html";
         }
-
+    
+        if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => {
+        console.log('Service Worker do VitaMet registrado com sucesso!', reg.scope);
+      })
+      .catch(err => {
+        console.error('Erro ao registrar o Service Worker:', err);
+      });
+  });
+}
     </script>
 
 </body>

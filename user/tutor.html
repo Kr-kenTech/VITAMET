@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VitaMet - Área do Tutor</title>
     <link rel="stylesheet" href="tutor.css">
+    <link rel="manifest" href="../manifest.json">
 </head>
 
 <body>
@@ -16,7 +17,7 @@
 
             <div class="logo">
                 <div class="logo-icon">
-                    <img src="foto.jpeg" alt="VitaMed">
+                    <img src="../foto.jpeg" alt="VitaMET">
                 </div>
 
                 <div>
@@ -63,12 +64,12 @@
 
                     <div>
                         <strong>Precisa de ajuda?</strong>
-                        <p>Entre em contato com a VitaMed.</p>
+                        <p>Entre em contato com a VitaMet.</p>
                     </div>
 
                 </div>
 
-                <a href="login.html" class="logout">
+                <a href="../login.html" class="logout">
                     <span>🚪</span>
                     Sair
                 </a>
@@ -367,7 +368,7 @@
 
         if (!usuarioId) {
             alert("Usuário não autenticado. Faça login novamente.");
-            window.location.href = "login.html";
+            window.location.href = "../login.html";
         }
 
         // Mantém os links do menu dinâmicos levando o ID junto (removido o linkConfiguracoes que não existe no HTML)
@@ -387,7 +388,7 @@ document.getElementById("linkPerfil").href = `perfil.html?id=${usuarioId}`;
 
                 if (!resposta.ok) {
                     alert(dados.erro || "Sessão inválida.");
-                    window.location.href = "login.html";
+                    window.location.href = "../login.html";
                     return;
                 }
 
@@ -436,7 +437,7 @@ document.getElementById("linkPerfil").href = `perfil.html?id=${usuarioId}`;
                             <p>
                                 Você ainda não possui nenhum pet cadastrado.
                                 Cadastre seu primeiro animal para acompanhar
-                                seus cuidados na VitaMed.
+                                seus cuidados na VitaMet.
                             </p>
                             <button type="button" class="btn-primary" onclick="abrirFormulario()">
                                 + Cadastrar meu primeiro pet

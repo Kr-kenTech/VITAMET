@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VitaMet - Meu Perfil</title>
     <link rel="stylesheet" href="perfil.css">
+    <link rel="manifest" href="../manifest.json">
 </head>
 <body>
 
@@ -12,7 +13,7 @@
 
         <div class="logo">
             <div class="logo-icon">
-                <img src="foto.jpeg" alt="VitaMet">
+                <img src="../foto.jpeg" alt="VitaMet">
             </div>
 
             <div>
@@ -28,7 +29,7 @@
                 Meus Pets
             </a>
 
-            <a href="agendamentos.html" class="menu-item">
+            <a href="agendamento.html" class="menu-item">
                 <span>📅</span>
                 Agendamento
             </a>
@@ -61,10 +62,10 @@
                 </div>
             </div>
 
-            <a href="login.html" class="logout">
-                <span>🚪</span>
-                Sair
-            </a>
+                <a href="../login.html" class="logout">
+                    <span>🚪</span>
+                    Sair
+                </a>
 
         </div>
 
@@ -192,7 +193,7 @@
                                 <span>Altere sua senha de acesso.</span>
                             </div>
 
-                            <button type="button" class="option-button">
+                            <button type="button" class="option-button" id="btnAlterarSenha">
                                 Alterar
                             </button>
                         </div>
@@ -206,18 +207,18 @@
 
     </main>
 
-    <script>
+<script>
     document.addEventListener("DOMContentLoaded", async () => {
         // 1. Pega o ID da URL (ex: perfil.html?id=5)
         const urlParams = new URLSearchParams(window.location.search);
-        const tutorId = urlParams.get("id");
+        const tutorIdUrl = urlParams.get("id");
 
         let tutor = null;
 
-        if (tutorId) {
+        if (tutorIdUrl) {
             try {
                 // 2. Busca os dados diretamente do Banco de Dados via API do backend
-                const resposta = await fetch(`/api/tutores/${tutorId}`);
+                const resposta = await fetch(`/usuario/${tutorIdUrl}`);
                 if (resposta.ok) {
                     tutor = await resposta.json();
                 } else {
@@ -272,9 +273,9 @@
             if (elCampoTelefone) elCampoTelefone.textContent = telefone;
             if (elCampoCpf) elCampoCpf.textContent = cpf;
         } else {
-            // Se não houver tutor nem no banco nem no storage, pode redirecionar para o login
+            // Se não houver tutor nem no banco nem no storage, redireciona para o login
             alert("Sessão expirada ou usuário não encontrado.");
-            window.location.href = "login.html";
+            window.location.href = "../login.html";
             return;
         }
 
@@ -289,7 +290,32 @@
                 }
             });
         }
+
+        // 6. Configura o botão de alterar senha de forma segura no mesmo escopo
+        const btnAlterarSenha = document.getElementById("btnAlterarSenha");
+        if (btnAlterarSenha) {
+            btnAlterarSenha.addEventListener("click", () => {
+                const tutorId = tutor?.id || tutor?._id || tutorIdUrl;
+                
+                if (tutorId) {
+                    window.location.href = `../esqueci-senha.html?id=${tutorId}`;
+                } else {
+                    window.location.href = "../esqueci-senha.html";
+                }
+            });
+        }
     });
+    if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('../sw.js')
+      .then(reg => {
+        console.log('Service Worker do VitaMet registrado com sucesso!', reg.scope);
+      })
+      .catch(err => {
+        console.error('Erro ao registrar o Service Worker:', err);
+      });
+  });
+}
 </script>
 
 </body>

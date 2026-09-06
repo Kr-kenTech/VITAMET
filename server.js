@@ -40,7 +40,7 @@ app.get('/cadastro.html', (req, res) => {
 });
 
 app.get('/tutor.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'tutor.html'));
+    res.sendFile(path.join(__dirname, 'user', 'tutor.html'));
 });
 
 // Rota de Usuário por ID (para preencher o painel, buscando dados do tutor e da tabela usuario)
@@ -238,50 +238,39 @@ app.get('/api/animais/tutor/:usuarioId', (req, res) => {
 // ROTAS DE AGENDAMENTOS E CONSULTAS
 // ==========================================
 
-// Cadastrar nova consulta / agendamento básico
 app.post('/api/agendamentos', (req, res) => {
-    const { animal_id, data, hora, tipo, observacoes } = req.body;
+    const { tutor_id, pet_id, servico, data, horario, observacoes, valor } = req.body;
 
-    if (!animal_id || !data || !hora || !tipo) {
-        return res.status(400).json({ erro: 'Preencha todos os campos obrigatórios do agendamento.' });
-    }
+    const query = 'INSERT INTO consultas (tutor_id, pet_id, servico, data, horario, observacoes, valor) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    
+    connection.query(query, [tutor_id, pet_id, servico, data, horario, observacoes, valor], (err, result) => {
+        if (err) {
+            // Se for duplicidade de horário (Código 1062 do MySQL)
+            if (err.code === 'ER_DUP_ENTRY' || err.errno === 1062) {
+                return res.status(400).json({ 
+                    erro: 'Já existe uma consulta agendada para esta mesma data e horário!' 
+                });
+            }
 
-    const queryTutorPet = `
-        SELECT t.usuario_id 
-        FROM animal a 
-        JOIN tutor t ON a.tutor_id = t.id 
-        WHERE a.id = ?
-    `;
-
-    connection.query(queryTutorPet, [animal_id], (err, resultsPet) => {
-        if (err || resultsPet.length === 0) {
-            return res.status(404).json({ erro: 'Pet ou tutor não encontrado.' });
+            console.error("Erro ao salvar agendamento no banco:", err);
+            return res.status(500).json({ erro: 'Erro ao salvar agendamento no banco de dados.' });
         }
 
-        const usuarioId = resultsPet[0].usuario_id;
-        const obsText = observacoes || '';
-        const queryInsert = "INSERT INTO consultas (tutor_id, pet_id, servico, data, horario, observacoes) VALUES (?, ?, ?, ?, ?, ?)";
-
-        connection.query(queryInsert, [usuarioId, animal_id, tipo, data, hora, obsText], (errInsert, results) => {
-            if (errInsert) {
-                console.error("Erro ao salvar consulta:", errInsert);
-                return res.status(500).json({ erro: 'Erro ao salvar agendamento no banco.' });
-            }
-            return res.status(201).json({ mensagem: 'Consulta agendada com sucesso!', id: results.insertId });
-        });
+        return res.status(201).json({ mensagem: 'Consulta agendada com sucesso!', id: result.insertId });
     });
 });
 
 // Cadastrar nova consulta completa
+// Cadastrar nova consulta completa
 app.post('/api/consultas', (req, res) => {
-    const { animal_id, data, hora, tipo, observacoes } = req.body;
+    const { animal_id, data, hora, tipo, observacoes, valor } = req.body;
 
     if (!animal_id || !data || !hora || !tipo) {
         return res.status(400).json({ erro: 'Preencha todos os campos obrigatórios do agendamento.' });
     }
 
     const queryTutorPet = `
-        SELECT t.usuario_id 
+        SELECT t.id AS tutor_id, t.usuario_id 
         FROM animal a 
         JOIN tutor t ON a.tutor_id = t.id 
         WHERE a.id = ?
@@ -292,12 +281,20 @@ app.post('/api/consultas', (req, res) => {
             return res.status(404).json({ erro: 'Pet ou tutor não encontrado.' });
         }
 
-        const usuarioId = resultsPet[0].usuario_id;
+        const tutorId = resultsPet[0].tutor_id;
         const obsText = observacoes || '';
-        const queryInsert = "INSERT INTO consultas (tutor_id, pet_id, servico, data, horario, observacoes) VALUES (?, ?, ?, ?, ?, ?)";
+        const valorConsulta = valor !== undefined ? valor : 0.00;
+        const queryInsert = "INSERT INTO consultas (tutor_id, pet_id, servico, data, horario, observacoes, valor) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        connection.query(queryInsert, [usuarioId, animal_id, tipo, data, hora, obsText], (errInsert, results) => {
+        connection.query(queryInsert, [tutorId, animal_id, tipo, data, hora, obsText, valorConsulta], (errInsert, results) => {
             if (errInsert) {
+                // Tratamento da restrição de duplicidade de data/horário (Erro 1062)
+                if (errInsert.code === 'ER_DUP_ENTRY' || errInsert.errno === 1062) {
+                    return res.status(400).json({ 
+                        erro: 'Já existe uma consulta agendada para esta mesma data e horário!' 
+                    });
+                }
+
                 console.error("Erro detalhado ao salvar consulta no MySQL:", errInsert);
                 return res.status(500).json({ erro: 'Erro ao salvar agendamento no banco.' });
             }
@@ -314,7 +311,8 @@ app.get('/api/agendamentos/tutor/:usuarioId', (req, res) => {
         SELECT c.id, a.nome AS pet, c.servico, c.data, c.horario, c.observacoes, c.valor, 'Agendado' AS status 
         FROM consultas c 
         JOIN animal a ON c.pet_id = a.id 
-        WHERE c.tutor_id = ?
+        JOIN tutor t ON c.tutor_id = t.id
+        WHERE t.usuario_id = ?
         ORDER BY c.data ASC
     `;
 
@@ -354,15 +352,29 @@ app.get('/api/gastos/:tutor_id', (req, res) => {
     });
 });
 
-// Listar todas as publicações
 app.get('/api/publicacoes', (req, res) => {
-    const query = "SELECT * FROM publicacoes ORDER BY data DESC";
-    connection.query(query, (err, results) => {
-        if (err) {
-            console.error("Erro ao buscar publicações:", err);
-            return res.status(500).json({ erro: 'Erro interno no servidor.' });
-        }
-        res.status(200).json(results);
+    const tutorId = req.query.tutor_id || null;
+
+    const query = `
+        SELECT p.*, 
+               COUNT(DISTINCT c.id) AS curtidas,
+               SUM(CASE WHEN c.tutor_id = ? THEN 1 ELSE 0 END) AS curtido
+        FROM publicacoes p
+        LEFT JOIN curtidas c ON p.id = c.publicacao_id
+        GROUP BY p.id
+        ORDER BY p.data DESC
+    `;
+    
+    connection.query(query, [tutorId], (err, results) => {
+        if (err) return res.status(500).json({ error: err.message });
+        
+        // Converte o resultado de 'curtido' para booleano (true/false) para o front-end
+        const publicacoesFormatadas = results.map(pub => ({
+            ...pub,
+            curtido: pub.curtido > 0
+        }));
+
+        res.json(publicacoesFormatadas);
     });
 });
 
@@ -427,6 +439,28 @@ app.delete('/api/animais/:id', (req, res) => {
         }
 
         return res.status(200).json({ mensagem: 'Animal excluído com sucesso!' });
+    });
+});
+
+// Rota para excluir ou cancelar consulta com motivo
+app.delete('/api/agendamentos/:id', (req, res) => {
+    const { id } = req.params;
+    const { motivo } = req.body; // Recebe o motivo enviado pelo front-end
+
+    // Se preferir apenas apagar do banco de dados:
+    const query = 'DELETE FROM consultas WHERE id = ?';
+
+    connection.query(query, [id], (err, results) => {
+        if (err) {
+            console.error("Erro ao excluir consulta:", err);
+            return res.status(500).json({ erro: 'Erro ao excluir a consulta.' });
+        }
+
+        if (results.affectedRows === 0) {
+            return res.status(404).json({ erro: 'Consulta não encontrada.' });
+        }
+
+        return res.status(200).json({ mensagem: 'Consulta excluída com sucesso!' });
     });
 });
 

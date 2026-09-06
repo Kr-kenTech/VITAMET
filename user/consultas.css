@@ -118,8 +118,10 @@ textarea {
 .sidebar-bottom {
     margin-top: auto;
     padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
-
 .help {
     padding: 13px;
     background: #e8f8ff;
@@ -155,12 +157,12 @@ textarea {
 
 .logout {
     display: block;
-    margin-top: 15px;
+    margin-top: 0;
     padding: 10px;
     color: #607d8b;
     font-size: 13px;
     border-radius: 10px;
-    transition: .3s;
+    transition: 0.3s;
 }
 
 .logout:hover {
@@ -535,6 +537,68 @@ textarea {
 
 .historico-section {
     margin-top: 35px;
+}
+
+#modalExclusao {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Fundo escuro translúcido */
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+#modalExclusao .modal-content {
+    background: #ffffff; /* Fundo branco do modal */
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 450px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#modalExclusao .modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+#modalExclusao .modal-buttons button {
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    border: none;
+}
+
+#modalExclusao .btn-danger {
+    background-color: #ff4d4d;
+    color: white;
+}
+
+#modalExclusao .btn-secondary {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+#modalExclusao textarea.form-control {
+    width: 100%;
+    min-height: 80px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 14px;
+    box-sizing: border-box;
+    resize: vertical; /* Permite ao usuário redimensionar se quiser, mas já começa maior */
 }
 
 @media (max-width: 1100px) {

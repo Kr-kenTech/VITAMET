@@ -1,0 +1,17 @@
+{
+  "name": "VitaMet - Clínica Veterinária",
+  "short_name": "VitaMet",
+  "description": "Sistema de gestão e agendamentos da Clínica Veterinária VitaMet",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4A90E2",
+  "icons": [
+    {
+      "src": "/icone-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

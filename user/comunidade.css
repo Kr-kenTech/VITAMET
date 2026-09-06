@@ -26,7 +26,9 @@ textarea {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Garante que o layout principal da comunidade ocupe a altura correta da tela */
 .layout {
+    display: flex;
     min-height: 100vh;
 }
 
@@ -99,7 +101,7 @@ textarea {
     gap: 13px;
     color: #607d8b;
     font-size: 14px;
-    transition: 0.3s;
+    transition: .3s;
 }
 
 .menu-item:hover {
@@ -122,8 +124,10 @@ textarea {
 .sidebar-bottom {
     margin-top: auto;
     padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
-
 .help {
     padding: 13px;
     background: #e8f8ff;
@@ -143,7 +147,6 @@ textarea {
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    flex-shrink: 0;
 }
 
 .help strong {
@@ -160,7 +163,7 @@ textarea {
 
 .logout {
     display: block;
-    margin-top: 15px;
+    margin-top: 0;
     padding: 10px;
     color: #607d8b;
     font-size: 13px;

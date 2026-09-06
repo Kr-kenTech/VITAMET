@@ -5,14 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Consultas | VITAMET</title>
     <link rel="stylesheet" href="consultas.css">
+    <link rel="manifest" href="../manifest.json">
 </head>
 <body>
-
     <aside class="sidebar">
-
         <div class="logo">
             <div class="logo-icon">
-                <img src="foto.jpeg" alt="VITAMET">
+                <img src="../foto.jpeg" alt="VITAMET">
             </div>
             <div>
                 <h2>Vita<span>Met</span></h2>
@@ -21,7 +20,6 @@
         </div>
 
         <nav class="menu">
-
             <a href="tutor.html" id="menuPets" class="menu-item">
                 <span>🐾</span>
                 Meus Pets
@@ -37,28 +35,39 @@
                 Consultas
             </a>
 
-        <a href="comunidade.html" class="menu-item"><span>👥</span>Comunidade</a>
+            <a href="comunidade.html" class="menu-item"><span>👥</span>Comunidade</a>
 
-            <a href="#" class="menu-item">
+            <a href="perfil.html" class="menu-item">
                 <span>👤</span>
                 Meu Perfil
             </a>
-
-            <a href="#" class="menu-item">
-                <span>⚙️</span>
-                Configurações
-            </a>
-
         </nav>
+        <div class="sidebar-bottom">
 
+                <div class="help">
+
+                    <div class="help-icon">
+                        ?
+                    </div>
+
+                    <div>
+                        <strong>Precisa de ajuda?</strong>
+                        <p>Entre em contato com a VitaMet.</p>
+                    </div>
+
+                </div>
+
+                <a href="../login.html" class="logout">
+                    <span>🚪</span>
+                    Sair
+                </a>
+
+            </div>
     </aside>
 
     <main class="main">
-
         <header class="topbar">
-
             <div></div>
-
             <div class="top-user">
                 <button class="notification">🔔</button>
 
@@ -70,14 +79,10 @@
                     <strong id="nomePerfil">Tutor</strong>
                     <span>Tutor</span>
                 </div>
-
-                <span class="arrow">⌄</span>
             </div>
-
         </header>
 
         <section class="content">
-
             <div class="page-header">
                 <div>
                     <h1>Minhas Consultas</h1>
@@ -90,7 +95,6 @@
             </div>
 
             <section class="gastos">
-
                 <div class="section-title">
                     <div>
                         <h2>Gastos com seu pet</h2>
@@ -99,7 +103,6 @@
                 </div>
 
                 <div class="gastos-grid">
-
                     <div class="gasto-card total">
                         <div class="gasto-icon">💰</div>
                         <div>
@@ -139,13 +142,10 @@
                             <strong id="gastoHigiene">R$ 0,00</strong>
                         </div>
                     </div>
-
                 </div>
-
             </section>
 
             <section class="consultas-section">
-
                 <div class="section-title">
                     <div>
                         <h2>Próximas consultas</h2>
@@ -154,11 +154,9 @@
                 </div>
 
                 <div id="proximasConsultas" class="consultas-list"></div>
-
             </section>
 
             <section class="consultas-section historico-section">
-
                 <div class="section-title">
                     <div>
                         <h2>Histórico de consultas</h2>
@@ -167,14 +165,42 @@
                 </div>
 
                 <div id="historicoConsultas" class="consultas-list"></div>
-
             </section>
-
         </section>
-
     </main>
 
-    <script>
+    <div id="modalExclusao" class="modal">
+        <div class="modal-content">
+            <form id="formExcluirConsulta">
+                <h3>Deseja realmente excluir/cancelar esta consulta?</h3>
+                
+                <input type="hidden" id="consultaIdParaExcluir">
+
+                <label for="selectMotivo">Motivo do cancelamento:</label>
+                <select id="selectMotivo" class="form-control" required>
+                    <option value="" disabled selected hidden>Selecione um motivo...</option>
+                    <option value="Imprevisto de última hora">Imprevisto de última hora</option>
+                    <option value="Mudança de horário">Mudança de horário</option>
+                    <option value="Problemas de saúde do tutor">Problemas de saúde do tutor</option>
+                    <option value="Melhora na saúde do pet">Melhora na saúde do pet</option>
+                    <option value="Questões financeiras">Questões financeiras</option>
+                    <option value="Outros">Outros</option>
+                </select>
+
+                <div id="divOutrosMotivo" style="display: none; margin-top: 10px;">
+                    <label for="inputOutroMotivo">Especifique o motivo:</label>
+                    <textarea id="inputOutroMotivo" class="form-control" placeholder="Digite o motivo..." rows="3" style="resize: vertical;"></textarea>
+                </div>
+
+                <div class="modal-buttons" style="margin-top: 15px;">
+                    <button type="submit" id="btnConfirmarExclusao" class="btn-danger">Confirmar</button>
+                    <button type="button" id="btnFecharModal" class="btn-secondary" onclick="fecharModalExcluir()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+<script>
     const tutor = JSON.parse(localStorage.getItem("tutor"));
 
     if (tutor && tutor.nome) {
@@ -194,14 +220,17 @@
     hoje.setHours(0, 0, 0, 0);
 
     const urlParams = new URLSearchParams(window.location.search);
-    const usuarioId = urlParams.get('id');
+    let usuarioId = urlParams.get('id');
+
+    if (!usuarioId && tutor && (tutor.id || tutor._id)) {
+        usuarioId = tutor.id || tutor._id;
+    }
+
+    console.log("ID do usuário identificado:", usuarioId); // Passo 1
 
     if (usuarioId) {
         const btnNovaConsulta = document.getElementById("btnNovaConsulta");
         if (btnNovaConsulta) btnNovaConsulta.href = `agendamento.html?id=${usuarioId}`;
-
-        const menuInicio = document.getElementById("menuInicio");
-        if (menuInicio) menuInicio.href = `tutor.html?id=${usuarioId}`;
 
         const menuPets = document.getElementById("menuPets");
         if (menuPets) menuPets.href = `tutor.html?id=${usuarioId}#pets`;
@@ -227,10 +256,12 @@
     }
 
     function criarConsulta(agendamento, passada) {
+        console.log("Criando card para a consulta:", agendamento); // Passo 4
         const card = document.createElement("div");
         card.className = "consulta-card";
 
         const valor = Number(agendamento.valor || 0);
+        const idUnico = agendamento.id || agendamento._id;
 
         card.innerHTML = `
             <div class="data-card">
@@ -251,14 +282,106 @@
                 ${agendamento.observacoes ? `<small>${agendamento.observacoes}</small>` : ""}
             </div>
 
-            <div class="consulta-valor">
-                <span>Valor</span>
-                <strong>${formatarValor(valor)}</strong>
+            <div class="consulta-valor" style="display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end;">
+                <div>
+                    <span>Valor</span>
+                    <strong>${formatarValor(valor)}</strong>
+                </div>
+                ${!passada ? `<button type="button" class="btn-excluir-consulta" style="background: #ff4d4d; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; margin-top: 8px;">Excluir</button>` : ""}
             </div>
         `;
 
+        if (!passada) {
+            const btnExcluir = card.querySelector('.btn-excluir-consulta');
+            if (btnExcluir) {
+                btnExcluir.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log("Botão excluir clicado! ID:", idUnico);
+                    abrirModalExcluir(idUnico);
+                });
+            } else {
+                console.warn("Botão de exclusão não encontrado dentro do card!");
+            }
+        }
+
         return card;
     }
+
+    function abrirModalExcluir(idConsulta) {
+        console.log("Abrindo modal para o ID:", idConsulta);
+        document.getElementById('consultaIdParaExcluir').value = idConsulta;
+        
+        const modal = document.getElementById('modalExclusao');
+        modal.style.setProperty('display', 'flex', 'important');
+        modal.style.setProperty('opacity', '1', 'important');
+        modal.style.setProperty('visibility', 'visible', 'important');
+    }
+
+    function fecharModalExcluir() {
+        const modal = document.getElementById('modalExclusao');
+        modal.style.setProperty('display', 'none', 'important');
+        modal.style.setProperty('opacity', '0', 'important');
+        modal.style.setProperty('visibility', 'hidden', 'important');
+        
+        document.getElementById('formExcluirConsulta').reset();
+        document.getElementById('divOutrosMotivo').style.display = 'none';
+    }
+
+    document.getElementById('btnFecharModal').addEventListener('click', fecharModalExcluir);
+
+    document.getElementById('selectMotivo').addEventListener('change', function() {
+        const divOutros = document.getElementById('divOutrosMotivo');
+        const inputOutro = document.getElementById('inputOutroMotivo');
+        
+        if (this.value === 'Outros') {
+            divOutros.style.display = 'block'; 
+            inputOutro.required = true;
+        } else {
+            divOutros.style.display = 'none';  
+            inputOutro.value = '';            
+            inputOutro.required = false;
+        }
+    });
+
+    document.getElementById('formExcluirConsulta').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const id = document.getElementById('consultaIdParaExcluir').value;
+        const selectMotivo = document.getElementById('selectMotivo').value;
+        const inputOutro = document.getElementById('inputOutroMotivo').value.trim();
+
+        if (!id) {
+            alert('Erro: ID da consulta não identificado.');
+            return;
+        }
+
+        const motivoFinal = selectMotivo === 'Outros' ? inputOutro : selectMotivo;
+
+        try {
+            const resposta = await fetch(`/api/agendamentos/${id}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ motivo: motivoFinal })
+            });
+
+            let resultado = {};
+            try {
+                resultado = await resposta.json();
+            } catch (err) {}
+
+            if (resposta.ok) {
+                alert('Consulta excluída com sucesso!');
+                fecharModalExcluir();
+                carregarDados(); 
+            } else {
+                alert(resultado.erro || 'Erro ao excluir consulta.');
+            }
+        } catch (error) {
+            console.error('Erro na requisição:', error);
+            alert('Erro de conexão com o servidor.');
+        }
+    });
 
     function mostrarVazio(elemento, mensagem, botao) {
         elemento.innerHTML = `
@@ -272,14 +395,18 @@
     }
 
     async function carregarDados() {
-        if (!usuarioId) return;
+        if (!usuarioId) {
+            console.warn("ID do usuário não encontrado. O carregamento foi abortado.");
+            return;
+        }
 
         try {
-            // Busca os dados consolidados de gastos e consultas do servidor
+            console.log("Buscando consultas na API para o ID:", usuarioId); // Passo 2
             const resposta = await fetch(`/api/agendamentos/tutor/${usuarioId}`);
             if (!resposta.ok) throw new Error('Erro ao buscar consultas');
 
             const agendamentos = await resposta.json();
+            console.log("Agendamentos recebidos da API:", agendamentos); // Passo 3
 
             proximasConsultas.innerHTML = "";
             historicoConsultas.innerHTML = "";
@@ -338,6 +465,18 @@
     window.addEventListener('DOMContentLoaded', () => {
         carregarDados();
     });
+
+    if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('../sw.js')
+      .then(reg => {
+        console.log('Service Worker do VitaMet registrado com sucesso!', reg.scope);
+      })
+      .catch(err => {
+        console.error('Erro ao registrar o Service Worker:', err);
+      });
+  });
+}
 </script>
 
 </body>

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VitaMed - Login</title>
     <link rel="stylesheet" href="login.css">
+    <link rel="manifest" href="manifest.json">
 </head>
 
 <body>
@@ -85,7 +86,7 @@
 
                 // 2. Pega o ID que veio do banco e direciona para o painel do tutor mantendo o ID na URL
                 const usuarioId = dadosUsuario ? dadosUsuario.id : "";
-                window.location.href = `tutor.html${usuarioId ? '?id=' + usuarioId : ''}`;
+                window.location.href = `user/tutor.html${usuarioId ? '?id=' + usuarioId : ''}`;
             } else {
                 alert(resultado.erro || "E-mail ou senha incorretos!");
             }
@@ -94,6 +95,17 @@
             alert("Erro de conexão com o servidor.");
         }
     }
+    if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => {
+        console.log('Service Worker do VitaMet registrado com sucesso!', reg.scope);
+      })
+      .catch(err => {
+        console.error('Erro ao registrar o Service Worker:', err);
+      });
+  });
+}
 </script>
 
 </body>

@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <link rel="manifest" href="../manifest.json">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="agendamento.css">
     <title>Agendamento | VITAMET</title>
@@ -138,7 +139,7 @@
 
             </form>
 
-            <a href="#" id="linkVoltar" class="voltar">
+            <a href="tutor.html" id="linkVoltar" class="voltar">
                 ← Voltar para Meus Pets
             </a>
 
@@ -153,11 +154,19 @@
 
     if (!usuarioId) {
         alert("Usuário não autenticado. Faça login novamente.");
-        window.location.href = "login.html";
+        window.location.href = "../login.html";
     }
 
     // Mantém o link de voltar conectado ao ID do tutor
     document.getElementById("linkVoltar").href = `tutor.html?id=${usuarioId}`;
+
+    // --- Tabela de preços correspondente aos serviços ---
+    const precosServicos = {
+        "Consulta veterinária": 150.00,
+        "Vacinação": 80.00,
+        "Exames": 200.00,
+        "Higiene e cuidados": 90.00
+    };
 
     // --- NOVA FUNÇÃO: Bloqueia datas passadas no calendário HTML ---
     function configurarDataMinima() {
@@ -204,11 +213,10 @@
     async function confirmarAgendamento(event) {
         event.preventDefault(); // Evita o recarregamento da página
 
-        // Corrigido para buscar pelos IDs corretos definidos no HTML ('pet' e 'horario')
         const animalId = document.getElementById('pet').value; 
         const tipo = document.getElementById('servico').value;    
         const data = document.getElementById('data').value;
-        const hora = document.getElementById('horario').value; // Ajustado de 'hora' para 'horario'
+        const hora = document.getElementById('horario').value; 
         const observacoes = document.getElementById('observacoes').value; 
 
         // Validação apenas dos campos obrigatórios
@@ -217,7 +225,6 @@
             return;
         }
 
-        
         const dataSelecionada = new Date(data + 'T00:00:00'); 
         const hoje = new Date();
         hoje.setHours(0, 0, 0, 0);
@@ -226,6 +233,9 @@
             alert("Erro ao agendar: Por favor, selecione apenas datas futuras.");
             return;
         }
+
+        // Busca o valor correspondente ao serviço selecionado (padrão 0 caso não ache)
+        const valorServico = precosServicos[tipo] || 0.00;
 
         try {
             const resposta = await fetch('/api/consultas', {
@@ -238,7 +248,8 @@
                     tipo: tipo,
                     data: data,
                     hora: hora,
-                    observacoes: observacoes
+                    observacoes: observacoes,
+                    valor: valorServico // Enviando o valor calculado para o backend
                 })
             });
 
@@ -256,10 +267,20 @@
         }
     }
 
-  
     configurarDataMinima();
     carregarPetsDoTutor();
 
+    if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('../sw.js')
+      .then(reg => {
+        console.log('Service Worker do VitaMet registrado com sucesso!', reg.scope);
+      })
+      .catch(err => {
+        console.error('Erro ao registrar o Service Worker:', err);
+      });
+  });
+}
 </script>
 
 </body>

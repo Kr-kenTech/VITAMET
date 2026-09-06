@@ -4,51 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Comunidade | VITAMET</title>
+    <link rel="manifest" href="../manifest.json">
     <link rel="stylesheet" href="comunidade.css">
 </head>
 <body>
-
     <aside class="sidebar">
+    <div class="logo">
+        <div class="logo-icon">
+            <img src="../foto.jpeg" alt="VITAMET">
+        </div>
+        <div>
+            <h2>Vita<span>Met</span></h2>
+            <p>Clínica Veterinária</p>
+        </div>
+    </div>
 
-        <div class="logo">
-            <div class="logo-icon">
-                <img src="foto.jpeg" alt="VITAMET">
-            </div>
+    <nav class="menu">
+        <a href="tutor.html" id="menuPets" class="menu-item">
+            <span>🐾</span>
+            Meus Pets
+        </a>
 
+        <a href="agendamento.html" id="menuAgendamento" class="menu-item">
+            <span>📅</span>
+            Agendamento
+        </a>
+
+        <a href="consultas.html" id="menuConsultas" class="menu-item">
+            <span>📋</span>
+            Consultas
+        </a>
+
+        <a href="comunidade.html" class="menu-item active"><span>👥</span>Comunidade</a>
+
+        <a href="perfil.html" class="menu-item">
+            <span>👤</span>
+            Meu Perfil
+        </a>
+    </nav>
+
+    <!-- Removido o style inline daqui -->
+    <div class="sidebar-bottom">
+        <div class="help">
+            <div class="help-icon">?</div>
             <div>
-                <h2>Vita<span>Met</span></h2>
-                <p>Clínica Veterinária</p>
+                <strong>Precisa de ajuda?</strong>
+                <p>Entre em contato com a VitaMet.</p>
             </div>
         </div>
 
-        <nav class="menu">
-            <a href="tutor.html" class="menu-item">
-                <span>🐾</span>
-                Meus Pets
-            </a>
-
-            <a href="agendamentos.html" class="menu-item">
-                <span>📅</span>
-                Agendamento
-            </a>
-
-            <a href="consultas.html" class="menu-item">
-                <span>📋</span>
-                Consultas
-            </a>
-
-            <a href="comunidade.html" class="menu-item active">
-                <span>👥</span>
-                Comunidade
-            </a>
-
-            <a href="perfil.html" class="menu-item">
-                <span>👤</span>
-                Meu Perfil
-            </a>
-        </nav>
-
-    </aside>
+        <a href="../login.html" class="logout">
+            <span>🚪</span>
+            Sair
+        </a>
+    </div>
+</aside>
 
     <main class="main">
 
@@ -112,16 +122,10 @@
                                 <option value="Passeios">🌳 Passeios</option>
                             </select>
 
-                            <input type="file" id="imagemPublicacao" accept="image/*" style="display: none;" onchange="mostrarNomeArquivo()">
-                            <button type="button" class="action-button" onclick="document.getElementById('imagemPublicacao').click()">
-                                📷 Foto
-                            </button>
-
                             <button class="btn-publicar" onclick="publicar()">
                                 Publicar
                             </button>
                         </div>
-                        <span id="nomeArquivoSelecionado" style="font-size: 12px; color: #666; margin-top: 5px; display: block;"></span>
                     </div>
 
                     <div class="feed-header">
@@ -265,16 +269,6 @@
             return `${dia}/${mes}/${ano} às ${hora}:${minuto}`;
         }
 
-        function mostrarNomeArquivo() {
-            const input = document.getElementById("imagemPublicacao");
-            const span = document.getElementById("nomeArquivoSelecionado");
-            if (input.files.length > 0) {
-                span.textContent = `Imagem selecionada: ${input.files[0].name}`;
-            } else {
-                span.textContent = "";
-            }
-        }
-
         async function carregarPublicacoes() {
             try {
                 const queryTutor = tutorId ? `?tutor_id=${tutorId}` : '';
@@ -309,10 +303,6 @@
 
                     const ehMinha = publicacao.tutor_id === tutorId || publicacao.autor === nomeTutor;
 
-                    const htmlImagem = publicacao.imagem 
-                        ? `<div class="post-image" style="margin: 10px 0;"><img src="${publicacao.imagem}" alt="Foto da publicação" style="max-width: 100%; border-radius: 8px;"></div>` 
-                        : '';
-
                     let htmlComentarios = '';
                     if (publicacao.comentarios && publicacao.comentarios.length > 0) {
                         publicacao.comentarios.forEach(c => {
@@ -344,13 +334,12 @@
 
                         <div class="post-content">
                             <p>${escaparHTML(publicacao.texto)}</p>
-                            ${htmlImagem}
                         </div>
 
                         <div class="post-actions">
-                            <button class="action-button ${publicacao.curtido ? "liked" : ""}" onclick="curtir(${publicacao.id})">
-                                ${publicacao.curtido ? "❤️" : "♡"} <span id="contador-curtidas-${publicacao.id}">${publicacao.curtidas || 0}</span>
-                            </button>
+                        <button class="action-button ${publicacao.curtido ? "liked" : ""}" onclick="curtir(${publicacao.id})">
+                            ${publicacao.curtido ? "&#x2764;&#xFE0F;" : "&#9825;"} <span id="contador-curtidas-${publicacao.id}">${publicacao.curtidas || 0}</span>
+                        </button>
 
                             ${ehMinha ? `
                                 <button class="delete-button" onclick="excluirPublicacao(${publicacao.id})">
@@ -380,35 +369,28 @@
         async function publicar() {
             const texto = document.getElementById("textoPublicacao").value.trim();
             const categoria = document.getElementById("categoriaPublicacao").value;
-            const imagemInput = document.getElementById("imagemPublicacao");
 
-            if (!texto && imagemInput.files.length === 0) {
-                alert("Digite algo ou adicione uma imagem para publicar.");
+            if (!texto) {
+                alert("Digite algo para publicar.");
                 return;
-            }
-
-            const formData = new FormData();
-            formData.append("tutor_id", tutorId);
-            formData.append("autor", nomeTutor);
-            formData.append("iniciais", iniciais);
-            formData.append("texto", texto);
-            formData.append("categoria", categoria);
-            
-            if (imagemInput.files.length > 0) {
-                formData.append("imagem", imagemInput.files[0]);
             }
 
             try {
                 const resposta = await fetch('/api/publicacoes', {
                     method: 'POST',
-                    body: formData
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        tutor_id: tutorId,
+                        autor: nomeTutor,
+                        iniciais: iniciais,
+                        texto: texto,
+                        categoria: categoria
+                    })
                 });
 
                 if (resposta.ok) {
                     document.getElementById("textoPublicacao").value = "";
                     document.getElementById("categoriaPublicacao").value = "Geral";
-                    imagemInput.value = "";
-                    document.getElementById("nomeArquivoSelecionado").textContent = "";
                     carregarPublicacoes();
                 } else {
                     alert("Erro ao realizar publicação.");
@@ -426,7 +408,7 @@
 
             try {
                 const resposta = await fetch(`/api/publicacoes/${id}/curtir`, {
-                    method: 'POST',
+                    method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ tutor_id: tutorId })
                 });
@@ -499,6 +481,14 @@
                 });
             }
         });
+    
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(registrations => {
+        for(let registration of registrations) {
+            registration.unregister(); // Remove o service worker antigo que está travando o cache
+        }
+    });
+}
     </script>
 
 </body>
