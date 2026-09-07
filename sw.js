@@ -13,8 +13,15 @@ const urlsToCache = [
   '/user/agendamento.css',
   '/user/tutor.css',
   'login.css',
-  'inicio 1.html',
-  'inicio.css',
+  '/admin/inicio.html',
+  '/admin/inicio.css',
+  '/admin/configuracoes.html',
+  '/admin/gestao.html',
+  '/admin/pets.html',
+  '/admin/veterinarios.html',
+  '/admin/publicacoes.html',
+  '/admin/logistica.html',
+  '/admin/relatorios.html',
   '/user/comunidade.html',
   '/user/comunidade.css'
 ];

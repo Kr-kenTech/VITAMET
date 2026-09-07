@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | VITAMET</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-icon"><img src="../foto.jpeg" alt="VITAMET"></div>
+            <div>
+                <h2>Vita<span>Met</span></h2>
+                <p>Clínica Veterinária</p>
+            </div>
+        </div>
+        <nav class="menu">
+            <a href="dashboard.html" id="menuDashboard" class="menu-item active"><span>📊</span> Dashboard</a>
+            <a href="tutor.html" id="menuPets" class="menu-item"><span>🐾</span> Meus Pets</a>
+            <a href="agendamento.html" id="menuAgendamento" class="menu-item"><span>📅</span> Agendamento</a>
+            <a href="consultas.html" id="menuConsultas" class="menu-item"><span>📋</span> Consultas</a>
+            <a href="comunidade.html" id="menuComunidade" class="menu-item"><span>👥</span> Comunidade</a>
+            <a href="perfil.html" id="menuPerfil" class="menu-item"><span>👤</span> Meu Perfil</a>
+        </nav>
+    </aside>
+
+    <main class="main">
+        <header class="topbar">
+            <div></div>
+            <div class="top-user">
+                <button class="notification">🔔</button>
+                <div class="avatar"><span id="avatarNome">TU</span></div>
+                <div class="user-info">
+                    <strong id="nomePerfil">Tutor</strong>
+                    <span>Tutor</span>
+                </div>
+            </div>
+        </header>
+
+        <section class="content">
+            <div class="page-header">
+                <h1>Painel Principal</h1>
+                <p>Acompanhe o status em tempo real dos seus pets na clínica.</p>
+            </div>
+
+            <div class="dashboard-grid">
+                <div>
+                    <h2>Status do Pet na Clínica</h2>
+                    <div id="listaStatusPets" style="margin-top: 15px;">
+                        <p>Carregando status dos pets...</p>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="side-card" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                        <h3>📌 Avisos Rápidos</h3>
+                        <p style="font-size: 14px; color: #666; margin-top: 10px;">Lembre-se de chegar com 10 minutos de antecedência para consultas presenciais.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const tutor = JSON.parse(localStorage.getItem("tutor") || "null");
+        const urlParams = new URLSearchParams(window.location.search);
+        const usuarioId = urlParams.get("id") || (tutor ? (tutor.id || tutor.usuario_id || tutor.tutor_id) : null);
+        const tutorId = tutor ? (tutor.tutor_id || tutor.id || usuarioId) : usuarioId;
+        let nomeTutor = tutor && tutor.nome ? tutor.nome : "Tutor";
+
+        if (usuarioId && !urlParams.get("id")) {
+            const novaUrl = new URL(window.location.href);
+            novaUrl.searchParams.set("id", usuarioId);
+            window.history.replaceState({}, "", novaUrl);
+        }
+
+        const parametrosTutor = usuarioId ? `?id=${encodeURIComponent(usuarioId)}` : "";
+        document.getElementById("menuDashboard").href = `dashboard.html${parametrosTutor}`;
+        document.getElementById("menuPets").href = `tutor.html${parametrosTutor}`;
+        document.getElementById("menuAgendamento").href = `agendamento.html${parametrosTutor}`;
+        document.getElementById("menuConsultas").href = `consultas.html${parametrosTutor}`;
+        document.getElementById("menuComunidade").href = `comunidade.html${parametrosTutor}`;
+        document.getElementById("menuPerfil").href = `perfil.html${parametrosTutor}`;
+
+        document.getElementById("nomePerfil").textContent = nomeTutor;
+        
+        const partesNome = nomeTutor.trim().split(" ");
+        let iniciais = partesNome[0] ? partesNome[0].charAt(0) : "T";
+        document.getElementById("avatarNome").textContent = iniciais.toUpperCase();
+
+        // Função para buscar os pets e o status em tempo real
+        async function carregarStatusPets() {
+            if (!tutorId) {
+                document.getElementById("listaStatusPets").innerHTML = `<p style="color: red;">ID do tutor não encontrado. Faça login novamente.</p>`;
+                return;
+            }
+
+            try {
+                const resposta = await fetch(`/api/tutores/${tutorId}/pets`);
+                if (!resposta.ok) throw new Error("Erro ao carregar pets");
+                
+                const pets = await resposta.json();
+                const container = document.getElementById("listaStatusPets");
+                container.innerHTML = "";
+
+                if (pets.length === 0) {
+                    container.innerHTML = `<p>Você não possui pets cadastrados no momento.</p>`;
+                    return;
+                }
+
+                pets.forEach(pet => {
+                    let statusAtual = pet.status_atual || "Aguardando atendimento";
+                    let classeCss = "status-ativo";
+
+                    if (statusAtual.toLowerCase().includes("consulta")) classeCss = "status-consulta";
+                    else if (statusAtual.toLowerCase().includes("cirurgia")) classeCss = "status-cirurgia";
+                    else if (statusAtual.toLowerCase().includes("pronto") || statusAtual.toLowerCase().includes("busca")) classeCss = "status-pronto";
+                    else if (statusAtual.toLowerCase().includes("espera")) classeCss = "status-espera";
+
+                    const card = document.createElement("div");
+                    card.className = "status-card";
+                    card.innerHTML = `
+                        <h3 style="margin: 0 0 5px 0;">🐾 ${pet.nome} (${pet.especie || 'Pet'})</h3>
+                        <p style="margin: 0; font-size: 14px; color: #555;">Raça: ${pet.raca || 'Não informada'}</p>
+                        <div class="status-badge ${classeCss}">${statusAtual}</div>
+                    `;
+                    container.appendChild(card);
+                });
+
+            } catch (erro) {
+                console.error("Erro ao buscar status:", erro);
+                document.getElementById("listaStatusPets").innerHTML = `<p style="color: red;">Erro ao atualizar status em tempo real.</p>`;
+            }
+        }
+
+        // Executa ao abrir e atualiza a cada 5 segundos automaticamente
+        carregarStatusPets();
+        setInterval(carregarStatusPets, 5000);
+    </script>
+</body>
+</html>

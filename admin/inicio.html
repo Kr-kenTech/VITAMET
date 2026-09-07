@@ -1,0 +1,174 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VitaMed - Painel de Controle (Admin)</title>
+    <link rel="stylesheet" href="inicio.css?v=2">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <img src="../foto.jpeg" alt="Logo">
+                </div>
+                <div>
+                    <h2>Vita<span>Med</span></h2>
+                    <p>Painel Administrativo</p>
+                </div>
+            </div>
+
+            <div class="menu">
+                <a href="inicio.html" class="menu-item active">
+                    <span><i class="fa-solid fa-house"></i></span> Painel de Controle
+                </a>
+                <a href="pets.html" class="menu-item">
+                    <span><i class="fa-solid fa-notes-medical"></i></span> Pets & Prontuários
+                </a>
+                <a href="veterinarios.html" class="menu-item">
+                    <span><i class="fa-solid fa-user-doctor"></i></span> Veterinários
+                </a>
+                <a href="gestao.html" class="menu-item">
+                    <span><i class="fa-solid fa-users"></i></span> Gestão de Usuários
+                </a>
+                <a href="publicacoes.html" class="menu-item">
+                    <span><i class="fa-solid fa-newspaper"></i></span> Publicações
+                </a>
+                <a href="logistica.html" class="menu-item">
+                    <span><i class="fa-solid fa-box"></i></span> Logística & Estoque
+                </a>
+                <a href="relatorios.html" class="menu-item">
+                    <span><i class="fa-solid fa-chart-pie"></i></span> Relatórios
+                </a>
+                <a href="configuracoes.html" class="menu-item">
+                    <span><i class="fa-solid fa-gear"></i></span> Configurações
+                </a>
+            </div>
+
+            <div class="sidebar-bottom">
+                <div class="help">
+                    <div class="help-icon">?</div>
+                    <div>
+                        <strong>Suporte Admin</strong>
+                        <p>Dúvidas com o sistema? Contate o suporte técnico.</p>
+                    </div>
+                </div>
+                <button class="logout" onclick="fazerLogout()">
+                    <span><i class="fa-solid fa-right-from-bracket"></i></span> Sair da Conta
+                </button>
+            </div>
+        </aside>
+
+        <!-- CONTEÚDO PRINCIPAL -->
+        <main class="main">
+            <header class="topbar">
+                <div></div>
+                <div class="top-user">
+                    <button class="notification">🔔</button>
+                    <div class="avatar"><span id="avatarNome">TU</span></div>
+                    <div class="user-info">
+                        <strong id="nomePerfil">Administrador</strong>
+                        <span>Admin</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content">
+                <div class="page-header">
+                    <div>
+                        <div class="breadcrumb">VISTAS DO SISTEMA / PAINEL DE CONTROLE</div>
+                        <h1>Visão Geral</h1>
+                        <p>Acompanhe as principais métricas e atalhos operacionais da plataforma VitaMed.</p>
+                    </div>
+                </div>
+
+                <!-- CARDS DE ESTATÍSTICAS -->
+                <div class="cards-grid">
+                    <div class="card">
+                        <span class="title">Total de Tutores</span>
+                        <span class="value" id="total-tutores">--</span>
+                    </div>
+                    <div class="card">
+                        <span class="title">Pets Cadastrados</span>
+                        <span class="value" id="total-pets">--</span>
+                    </div>
+                    <div class="card">
+                        <span class="title">Veterinários Ativos</span>
+                        <span class="value" id="total-vets">--</span>
+                    </div>
+                    <div class="card">
+                        <span class="title">Prontuários Registrados</span>
+                        <span class="value" id="total-prontuarios">--</span>
+                    </div>
+                </div>
+
+                <!-- AÇÕES RÁPIDAS -->
+                <div class="section-box">
+                    <h3>Ações Rápidas do Sistema</h3>
+                    <div class="quick-links">
+                        <a href="gestao.html" class="quick-btn"><i class="fa-solid fa-user-plus"></i> Gerenciar Usuários</a>
+                        <a href="veterinarios.html" class="quick-btn"><i class="fa-solid fa-user-doctor"></i> Aprovar Veterinários</a>
+                        <a href="publicacoes.html" class="quick-btn"><i class="fa-solid fa-pen-to-square"></i> Nova Publicação</a>
+                        <a href="relatorios.html" class="quick-btn"><i class="fa-solid fa-chart-line"></i> Relatórios Gerais</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', async () => {
+            // 1. Recupera dados do usuário logado via localStorage
+            const usuarioSalvo = localStorage.getItem("usuario") || localStorage.getItem("tutor");
+            if (usuarioSalvo) {
+                try {
+                    const usuario = JSON.parse(usuarioSalvo);
+                    if (usuario.nome) {
+                        document.getElementById("nomePerfil").innerText = usuario.nome;
+                        
+                        // Gera iniciais corretas para o avatar
+                        const partes = usuario.nome.trim().split(" ");
+                        let iniciais = partes[0][0];
+                        if (partes.length > 1) {
+                            iniciais += partes[partes.length - 1][0];
+                        }
+                        document.getElementById("avatarNome").innerText = iniciais.toUpperCase();
+                    }
+                } catch (e) {
+                    console.error("Erro ao processar dados do usuário:", e);
+                }
+            }
+
+            // 2. Busca as métricas reais direto do Banco de Dados via API
+            try {
+                const response = await fetch('/api/dashboard/estatisticas'); // Substitua pela URL da sua API/Backend
+                if (response.ok) {
+                    const dados = await response.json();
+                    document.getElementById("total-tutores").innerText = dados.totalTutores || 0;
+                    document.getElementById("total-pets").innerText = dados.totalPets || 0;
+                    document.getElementById("total-vets").innerText = dados.totalVets || 0;
+                    document.getElementById("total-prontuarios").innerText = dados.totalProntuarios || 0;
+                } else {
+                    throw new Error("Erro ao buscar dados do servidor");
+                }
+            } catch (error) {
+                console.warn("API indisponível, exibindo dados de contingência ou zerados:", error);
+                // Caso queira manter um fallback visual caso a API caia:
+                document.getElementById("total-tutores").innerText = "0";
+                document.getElementById("total-pets").innerText = "0";
+                document.getElementById("total-vets").innerText = "0";
+                document.getElementById("total-prontuarios").innerText = "0";
+            }
+        });
+
+        function fazerLogout() {
+            localStorage.removeItem("usuario");
+            localStorage.removeItem("tutor");
+            window.location.href = "../login.html";
+        }
+    </script>
+</body>
+</html>

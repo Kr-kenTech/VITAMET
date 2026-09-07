@@ -27,31 +27,12 @@
             </div>
 
             <nav class="menu">
-
-                <a href="tutor.html" class="menu-item active" id="linkPets">
-                    <span>🐾</span>
-                    Meus Pets
-                </a>
-
-                <a href="agendamento.html" class="menu-item" id="linkAgendamento">
-                    <span>📅</span>
-                    Agendamento
-                </a>
-
-                <a href="consultas.html" class="menu-item" id="linkConsultas">
-                    <span>📋</span>
-                    Consultas
-                </a>
-
-                <a href="comunidade.html" class="menu-item" id="linkComunidade">
-                    <span>👥</span>
-                    Comunidade
-                </a>
-
-                <a href="perfil.html" class="menu-item" id="linkPerfil">
-                    <span>👤</span>
-                    Meu Perfil
-                </a>
+                <a href="dashboard.html" id="menuDashboard" class="menu-item"><span>📊</span> Dashboard</a>
+                <a href="tutor.html" id="linkPets" class="menu-item"><span>🐾</span> Meus Pets</a>
+                <a href="agendamento.html" id="linkAgendamento" class="menu-item"><span>📅</span> Agendamento</a>
+                <a href="consultas.html" id="linkConsultas" class="menu-item"><span>📋</span> Consultas</a>
+                <a href="comunidade.html" id="linkComunidade" class="menu-item"><span>👥</span> Comunidade</a>
+                <a href="perfil.html" id="linkPerfil" class="menu-item"><span>👤</span> Meu Perfil</a>
             </nav>
 
             <div class="sidebar-bottom">
@@ -362,21 +343,29 @@
     </div>
 
     <script>
-        // Pega o ID do usuário direto da URL (ex: tutor.html?id=9)
+        // Pega o ID do usuário direto da URL ou do localStorage como fallback
         const urlParams = new URLSearchParams(window.location.search);
-        const usuarioId = urlParams.get('id');
+        const tutorSalvo = JSON.parse(localStorage.getItem("tutor") || "null");
+        const usuarioId = urlParams.get('id') || (tutorSalvo ? (tutorSalvo.tutor_id || tutorSalvo.id || tutorSalvo.usuario_id) : null);
 
         if (!usuarioId) {
             alert("Usuário não autenticado. Faça login novamente.");
             window.location.href = "../login.html";
         }
 
+        if (!urlParams.get('id') && usuarioId) {
+            const novaUrl = new URL(window.location.href);
+            novaUrl.searchParams.set('id', usuarioId);
+            window.history.replaceState({}, '', novaUrl);
+        }
+
         // Mantém os links do menu dinâmicos levando o ID junto (removido o linkConfiguracoes que não existe no HTML)
         document.getElementById("linkPets").href = `tutor.html?id=${usuarioId}`;
-document.getElementById("linkAgendamento").href = `agendamento.html?id=${usuarioId}`;
-document.getElementById("linkConsultas").href = `consultas.html?id=${usuarioId}`;
-document.getElementById("linkComunidade").href = `comunidade.html?id=${usuarioId}`; 
-document.getElementById("linkPerfil").href = `perfil.html?id=${usuarioId}`;
+        document.getElementById("linkAgendamento").href = `agendamento.html?id=${usuarioId}`;
+        document.getElementById("linkConsultas").href = `consultas.html?id=${usuarioId}`;
+        document.getElementById("linkComunidade").href = `comunidade.html?id=${usuarioId}`; 
+        document.getElementById("linkPerfil").href = `perfil.html?id=${usuarioId}`;
+        document.getElementById("menuDashboard").href = `dashboard.html?id=${usuarioId}`;
 
         let usuarioLogado = {};
 

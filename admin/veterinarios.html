@@ -1,0 +1,259 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitamed - Gestão de Veterinários</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="pets.css">
+</head>
+<body>
+
+<div class="layout">
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-icon">
+                <img src="../foto.jpeg" alt="Logo">
+            </div>
+            <div>
+                <h2>Vita<span>Med</span></h2>
+                <p>Painel Administrativo</p>
+            </div>
+        </div>
+
+        <div class="menu">
+            <a href="inicio.html" class="menu-item">
+                <span><i class="fa-solid fa-house"></i></span> Painel de Controle
+            </a>
+            <a href="pets.html" class="menu-item">
+                <span><i class="fa-solid fa-notes-medical"></i></span> Pets & Prontuários
+            </a>
+            <a href="veterinarios.html" class="menu-item active">
+                <span><i class="fa-solid fa-user-doctor"></i></span> Veterinários
+            </a>
+            <a href="gestao.html" class="menu-item">
+                <span><i class="fa-solid fa-users"></i></span> Gestão de Usuários
+            </a>
+            <a href="publicacoes.html" class="menu-item">
+                <span><i class="fa-solid fa-newspaper"></i></span> Publicações
+            </a>
+            <a href="logistica.html" class="menu-item">
+                <span><i class="fa-solid fa-box"></i></span> Logística & Estoque
+            </a>
+            <a href="relatorios.html" class="menu-item">
+                <span><i class="fa-solid fa-chart-pie"></i></span> Relatórios
+            </a>
+            <a href="configuracoes.html" class="menu-item">
+                <span><i class="fa-solid fa-gear"></i></span> Configurações
+            </a>
+        </div>
+
+        <div class="sidebar-bottom">
+            <button class="logout" onclick="window.location.href='../login.html'">
+                <span><i class="fa-solid fa-right-from-bracket"></i></span> Sair da Conta
+            </button>
+        </div>
+    </aside>
+
+    <main class="main">
+        <header class="topbar">
+            <div class="mobile-logo">Vitamet<span>.</span></div>
+            
+            <div class="search-box" style="display: flex; align-items: center; gap: 10px; background: #f8fbff; border: 1px solid #d9eef7; padding: 8px 14px; border-radius: 10px; width: 300px;">
+                <i class="fa-solid fa-magnifying-glass" style="color: #607d8b;"></i>
+                <input type="text" id="inputBuscaVet" placeholder="Buscar veterinário..." onkeyup="filtrarVeterinarios()" style="border: none; background: none; outline: none; width: 100%; font-size: 13px;">
+            </div>
+
+            <div class="top-user">
+                <div class="notification"><i class="fa-regular fa-bell"></i></div>
+                <div class="avatar">
+                    <img src="../WhatsApp%20Image%202026-08-31%20at%209.31.23%20PM.jpeg" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                </div>
+                <div class="user-info">
+                    <strong>Dr. Raylander</strong>
+                    <span>Usuário Admin</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="content">
+            <div class="page-header">
+                <div>
+                    <span class="breadcrumb">CORPO CLÍNICO</span>
+                    <h1>Gestão de Veterinários</h1>
+                    <p>Visualize e gerencie os profissionais cadastrados no sistema.</p>
+                </div>
+                <div>
+                    <button class="btn btn-primary" onclick="abrirModalNovoVet()">
+                        <i class="fa-solid fa-plus"></i> Novo Veterinário
+                    </button>
+                </div>
+            </div>
+
+            <div class="section-box">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3>Veterinários Cadastrados</h3>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome do Profissional</th>
+                                <th>E-mail</th>
+                                <th>Perfil / Cargo</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-veterinarios">
+                            <tr>
+                                <td colspan="4" style="text-align: center; color: #607d8b; padding: 25px;">Carregando veterinários...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- MODAL DE CADASTRO DE VETERINÁRIO -->
+<div id="modalVet" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center;">
+    <div class="modal-content" style="background: white; padding: 30px; border-radius: 12px; width: 400px; max-width: 90%;">
+        <span class="modal-close" onclick="fecharModalNovoVet()" style="float: right; cursor: pointer; font-size: 20px;">&times;</span>
+        <h2 style="margin-bottom: 20px; font-size: 20px; color: #28556b;">Cadastrar Veterinário</h2>
+        
+        <form id="formNovoVet" onsubmit="cadastrarVeterinario(event)">
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label for="nomeVet" style="display: block; margin-bottom: 5px; font-size: 13px; font-weight: 600;">Nome Completo</label>
+                <input type="text" id="nomeVet" required placeholder="Ex: Dr. Carlos Silva" style="width: 100%; padding: 8px; border: 1px solid #d9eef7; border-radius: 6px;">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label for="emailVet" style="display: block; margin-bottom: 5px; font-size: 13px; font-weight: 600;">E-mail</label>
+                <input type="email" id="emailVet" required placeholder="carlos@vitamed.com" style="width: 100%; padding: 8px; border: 1px solid #d9eef7; border-radius: 6px;">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label for="senhaVet" style="display: block; margin-bottom: 5px; font-size: 13px; font-weight: 600;">Senha Temporária</label>
+                <input type="password" id="senhaVet" required placeholder="******" style="width: 100%; padding: 8px; border: 1px solid #d9eef7; border-radius: 6px;">
+            </div>
+
+            <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button type="button" class="btn btn-secondary" onclick="fecharModalNovoVet()" style="padding: 8px 14px; background: #e0e0e0; border: none; border-radius: 6px; cursor: pointer;">Cancelar</button>
+                <button type="submit" class="btn btn-primary" style="padding: 8px 14px; background: #28556b; color: white; border: none; border-radius: 6px; cursor: pointer;">Salvar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    let listaVetsGlobal = [];
+
+    async function carregarVeterinarios() {
+        const tbody = document.getElementById('tabela-veterinarios');
+        try {
+            const resposta = await fetch('/api/veterinarios');
+            const vets = await resposta.json();
+
+            if (resposta.ok) {
+                listaVetsGlobal = vets;
+                renderizarTabelaVets(vets);
+            } else {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #d9534f; padding: 20px;">Erro ao carregar dados.</td></tr>`;
+            }
+        } catch (error) {
+            console.error("Erro:", error);
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #d9534f; padding: 20px;">Erro de comunicação com o servidor.</td></tr>`;
+        }
+    }
+
+    function renderizarTabelaVets(vets) {
+        const tbody = document.getElementById('tabela-veterinarios');
+        tbody.innerHTML = '';
+
+        if (!vets || vets.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #607d8b; padding: 20px;">Nenhum veterinário encontrado.</td></tr>`;
+            return;
+        }
+
+        vets.forEach(vet => {
+            const linha = document.createElement('tr');
+            linha.innerHTML = `
+                <td><strong>${vet.nome}</strong></td>
+                <td>${vet.email}</td>
+                <td><span class="badge" style="background: #e8f5e9; color: #2e7d32; padding: 4px 8px; border-radius: 6px; font-size: 12px;">Veterinário</span></td>
+                <td><button onclick="excluirVeterinario(${vet.id})" style="border: none; background: none; color: #d9534f; cursor: pointer;"><i class="fa-solid fa-trash"></i></button></td>
+            `;
+            tbody.appendChild(linha);
+        });
+    }
+
+    function filtrarVeterinarios() {
+        const termo = document.getElementById('inputBuscaVet').value.toLowerCase();
+        const filtrados = listaVetsGlobal.filter(vet => 
+            vet.nome.toLowerCase().includes(termo) || 
+            vet.email.toLowerCase().includes(termo)
+        );
+        renderizarTabelaVets(filtrados);
+    }
+
+    function abrirModalNovoVet() {
+        document.getElementById('modalVet').style.display = 'flex';
+    }
+
+    function fecharModalNovoVet() {
+        document.getElementById('modalVet').style.display = 'none';
+        document.getElementById('formNovoVet').reset();
+    }
+
+    async function cadastrarVeterinario(event) {
+        event.preventDefault();
+        const dados = {
+            nome: document.getElementById('nomeVet').value,
+            email: document.getElementById('emailVet').value,
+            senha: document.getElementById('senhaVet').value,
+            perfil: 'veterinario'
+        };
+
+        try {
+            const resposta = await fetch('/api/veterinarios', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dados)
+            });
+            const resultado = await resposta.json();
+
+            if (resposta.ok) {
+                alert(resultado.mensagem);
+                fecharModalNovoVet();
+                carregarVeterinarios();
+            } else {
+                alert('Erro: ' + resultado.erro);
+            }
+        } catch (e) {
+            console.error(e);
+            alert('Erro ao cadastrar veterinário.');
+        }
+    }
+
+    async function excluirVeterinario(id) {
+        if (!confirm('Deseja realmente excluir este veterinário?')) return;
+        try {
+            const resposta = await fetch(`/api/veterinarios/${id}`, { method: 'DELETE' });
+            const resultado = await resposta.json();
+            if (resposta.ok) {
+                carregarVeterinarios();
+            } else {
+                alert(resultado.erro);
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', carregarVeterinarios);
+</script>
+</body>
+</html>

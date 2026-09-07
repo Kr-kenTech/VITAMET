@@ -1,0 +1,301 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitamed - Gestão de Pets e Prontuários</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="pets.css">
+</head>
+<body>
+
+<div class="layout">
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <img src="../foto.jpeg" alt="Logo">
+                </div>
+                <div>
+                    <h2>Vita<span>Med</span></h2>
+                    <p>Painel Administrativo</p>
+                </div>
+            </div>
+
+            <div class="menu">
+                <a href="inicio.html" class="menu-item">
+                    <span><i class="fa-solid fa-house"></i></span> Painel de Controle
+                </a>
+                <a href="pets.html" class="menu-item active">
+                    <span><i class="fa-solid fa-notes-medical"></i></span> Pets & Prontuários
+                </a>
+                <a href="veterinarios.html" class="menu-item">
+                    <span><i class="fa-solid fa-user-doctor"></i></span> Veterinários
+                </a>
+                <a href="gestao.html" class="menu-item">
+                    <span><i class="fa-solid fa-users"></i></span> Gestão de Usuários
+                </a>
+                <a href="publicacoes.html" class="menu-item">
+                    <span><i class="fa-solid fa-newspaper"></i></span> Publicações
+                </a>
+                <a href="logistica.html" class="menu-item">
+                    <span><i class="fa-solid fa-box"></i></span> Logística & Estoque
+                </a>
+                <a href="relatorios.html" class="menu-item">
+                    <span><i class="fa-solid fa-chart-pie"></i></span> Relatórios
+                </a>
+                <a href="configuracoes.html" class="menu-item">
+                    <span><i class="fa-solid fa-gear"></i></span> Configurações
+                </a>
+            </div>
+
+        <div class="sidebar-bottom">
+            <button class="logout" onclick="window.location.href='login.html'">
+                <span><i class="fa-solid fa-right-from-bracket"></i></span> Sair da Conta
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT WRAPPER -->
+    <main class="main">
+        <header class="topbar">
+            <div class="mobile-logo">Vitamet<span>.</span></div>
+            
+            <div class="search-box" style="display: flex; align-items: center; gap: 10px; background: #f8fbff; border: 1px solid #d9eef7; padding: 8px 14px; border-radius: 10px; width: 300px;">
+                <i class="fa-solid fa-magnifying-glass" style="color: #607d8b;"></i>
+                <input type="text" id="inputBusca" placeholder="Buscar pet ou tutor..." onkeyup="filtrarPets()" style="border: none; background: none; outline: none; width: 100%; font-size: 13px;">
+            </div>
+
+            <div class="top-user">
+                <div class="notification">
+                    <i class="fa-regular fa-bell"></i>
+                </div>
+                <div class="avatar">
+                    <img src="WhatsApp%20Image%202026-08-31%20at%209.31.23%20PM.jpeg" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                </div>
+                <div class="user-info">
+                    <strong>Dr. Raylander</strong>
+                    <span>Usuário Admin</span>
+                </div>
+                <i class="fa-solid fa-chevron-down arrow"></i>
+            </div>
+        </header>
+
+        <div class="content">
+            <div class="page-header">
+                <div>
+                    <span class="breadcrumb">GERENCIAMENTO CLÍNICO</span>
+                    <h1>Gestão de Pets & Prontuários</h1>
+                    <p>Visualize, cadastre e gerencie a ficha clínica dos pacientes em tempo real.</p>
+                </div>
+                <div>
+                    <button class="btn btn-primary" onclick="abrirModalNovoPet()">
+                        <i class="fa-solid fa-plus"></i> Novo Pet
+                    </button>
+                </div>
+            </div>
+
+            <div class="section-box">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3>Pets Cadastrados no Sistema</h3>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome do Pet</th>
+                                <th>Espécie / Raça</th>
+                                <th>Tutor Responsável</th>
+                                <th>Idade / Peso</th>
+                                <th>Status Clínico</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-pets">
+                            <tr>
+                                <td colspan="6" style="text-align: center; color: #607d8b; padding: 25px;">Carregando pets do banco de dados...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- MODAL DE CADASTRO DE PET -->
+<div id="modalPet" class="modal">
+    <div class="modal-content">
+        <span class="modal-close" onclick="fecharModalNovoPet()">&times;</span>
+        <h2 style="margin-bottom: 20px; font-size: 20px; color: #28556b;">Cadastrar Novo Pet</h2>
+        
+        <form id="formNovoPet" onsubmit="cadastrarPet(event)">
+            <div class="form-group">
+                <label for="tutor_id">Selecione o Tutor Responsável</label>
+                <select id="tutor_id" required>
+                    <option value="">Carregando tutores...</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="nome">Nome do Pet</label>
+                <input type="text" id="nome" required placeholder="Ex: Thor">
+            </div>
+
+            <div class="form-group">
+                <label for="especie">Espécie</label>
+                <input type="text" id="especie" required placeholder="Ex: Cachorro, Gato...">
+            </div>
+
+            <div class="form-group">
+                <label for="raca">Raça</label>
+                <input type="text" id="raca" placeholder="Ex: Golden Retriever, Siamês...">
+            </div>
+
+            <div style="display: flex; gap: 12px;">
+                <div class="form-group" style="flex: 1;">
+                    <label for="idade">Idade (anos)</label>
+                    <input type="number" id="idade" placeholder="Ex: 3">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label for="peso">Peso (kg)</label>
+                    <input type="number" step="0.1" id="peso" placeholder="Ex: 12.5">
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="fecharModalNovoPet()">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Salvar Pet</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+   let listaPetsGlobal = [];
+
+    // Função principal que busca os pets do backend
+    async function carregarPets() {
+        const tbody = document.getElementById('tabela-pets');
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #607d8b; padding: 25px;">Carregando pets do banco de dados...</td></tr>`;
+
+        try {
+            const resposta = await fetch('/api/pets');
+            const animais = await resposta.json();
+
+            if (resposta.ok) {
+                listaPetsGlobal = animais; // Salva na global para a busca/filtro funcionar
+                renderizarTabela(animais);
+            } else {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #d9534f; padding: 25px;">Erro ao carregar pets: ${animais.erro || 'Erro desconhecido'}</td></tr>`;
+            }
+        } catch (error) {
+            console.error("Erro na requisição:", error);
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #d9534f; padding: 25px;">Erro de comunicação com o servidor.</td></tr>`;
+        }
+    }
+
+    function renderizarTabela(pets) {
+        const tbody = document.getElementById('tabela-pets');
+        tbody.innerHTML = '';
+
+        if (!pets || pets.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #607d8b; padding: 20px;">Nenhum pet encontrado.</td></tr>`;
+            return;
+        }
+
+        pets.forEach(pet => {
+            const fotoUrl = 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=100';
+            const linha = document.createElement('tr');
+            linha.innerHTML = `
+                <td>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <img src="${fotoUrl}" class="pet-avatar" alt="${pet.nome}" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover;">
+                        <strong>${pet.nome}</strong>
+                    </div>
+                </td>
+                <td>${pet.especie} ${pet.raca ? '- ' + pet.raca : ''}</td>
+                <td>${pet.nome_tutor || 'Não vinculado'}</td>
+                <td>${pet.idade ? pet.idade + ' anos' : 'N/D'} / ${pet.peso ? pet.peso + 'kg' : 'N/D'}</td>
+                <td><span class="badge badge-success" style="background: #e1f5fe; color: #0288d1; padding: 4px 8px; border-radius: 6px; font-size: 12px;">${pet.status_atual || 'Ativo'}</span></td>
+                <td><i class="fa-solid fa-ellipsis-vertical" style="cursor: pointer; color: #607d8b; padding: 5px;"></i></td>
+            `;
+            tbody.appendChild(linha);
+        });
+    }
+
+    function filtrarPets() {
+        const termo = document.getElementById('inputBusca').value.toLowerCase();
+        const filtrados = listaPetsGlobal.filter(pet => 
+            pet.nome.toLowerCase().includes(termo) || 
+            pet.especie.toLowerCase().includes(termo) ||
+            (pet.nome_tutor && pet.nome_tutor.toLowerCase().includes(termo))
+        );
+        renderizarTabela(filtrados);
+    }
+
+    async function abrirModalNovoPet() {
+        document.getElementById('modalPet').style.display = 'flex';
+        await carregarTutoresSelect();
+    }
+
+    function fecharModalNovoPet() {
+        document.getElementById('modalPet').style.display = 'none';
+        document.getElementById('formNovoPet').reset();
+    }
+
+    async function carregarTutoresSelect() {
+        try {
+            const resTutores = await fetch('/api/tutores');
+            const tutores = await resTutores.json();
+
+            const select = document.getElementById('tutor_id');
+            select.innerHTML = '<option value="">Selecione um tutor...</option>';
+
+            tutores.forEach(tutor => {
+                select.innerHTML += `<option value="${tutor.id}">${tutor.nome} (CPF: ${tutor.cpf})</option>`;
+            });
+        } catch (e) {
+            console.warn("Aviso ao carregar tutores para o select:", e);
+        }
+    }
+
+    async function cadastrarPet(event) {
+        event.preventDefault();
+
+        const dados = {
+            tutor_id: document.getElementById('tutor_id').value,
+            nome: document.getElementById('nome').value,
+            especie: document.getElementById('especie').value,
+            raca: document.getElementById('raca').value,
+            idade: document.getElementById('idade').value,
+            peso: document.getElementById('peso').value
+        };
+
+        try {
+            const resposta = await fetch('/api/pets', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dados)
+            });
+
+            const resultado = await resposta.json();
+
+            if (resposta.ok) {
+                alert(resultado.mensagem);
+                fecharModalNovoPet();
+                carregarPets(); // Recarrega a tabela automaticamente após salvar
+            } else {
+                alert('Erro: ' + resultado.erro);
+            }
+        } catch (e) {
+            console.error("Erro ao cadastrar:", e);
+            alert('Erro de comunicação com o servidor.');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', carregarPets);
+</script>
+</body>
+</html>

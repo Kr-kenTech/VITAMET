@@ -9,80 +9,66 @@
 </head>
 <body>
     <aside class="sidebar">
-    <div class="logo">
-        <div class="logo-icon">
-            <img src="../foto.jpeg" alt="VITAMET">
-        </div>
-        <div>
-            <h2>Vita<span>Met</span></h2>
-            <p>Clínica Veterinária</p>
-        </div>
-    </div>
-
-    <nav class="menu">
-        <a href="tutor.html" id="menuPets" class="menu-item">
-            <span>🐾</span>
-            Meus Pets
-        </a>
-
-        <a href="agendamento.html" id="menuAgendamento" class="menu-item">
-            <span>📅</span>
-            Agendamento
-        </a>
-
-        <a href="consultas.html" id="menuConsultas" class="menu-item">
-            <span>📋</span>
-            Consultas
-        </a>
-
-        <a href="comunidade.html" class="menu-item active"><span>👥</span>Comunidade</a>
-
-        <a href="perfil.html" class="menu-item">
-            <span>👤</span>
-            Meu Perfil
-        </a>
-    </nav>
-
-    <!-- Removido o style inline daqui -->
-    <div class="sidebar-bottom">
-        <div class="help">
-            <div class="help-icon">?</div>
+        <div class="logo">
+            <div class="logo-icon">
+                <img src="../foto.jpeg" alt="VITAMET">
+            </div>
             <div>
-                <strong>Precisa de ajuda?</strong>
-                <p>Entre em contato com a VitaMet.</p>
+                <h2>Vita<span>Met</span></h2>
+                <p>Clínica Veterinária</p>
             </div>
         </div>
 
-        <a href="../login.html" class="logout">
-            <span>🚪</span>
-            Sair
-        </a>
-    </div>
-</aside>
+        <nav class="menu">
+            <a href="dashboard.html" id="menuDashboard" class="menu-item">
+                <span>📊</span> Dashboard
+            </a>
+            <a href="tutor.html" id="menuPets" class="menu-item">
+                <span>🐾</span> Meus Pets
+            </a>
+            <a href="agendamento.html" id="menuAgendamento" class="menu-item">
+                <span>📅</span> Agendamento
+            </a>
+            <a href="consultas.html" id="menuConsultas" class="menu-item">
+                <span>📋</span> Consultas
+            </a>
+            <a href="comunidade.html" class="menu-item active"><span>👥</span>Comunidade</a>
+            <a href="perfil.html" id="menuPerfil" class="menu-item">
+                <span>👤</span> Meu Perfil
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="help">
+                <div class="help-icon">?</div>
+                <div>
+                    <strong>Precisa de ajuda?</strong>
+                    <p>Entre em contato com a VitaMet.</p>
+                </div>
+            </div>
+            <a href="../login.html" class="logout">
+                <span>🚪</span> Sair
+            </a>
+        </div>
+    </aside>
 
     <main class="main">
-
         <header class="topbar">
             <div></div>
-
             <div class="top-user">
                 <button class="notification">🔔</button>
-
                 <div class="avatar">
                     <span id="avatarNome">TU</span>
                 </div>
-
                 <div class="user-info">
                     <strong id="nomePerfil">Tutor</strong>
                     <span>Tutor</span>
                 </div>
-
                 <span class="arrow">⌄</span>
             </div>
         </header>
 
         <section class="content">
-
             <div class="page-header">
                 <div>
                     <h1>Comunidade</h1>
@@ -91,15 +77,12 @@
             </div>
 
             <div class="community-layout">
-
                 <section class="feed">
-
                     <div class="create-card">
                         <div class="create-top">
                             <div class="avatar small">
                                 <span id="avatarCriar">TU</span>
                             </div>
-
                             <div>
                                 <strong>Compartilhe algo com a comunidade</strong>
                                 <span>Conte uma experiência ou dê uma dica para outros tutores.</span>
@@ -146,21 +129,17 @@
                     </div>
 
                     <div id="listaPublicacoes"></div>
-
                 </section>
 
                 <aside class="community-side">
-
                     <div class="side-card">
                         <div class="side-title">
                             <span class="side-icon">💡</span>
-
                             <div>
                                 <h3>Dicas para tutores</h3>
                                 <p>Cuidados importantes</p>
                             </div>
                         </div>
-
                         <div class="dica">
                             <span>💧</span>
                             <div>
@@ -168,91 +147,49 @@
                                 <p>Mantenha seu pet hidratado durante todo o dia.</p>
                             </div>
                         </div>
-
-                        <div class="dica">
-                            <span>🩺</span>
-                            <div>
-                                <strong>Acompanhe a saúde</strong>
-                                <p>Faça consultas veterinárias regularmente.</p>
-                            </div>
-                        </div>
-
-                        <div class="dica">
-                            <span>🥗</span>
-                            <div>
-                                <strong>Alimentação adequada</strong>
-                                <p>Ofereça uma alimentação indicada para seu pet.</p>
-                            </div>
-                        </div>
-
-                        <div class="dica">
-                            <span>❤️</span>
-                            <div>
-                                <strong>Dê atenção e carinho</strong>
-                                <p>Momentos juntos também fazem parte dos cuidados.</p>
-                            </div>
-                        </div>
                     </div>
 
                     <div class="side-card community-info">
                         <div class="side-title">
                             <span class="side-icon">👥</span>
-
                             <div>
                                 <h3>Sobre a comunidade</h3>
                                 <p>Um espaço para tutores</p>
                             </div>
                         </div>
-
-                        <p>
-                            Compartilhe experiências, tire dúvidas e
-                            aprenda com outros tutores que também amam
-                            seus pets.
-                        </p>
-
+                        <p>Compartilhe experiências, tire dúvidas e aprenda com outros tutores.</p>
                         <div class="community-stats">
                             <div>
                                 <strong id="contadorPublicacoes">0</strong>
                                 <span>Publicações</span>
                             </div>
-
-                            <div>
-                                <strong>🐾</strong>
-                                <span>Amor pelos pets</span>
-                            </div>
                         </div>
                     </div>
-
                 </aside>
-
             </div>
-
         </section>
-
     </main>
 
     <script>
-        const tutor = JSON.parse(localStorage.getItem("tutor"));
+        const tutorStorage = localStorage.getItem("tutor");
+        const tutor = tutorStorage ? JSON.parse(tutorStorage) : null;
 
-        let nomeTutor = "Tutor";
-        let tutorId = tutor && tutor.id ? tutor.id : null;
+        const nomeTutor = tutor && tutor.nome ? tutor.nome : "Tutor";
+        const tutorId = tutor && tutor.id ? tutor.id : null;
 
-        if (tutor && tutor.nome) {
-            nomeTutor = tutor.nome;
-        }
+        const parametrosTutor = tutorId ? `?id=${encodeURIComponent(tutorId)}` : "";
+        document.getElementById("menuPets").href = `tutor.html${parametrosTutor}`;
+        document.getElementById("menuAgendamento").href = `agendamento.html${parametrosTutor}`;
+        document.getElementById("menuConsultas").href = `consultas.html${parametrosTutor}`;
+        document.getElementById("menuPerfil").href = `perfil.html${parametrosTutor}`;
 
         document.getElementById("nomePerfil").textContent = nomeTutor;
 
         const partesNome = nomeTutor.trim().split(" ");
-
-        let iniciais = partesNome[0]
-            ? partesNome[0].charAt(0)
-            : "T";
-
+        let iniciais = partesNome[0] ? partesNome[0].charAt(0) : "T";
         if (partesNome.length > 1) {
             iniciais += partesNome[partesNome.length - 1].charAt(0);
         }
-
         iniciais = iniciais.toUpperCase();
 
         document.getElementById("avatarNome").textContent = iniciais;
@@ -265,14 +202,13 @@
             const ano = dataAtual.getFullYear();
             const hora = String(dataAtual.getHours()).padStart(2, "0");
             const minuto = String(dataAtual.getMinutes()).padStart(2, "0");
-
             return `${dia}/${mes}/${ano} às ${hora}:${minuto}`;
         }
 
         async function carregarPublicacoes() {
             try {
-                const queryTutor = tutorId ? `?tutor_id=${tutorId}` : '';
-                const resposta = await fetch(`/api/publicacoes${queryTutor}`);
+                const url = tutorId ? `/api/publicacoes?id=${tutorId}` : '/api/publicacoes';
+                const resposta = await fetch(url);
                 if (!resposta.ok) throw new Error('Erro ao carregar publicações');
 
                 const publicacoes = await resposta.json();
@@ -288,8 +224,7 @@
 
                 if (!filtradas.length) {
                     lista.innerHTML = `
-                        <div class="empty-community">
-                            <div class="empty-community-icon">🐾</div>
+                        <div class="empty-community" style="text-align: center; padding: 20px;">
                             <h3>Nenhuma publicação encontrada</h3>
                             <p>Seja o primeiro a compartilhar algo com a comunidade.</p>
                         </div>
@@ -301,48 +236,58 @@
                     const card = document.createElement("article");
                     card.className = "post-card";
 
-                    const ehMinha = publicacao.tutor_id === tutorId || publicacao.autor === nomeTutor;
+                    const ehMinha = String(publicacao.tutor_id) === String(tutorId);
 
                     let htmlComentarios = '';
                     if (publicacao.comentarios && publicacao.comentarios.length > 0) {
                         publicacao.comentarios.forEach(c => {
+                            const ehMeuComentario = String(c.tutor_id) === String(tutorId);
                             htmlComentarios += `
-                                <div class="comment-item" style="font-size: 13px; background: #f9f9f9; padding: 6px 10px; border-radius: 6px; margin-top: 5px;">
-                                    <strong>${escaparHTML(c.autor || 'Tutor')}:</strong> ${escaparHTML(c.texto)}
+                                <div class="comment-item" id="comentario-${c.id}" style="font-size: 13px; background: #f9f9f9; padding: 6px 10px; border-radius: 6px; margin-top: 5px; display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <strong>${escaparHTML(c.autor || 'Tutor')}:</strong> ${escaparHTML(c.texto)}
+                                    </div>
+                                    ${ehMeuComentario ? `
+                                        <button onclick="excluirComentario(${c.id})" style="background: none; border: none; cursor: pointer; font-size: 14px;" title="Excluir comentário">
+                                            🗑️
+                                        </button>
+                                    ` : ''}
                                 </div>
                             `;
                         });
                     }
 
-                    const pubIniciais = publicacao.iniciais || (publicacao.autor ? publicacao.autor.substring(0,2).toUpperCase() : "TU");
+                    let avatarPostHTML = publicacao.iniciais || iniciais || "TU";
+                    let estiloAvatarPost = "background: #f3f4f6; color: #1f2937; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: bold; overflow: hidden;";
 
                     card.innerHTML = `
-                        <div class="post-header">
-                            <div class="post-user">
-                                <div class="avatar post-avatar">
-                                    ${pubIniciais}
+                        <div class="post-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <div class="post-user" style="display: flex; gap: 10px; align-items: center;">
+                                <div class="avatar post-avatar" style="${estiloAvatarPost}">
+                                    ${avatarPostHTML}
                                 </div>
                                 <div>
-                                    <strong>${escaparHTML(publicacao.autor || nomeTutor)}</strong>
-                                    <span>${formatarData(publicacao.data)}</span>
+                                    <strong>${escaparHTML(publicacao.autor || nomeTutor)}</strong><br>
+                                    <span style="font-size: 11px; color: #666;">${formatarData(publicacao.data)}</span>
                                 </div>
                             </div>
-                            <div class="post-category">
+                            <div class="post-category" style="background: #e0e7ff; padding: 3px 8px; border-radius: 4px; font-size: 12px;">
                                 ${escaparHTML(publicacao.categoria)}
                             </div>
                         </div>
 
-                        <div class="post-content">
+                        <div class="post-content" style="margin-bottom: 10px;">
                             <p>${escaparHTML(publicacao.texto)}</p>
                         </div>
 
-                        <div class="post-actions">
-                        <button class="action-button ${publicacao.curtido ? "liked" : ""}" onclick="curtir(${publicacao.id})">
-                            ${publicacao.curtido ? "&#x2764;&#xFE0F;" : "&#9825;"} <span id="contador-curtidas-${publicacao.id}">${publicacao.curtidas || 0}</span>
-                        </button>
+                        <div class="post-actions" style="display: flex; gap: 10px; align-items: center;">
+                            <button class="action-button ${publicacao.curtido ? "liked" : ""}" onclick="curtir(${publicacao.id})" style="background: none; border: 1px solid #ccc; padding: 5px 10px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                                <span>${publicacao.curtido ? "❤️" : "🤍"}</span> 
+                                <span id="contador-curtidas-${publicacao.id}">${publicacao.curtidas || 0}</span>
+                            </button>
 
                             ${ehMinha ? `
-                                <button class="delete-button" onclick="excluirPublicacao(${publicacao.id})">
+                                <button class="delete-button" onclick="excluirPublicacao(${publicacao.id})" style="background: #fee2e2; color: #991b1b; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
                                     🗑️ Excluir
                                 </button>
                             ` : ""}
@@ -452,12 +397,42 @@
             if (!confirm("Deseja realmente excluir esta publicação?")) return;
 
             try {
-                await fetch(`/api/publicacoes/${id}`, {
+                const resposta = await fetch(`/api/publicacoes/${id}`, { 
                     method: 'DELETE'
                 });
-                carregarPublicacoes();
+
+                if (resposta.ok) {
+                    carregarPublicacoes();
+                } else {
+                    const erroData = await resposta.json().catch(() => ({}));
+                    alert(erroData.mensagem || "Erro ao excluir a publicação.");
+                }
             } catch (erro) {
                 console.error("Erro ao excluir:", erro);
+                alert("Erro de conexão ao tentar excluir a publicação.");
+            }
+        }
+
+        async function excluirComentario(comentarioId) {
+            if (!confirm("Deseja realmente excluir este comentário?")) return;
+
+            try {
+                const resposta = await fetch(`/api/comentarios/${comentarioId}`, {
+                    method: 'DELETE'
+                });
+
+                if (resposta.ok) {
+                    const elemento = document.getElementById(`comentario-${comentarioId}`);
+                    if (elemento) {
+                        elemento.remove();
+                    } else {
+                        carregarPublicacoes();
+                    }
+                } else {
+                    alert("Erro ao excluir o comentário.");
+                }
+            } catch (erro) {
+                console.error("Erro ao excluir comentário:", erro);
             }
         }
 
@@ -468,28 +443,6 @@
         }
 
         carregarPublicacoes();
-
-        document.addEventListener("DOMContentLoaded", () => {
-            const paramsAtuais = window.location.search;
-            if (paramsAtuais) {
-                document.querySelectorAll(".menu a").forEach(link => {
-                    const urlOriginal = link.getAttribute("href");
-                    if (urlOriginal && !urlOriginal.includes("?")) {
-                        const partes = urlOriginal.split("#");
-                        link.setAttribute("href", `${partes[0]}${paramsAtuais}${partes[1] ? '#' + partes[1] : ''}`);
-                    }
-                });
-            }
-        });
-    
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.getRegistrations().then(registrations => {
-        for(let registration of registrations) {
-            registration.unregister(); // Remove o service worker antigo que está travando o cache
-        }
-    });
-}
     </script>
-
 </body>
 </html>

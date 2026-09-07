@@ -31,6 +31,19 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'login.html'));
 });
 
+app.get('/admin', (req, res) => {
+    res.sendFile(path.join(__dirname, 'admin', 'inicio.html'));
+});
+
+app.get('/admin/:page', (req, res) => {
+    const pagina = decodeURIComponent(req.params.page);
+    res.sendFile(path.join(__dirname, 'admin', pagina));
+});
+
+app.get('/dashboard.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'user', 'dashboard.html'));
+});
+
 app.get('/index.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
@@ -43,7 +56,7 @@ app.get('/tutor.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'user', 'tutor.html'));
 });
 
-// Rota de Usuário por ID (para preencher o painel, buscando dados do tutor e da tabela usuario)
+// Rota de Usuário por ID
 app.get('/usuario/:id', (req, res) => {
     const { id } = req.params;
     const query = `
@@ -76,11 +89,8 @@ app.post('/cadastro', async (req, res) => {
     }
 
     try {
-        const senhaHash = await argon2.hash(senha, {
-            memoryCost: 65536,
-            timeCost: 3,
-            parallelism: 2,
-        });
+        // Gera o hash compatível com o @node-rs/argon2
+        const senhaHash = await argon2.hash(senha);
 
         const queryUsuario = 'INSERT INTO usuario (nome, email, senha, perfil) VALUES (?, ?, ?, ?)';
         connection.query(queryUsuario, [nome, email, senhaHash, 'tutor'], (err, results) => {
@@ -113,58 +123,76 @@ app.post('/cadastro', async (req, res) => {
     }
 });
 
-// Rota de Login (atualizada para buscar o tutor_id caso seja tutor)
 app.post('/login', (req, res) => {
+    console.log("-> Requisição de login recebida:", req.body);
     const { email, senha } = req.body;
 
     if (!email || !senha) {
         return res.status(400).json({ erro: 'E-mail e senha são obrigatórios.' });
     }
 
-    const query = `
-        SELECT u.*, t.id AS tutor_id, t.cpf, t.telefone 
-        FROM usuario u 
-        LEFT JOIN tutor t ON t.usuario_id = u.id 
-        WHERE u.email = ?
-    `;
-
+    const query = 'SELECT * FROM usuario WHERE email = ?';
     connection.query(query, [email], async (err, results) => {
         if (err) {
-            console.error("Erro no login:", err);
-            return res.status(500).json({ erro: 'Erro interno no servidor.' });
+            console.error("ERRO MYSQL NO LOGIN:", err);
+            return res.status(500).json({ erro: 'Erro interno no servidor (MySQL).' });
         }
 
         if (results.length === 0) {
-            return res.status(401).json({ erro: 'E-mail ou senha inválidos.' });
+            return res.status(401).json({ erro: 'E-mail ou senha incorretos!' });
         }
 
         const usuario = results[0];
+        console.log("Usuário encontrado no banco:", usuario.email);
 
         try {
-            const senhaCorreta = await argon2.verify(usuario.senha, senha);
-            
-            if (!senhaCorreta) {
-                return res.status(401).json({ erro: 'E-mail ou senha inválidos.' });
+            let senhaValida = false;
+
+            if (usuario.senha && (usuario.senha.startsWith('$argon2') || usuario.senha.length > 50)) {
+                try {
+                    senhaValida = await argon2.verify(usuario.senha, senha);
+                } catch (argonError) {
+                    console.error("ERRO ARGON2 VERIFY:", argonError);
+                    senhaValida = false;
+                }
+            } else {
+                senhaValida = (usuario.senha === senha);
+            }
+
+            console.log("Senha válida?", senhaValida);
+
+            if (!senhaValida) {
+                return res.status(401).json({ erro: 'E-mail ou senha incorretos!' });
             }
 
             return res.status(200).json({
                 mensagem: 'Login realizado com sucesso!',
                 usuario: {
                     id: usuario.id,
-                    tutor_id: usuario.tutor_id || null,
                     nome: usuario.nome,
                     email: usuario.email,
-                    perfil: usuario.perfil,
-                    cpf: usuario.cpf || null,
-                    telefone: usuario.telefone || null
+                    perfil: usuario.perfil || 'tutor'
                 }
             });
-        } catch (error) {
-            console.error("Erro detalhado no login:", error);
-            return res.status(401).json({ erro: 'Erro ao verificar senha.' });
+        } catch (erroGeral) {
+            console.error("ERRO CRÍTICO NO TRY/CATCH DO LOGIN:", erroGeral);
+            return res.status(500).json({ erro: 'Erro interno no servidor (Geral).' });
         }
     });
 });
+
+function enviarRespostaLogin(res, usuario, idNavegacao) {
+    return res.status(200).json({
+        mensagem: 'Login realizado com sucesso!',
+        usuario: {
+            id: idNavegacao, // ID mapeado corretamente para o perfil
+            usuario_id: usuario.id,
+            nome: usuario.nome,
+            email: usuario.email,
+            perfil: usuario.perfil // 'tutor', 'veterinario' ou 'admin'
+        }
+    });
+}
 
 // Rota de Recuperação de Senha
 app.post('/recuperar', (req, res) => {
@@ -192,7 +220,6 @@ app.post('/recuperar', (req, res) => {
 // ROTAS DE ANIMAIS (PETS)
 // ==========================================
 
-// Cadastrar novo animal vinculado ao tutor
 app.post('/api/animais', (req, res) => {
     const { usuario_id, nome, especie, raca, idade, sexo, peso, status_atual } = req.body;
 
@@ -219,7 +246,36 @@ app.post('/api/animais', (req, res) => {
     });
 });
 
-// Listar pets do tutor
+app.get('/api/tutores', (req, res) => {
+    const query = 'SELECT id, nome, cpf FROM tutor';
+    connection.query(query, (err, tutores) => {
+        if (err) {
+            console.error("Erro ao buscar tutores:", err);
+            return res.status(500).json({ erro: 'Erro interno ao buscar tutores.' });
+        }
+        res.json(tutores);
+    });
+});
+
+// Rota para buscar os pets e o status em tempo real pelo ID do tutor
+app.get('/api/tutores/:tutorId/pets', (req, res) => {
+    const { tutorId } = req.params;
+
+    const query = `
+        SELECT id, nome, especie, raca, idade, sexo, peso, status_atual 
+        FROM animal 
+        WHERE tutor_id = ?
+    `;
+
+    connection.query(query, [tutorId], (err, results) => {
+        if (err) {
+            console.error("Erro ao buscar status dos pets:", err);
+            return res.status(500).json({ erro: 'Erro interno no servidor.' });
+        }
+        return res.status(200).json(results);
+    });
+});
+
 app.get('/api/animais/tutor/:usuarioId', (req, res) => {
     const { usuarioId } = req.params;
 
@@ -234,34 +290,47 @@ app.get('/api/animais/tutor/:usuarioId', (req, res) => {
     });
 });
 
+app.post('/api/pets', (req, res) => {
+    const { tutor_id, nome, especie, raca, idade, peso } = req.body;
+    
+    if (!tutor_id || !nome || !especie) {
+        return res.status(400).json({ erro: 'Preencha os campos obrigatórios.' });
+    }
+
+    const query = `
+        INSERT INTO animal (tutor_id, nome, especie, raca, idade, peso, status_atual) 
+        VALUES (?, ?, ?, ?, ?, ?, 'Ativo')
+    `;
+    
+    connection.query(query, [tutor_id, nome, especie, raca || '', idade || null, peso || null], (err, result) => {
+        if (err) {
+            console.error("Erro ao cadastrar pet:", err);
+            return res.status(500).json({ erro: 'Erro interno ao salvar pet no banco.' });
+        }
+        res.status(201).json({ mensagem: 'Pet cadastrado com sucesso!', id: result.insertId });
+    });
+});
+
+app.get('/api/pets', (req, res) => {
+    const query = `
+        SELECT a.*, t.nome AS nome_tutor 
+        FROM animal a 
+        LEFT JOIN tutor t ON a.tutor_id = t.id
+    `;
+    
+    connection.query(query, (err, pets) => {
+        if (err) {
+            console.error("Erro ao buscar pets:", err);
+            return res.status(500).json({ erro: 'Erro interno ao buscar pets.' });
+        }
+        res.json(pets);
+    });
+});
+
 // ==========================================
 // ROTAS DE AGENDAMENTOS E CONSULTAS
 // ==========================================
 
-app.post('/api/agendamentos', (req, res) => {
-    const { tutor_id, pet_id, servico, data, horario, observacoes, valor } = req.body;
-
-    const query = 'INSERT INTO consultas (tutor_id, pet_id, servico, data, horario, observacoes, valor) VALUES (?, ?, ?, ?, ?, ?, ?)';
-    
-    connection.query(query, [tutor_id, pet_id, servico, data, horario, observacoes, valor], (err, result) => {
-        if (err) {
-            // Se for duplicidade de horário (Código 1062 do MySQL)
-            if (err.code === 'ER_DUP_ENTRY' || err.errno === 1062) {
-                return res.status(400).json({ 
-                    erro: 'Já existe uma consulta agendada para esta mesma data e horário!' 
-                });
-            }
-
-            console.error("Erro ao salvar agendamento no banco:", err);
-            return res.status(500).json({ erro: 'Erro ao salvar agendamento no banco de dados.' });
-        }
-
-        return res.status(201).json({ mensagem: 'Consulta agendada com sucesso!', id: result.insertId });
-    });
-});
-
-// Cadastrar nova consulta completa
-// Cadastrar nova consulta completa
 app.post('/api/consultas', (req, res) => {
     const { animal_id, data, hora, tipo, observacoes, valor } = req.body;
 
@@ -288,7 +357,6 @@ app.post('/api/consultas', (req, res) => {
 
         connection.query(queryInsert, [tutorId, animal_id, tipo, data, hora, obsText, valorConsulta], (errInsert, results) => {
             if (errInsert) {
-                // Tratamento da restrição de duplicidade de data/horário (Erro 1062)
                 if (errInsert.code === 'ER_DUP_ENTRY' || errInsert.errno === 1062) {
                     return res.status(400).json({ 
                         erro: 'Já existe uma consulta agendada para esta mesma data e horário!' 
@@ -303,7 +371,6 @@ app.post('/api/consultas', (req, res) => {
     });
 });
 
-// Listar consultas e agendamentos vinculadas ao tutor logado com o respectivo valor
 app.get('/api/agendamentos/tutor/:usuarioId', (req, res) => {
     const { usuarioId } = req.params;
 
@@ -325,12 +392,11 @@ app.get('/api/agendamentos/tutor/:usuarioId', (req, res) => {
     });
 });
 
-//Calculo de gastos do tutor
 app.get('/api/gastos/:tutor_id', (req, res) => {
     const { tutor_id } = req.params;
     
     const queryTotal = "SELECT SUM(valor) as totalGasto FROM consultas WHERE tutor_id = ?";
-    const queryPorTipo = "SELECT tipo_servico, SUM(valor) as total FROM consultas WHERE tutor_id = ? GROUP BY tipo_servico";
+    const queryPorTipo = "SELECT servico as tipo_servico, SUM(valor) as total FROM consultas WHERE tutor_id = ? GROUP BY servico";
 
     connection.query(queryTotal, [tutor_id], (err, resultTotal) => {
         if (err) {
@@ -352,60 +418,163 @@ app.get('/api/gastos/:tutor_id', (req, res) => {
     });
 });
 
-app.get('/api/publicacoes', (req, res) => {
-    const tutorId = req.query.tutor_id || null;
+// ==========================================
+// ROTAS DA COMUNIDADE (PUBLICAÇÕES, CURTIDAS E COMENTÁRIOS)
+// ==========================================
 
-    const query = `
-        SELECT p.*, 
-               COUNT(DISTINCT c.id) AS curtidas,
-               SUM(CASE WHEN c.tutor_id = ? THEN 1 ELSE 0 END) AS curtido
-        FROM publicacoes p
-        LEFT JOIN curtidas c ON p.id = c.publicacao_id
-        GROUP BY p.id
-        ORDER BY p.data DESC
-    `;
-    
-    connection.query(query, [tutorId], (err, results) => {
-        if (err) return res.status(500).json({ error: err.message });
-        
-        // Converte o resultado de 'curtido' para booleano (true/false) para o front-end
-        const publicacoesFormatadas = results.map(pub => ({
-            ...pub,
-            curtido: pub.curtido > 0
-        }));
-
-        res.json(publicacoesFormatadas);
-    });
-});
-
-// Criar nova publicação
+// Criar uma nova publicação (Compatível com tabelas que só têm tutor_id e texto)
 app.post('/api/publicacoes', (req, res) => {
-    const { autor, iniciais, texto, categoria } = req.body;
-    const query = "INSERT INTO publicacoes (autor, iniciais, texto, categoria, curtidas) VALUES (?, ?, ?, ?, 0)";
+    const { tutor_id, texto } = req.body;
+
+    if (!tutor_id || !texto) {
+        return res.status(400).json({ erro: 'O tutor e o texto da publicação são obrigatórios.' });
+    }
+
+    const query = "INSERT INTO publicacoes (tutor_id, texto) VALUES (?, ?)";
     
-    connection.query(query, [autor, iniciais, texto, categoria], (err, results) => {
+    connection.query(query, [tutor_id, texto], (err, results) => {
         if (err) {
             console.error("Erro ao criar publicação:", err);
             return res.status(500).json({ erro: 'Erro interno no servidor.' });
         }
-        res.status(201).json({ id: results.insertId, mensagem: 'Publicação criada com sucesso!' });
+        res.status(201).json({ 
+            id: results.insertId, 
+            mensagem: 'Publicação criada com sucesso!' 
+        });
     });
 });
 
-// Curtir / Atualizar curtidas
-app.put('/api/publicacoes/:id/curtir', (req, res) => {
-    const { id } = req.params;
-    const { acao } = req.body; // 'incrementar' ou 'decrementar'
-    
-    const incremento = acao === 'decrementar' ? -1 : 1;
-    const query = "UPDATE publicacoes SET curtidas = GREATEST(0, curtidas + ?) WHERE id = ?";
+app.get('/api/publicacoes', (req, res) => {
+    // Se a tabela tiver a coluna 'titulo', use-a. Se não, pegamos os primeiros 30 caracteres do 'texto' como título.
+    const query = `
+        SELECT id, tutor_id, categoria, texto, texto AS titulo, data 
+        FROM publicacoes 
+        ORDER BY id DESC
+    `;
 
-    connection.query(query, [incremento, id], (err, results) => {
+    connection.query(query, (err, results) => {
         if (err) {
-            console.error("Erro ao atualizar curtidas:", err);
-            return res.status(500).json({ erro: 'Erro interno no servidor.' });
+            console.error("Erro ao buscar publicações:", err);
+            return res.status(500).json({ erro: 'Erro interno ao buscar publicações.' });
         }
-        res.status(200).json({ mensagem: 'Curtida atualizada!' });
+        res.status(200).json(results);
+    });
+});
+
+// Rota para curtir ou descurtir uma publicação
+app.put('/api/publicacoes/:id/curtir', async (req, res) => {
+    const publicacaoId = req.params.id;
+    const { tutor_id } = req.body;
+
+    try {
+        // Verifica se o tutor já curtiu esta publicação
+        const [rows] = await connection.promise().query(
+            'SELECT * FROM curtidas WHERE publicacao_id = ? AND tutor_id = ?',
+            [publicacaoId, tutor_id]
+        );
+
+        if (rows.length > 0) {
+            // Se já curtiu, remove a curtida (descurtir)
+            await connection.promise().query(
+                'DELETE FROM curtidas WHERE publicacao_id = ? AND tutor_id = ?',
+                [publicacaoId, tutor_id]
+            );
+            
+            // Decrementa o contador na tabela publicacoes
+            await connection.promise().query(
+                'UPDATE publicacoes SET curtidas = GREATEST(curtidas - 1, 0) WHERE id = ?',
+                [publicacaoId]
+            );
+            
+            return res.status(200).json({ mensagem: 'Curtida removida', curtido: false });
+        } else {
+            // Se não curtiu, adiciona a curtida
+            await connection.promise().query(
+                'INSERT INTO curtidas (publicacao_id, tutor_id) VALUES (?, ?)',
+                [publicacaoId, tutor_id]
+            );
+            
+            // Incrementa o contador na tabela publicacoes
+            await connection.promise().query(
+                'UPDATE publicacoes SET curtidas = curtidas + 1 WHERE id = ?',
+                [publicacaoId]
+            );
+            
+            return res.status(200).json({ mensagem: 'Publicação curtida', curtido: true });
+        }
+    } catch (erro) {
+        console.error("Erro ao processar curtida:", erro);
+        res.status(500).json({ erro: 'Erro interno ao processar curtida.' });
+    }
+});
+
+// ==========================================
+// ROTAS DE COMENTÁRIOS DAS PUBLICAÇÕES
+// ==========================================
+
+// Listar comentários de uma publicação específica (Versão Segura sem JOIN)
+app.get('/api/publicacoes/:id/comentarios', (req, res) => {
+    const { id } = req.params;
+    const query = "SELECT id, publicacao_id, tutor_id, texto, data FROM comentarios WHERE publicacao_id = ? ORDER BY id DESC";
+    
+    connection.query(query, [id], (err, results) => {
+        if (err) {
+            console.error("Erro ao buscar comentários:", err);
+            return res.status(500).json({ erro: 'Erro interno ao buscar comentários: ' + err.message });
+        }
+        res.status(200).json(results);
+    });
+});
+
+app.post('/api/publicacoes/:id/comentarios', (req, res) => {
+    const publicacaoId = req.params.id;
+    const { tutor_id, usuario_id, texto } = req.body;
+
+    if (!texto) {
+        return res.status(400).json({ erro: 'O texto do comentário não pode estar vazio.' });
+    }
+
+    const salvarNoBanco = (idTutorReal) => {
+        const query = "INSERT INTO comentarios (publicacao_id, tutor_id, texto, data) VALUES (?, ?, ?, NOW())";
+        connection.query(query, [publicacaoId, idTutorReal, texto], (err, result) => {
+            if (err) {
+                console.error("Erro ao salvar comentário:", err);
+                return res.status(500).json({ erro: 'Erro interno ao salvar comentário.' });
+            }
+            res.status(201).json({ mensagem: 'Comentário adicionado com sucesso!', id: result.insertId });
+        });
+    };
+
+    // Se o front-end mandou um ID que na verdade é o de usuário, ou se precisamos buscar o tutor vinculado:
+    // Tentamos primeiro ver se existe um registro na tabela tutor onde o id ou usuario_id seja igual ao ID recebido
+    const idEnviado = tutor_id || usuario_id;
+
+    if (!idEnviado) {
+        return res.status(400).json({ erro: 'Identificação do tutor é obrigatória.' });
+    }
+
+    // Verifica se o ID enviado existe diretamente na tabela tutor
+    const queryVerificaTutor = "SELECT id FROM tutor WHERE id = ?";
+    connection.query(queryVerificaTutor, [idEnviado], (err, resultsTutor) => {
+        if (err) {
+            return res.status(500).json({ erro: 'Erro ao verificar tutor.' });
+        }
+
+        if (resultsTutor.length > 0) {
+            // O ID enviado já é o ID correto do tutor!
+            salvarNoBanco(resultsTutor[0].id);
+        } else {
+            // Se não achou pelo ID direto, tenta buscar pelo campo usuario_id (caso exista na sua tabela tutor)
+            const queryBuscaPorUsuario = "SELECT id FROM tutor WHERE usuario_id = ?";
+            connection.query(queryBuscaPorUsuario, [idEnviado], (err, resultsUsuario) => {
+                if (err || resultsUsuario.length === 0) {
+                    return res.status(400).json({ 
+                        erro: 'O tutor associado a este usuário não foi encontrado no banco de dados. Cadastre o perfil do pet/tutor primeiro.' 
+                    });
+                }
+                salvarNoBanco(resultsUsuario[0].id);
+            });
+        }
     });
 });
 
@@ -423,7 +592,19 @@ app.delete('/api/publicacoes/:id', (req, res) => {
     });
 });
 
-// Rota para excluir um animal pelo ID
+// Rota para excluir um comentário
+app.delete('/api/comentarios/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        await connection.promise().query('DELETE FROM comentarios WHERE id = ?', [id]);
+        res.status(200).json({ mensagem: 'Comentário excluído com sucesso!' });
+    } catch (erro) {
+        console.error("Erro ao excluir comentário:", erro);
+        res.status(500).json({ erro: 'Erro interno ao excluir comentário.' });
+    }
+});
+
+// Excluir animal
 app.delete('/api/animais/:id', (req, res) => {
     const { id } = req.params;
     const query = 'DELETE FROM animal WHERE id = ?';
@@ -442,12 +623,9 @@ app.delete('/api/animais/:id', (req, res) => {
     });
 });
 
-// Rota para excluir ou cancelar consulta com motivo
+// Excluir consulta
 app.delete('/api/agendamentos/:id', (req, res) => {
     const { id } = req.params;
-    const { motivo } = req.body; // Recebe o motivo enviado pelo front-end
-
-    // Se preferir apenas apagar do banco de dados:
     const query = 'DELETE FROM consultas WHERE id = ?';
 
     connection.query(query, [id], (err, results) => {
@@ -464,7 +642,7 @@ app.delete('/api/agendamentos/:id', (req, res) => {
     });
 });
 
-// Rota para buscar valores fixos do banco
+// Tipos de serviços
 app.get('/api/tipos-servicos', (req, res) => {
     const query = "SELECT * FROM tipos_servicos";
     connection.query(query, (err, results) => {
@@ -473,6 +651,179 @@ app.get('/api/tipos-servicos', (req, res) => {
             return res.status(500).json({ erro: 'Erro no servidor' });
         }
         res.status(200).json(results);
+    });
+});
+
+// ==========================================
+// ROTA DE ESTATÍSTICAS DO PAINEL ADMIN
+// ==========================================
+app.get('/api/dashboard/estatisticas', async (req, res) => {
+    try {
+        const promisePool = connection.promise();
+
+        // Conta quantos tutores existem na tabela tutor
+        const [tutoresRes] = await promisePool.query("SELECT COUNT(*) AS total FROM tutor");
+        // Conta quantos pets existem
+        const [petsRes] = await promisePool.query("SELECT COUNT(*) AS total FROM animal");
+        // Conta quantos veterinários existem (ajuste o perfil conforme salvo no seu banco)
+        const [vetsRes] = await promisePool.query("SELECT COUNT(*) AS total FROM usuario WHERE perfil = 'veterinario' OR perfil = 'vet'");
+        // Conta quantas consultas ou prontuários existem
+        const [prontuariosRes] = await promisePool.query("SELECT COUNT(*) AS total FROM consultas"); // Ou mude para sua tabela de prontuários se houver
+
+        res.status(200).json({
+            totalTutores: tutoresRes[0].total || 0,
+            totalPets: petsRes[0].total || 0,
+            totalVets: vetsRes[0].total || 0,
+            totalProntuarios: prontuariosRes[0].total || 0
+        });
+    } catch (err) {
+        console.error("Erro ao buscar estatísticas do dashboard:", err);
+        res.status(500).json({ erro: 'Erro interno ao buscar estatísticas.' });
+    }
+});
+
+// ==========================================
+// ROTAS DE VETERINÁRIOS
+// ==========================================
+
+// Listar veterinários
+app.get('/api/veterinarios', (req, res) => {
+    const query = "SELECT id, nome, email, perfil FROM usuario WHERE perfil = 'veterinario' OR perfil = 'vet'";
+    connection.query(query, (err, results) => {
+        if (err) {
+            console.error("Erro ao buscar veterinários:", err);
+            return res.status(500).json({ erro: 'Erro interno ao buscar veterinários.' });
+        }
+        res.status(200).json(results);
+    });
+});
+
+// Cadastrar veterinário
+app.post('/api/veterinarios', async (req, res) => {
+    const { nome, email, senha, perfil } = req.body;
+
+    if (!nome || !email || !senha) {
+        return res.status(400).json({ erro: 'Preencha todos os campos obrigatórios.' });
+    }
+
+    try {
+        const senhaHash = await argon2.hash(senha);
+        const query = "INSERT INTO usuario (nome, email, senha, perfil) VALUES (?, ?, ?, ?)";
+        
+        connection.query(query, [nome, email, senhaHash, perfil || 'veterinario'], (err, result) => {
+            if (err) {
+                if (err.code === 'ER_DUP_ENTRY') {
+                    return res.status(400).json({ erro: 'Este e-mail já está cadastrado.' });
+                }
+                console.error("Erro ao cadastrar veterinário:", err);
+                return res.status(500).json({ erro: 'Erro interno ao salvar veterinário.' });
+            }
+            res.status(201).json({ mensagem: 'Veterinário cadastrado com sucesso!', id: result.insertId });
+        });
+    } catch (error) {
+        console.error("Erro ao gerar hash da senha:", error);
+        res.status(500).json({ erro: 'Erro interno no servidor.' });
+    }
+});
+
+// Excluir veterinário
+app.delete('/api/veterinarios/:id', (req, res) => {
+    const { id } = req.params;
+    const query = "DELETE FROM usuario WHERE id = ?";
+
+    connection.query(query, [id], (err, results) => {
+        if (err) {
+            console.error("Erro ao excluir veterinário:", err);
+            return res.status(500).json({ erro: 'Erro ao excluir veterinário.' });
+        }
+        if (results.affectedRows === 0) {
+            return res.status(404).json({ erro: 'Veterinário não encontrado.' });
+        }
+        res.status(200).json({ mensagem: 'Veterinário excluído com sucesso!' });
+    });
+});
+
+// ==========================================
+// ROTAS DE GESTÃO DE USUÁRIOS
+// ==========================================
+
+// Listar todos os usuários
+app.get('/api/usuarios', (req, res) => {
+    const query = "SELECT id, nome, email, perfil FROM usuario WHERE perfil != 'admin'";
+    connection.query(query, (err, results) => {
+        if (err) {
+            console.error("Erro ao buscar usuários:", err);
+            return res.status(500).json({ erro: 'Erro interno ao buscar usuários.' });
+        }
+        res.status(200).json(results);
+    });
+});
+
+// Excluir usuário por ID
+app.delete('/api/usuarios/:id', (req, res) => {
+    const { id } = req.params;
+    const query = "DELETE FROM usuario WHERE id = ?";
+
+    connection.query(query, [id], (err, results) => {
+        if (err) {
+            console.error("Erro ao excluir usuário:", err);
+            return res.status(500).json({ erro: 'Erro ao excluir usuário.' });
+        }
+        if (results.affectedRows === 0) {
+            return res.status(404).json({ erro: 'Usuário não encontrado.' });
+        }
+        res.status(200).json({ mensagem: 'Usuário excluído com sucesso!' });
+    });
+});
+
+// ==========================================
+// ROTAS DE PUBLICAÇÕES (ADMINISTRAÇÃO)
+// ==========================================
+
+// Listar todas as publicações
+app.get('/api/publicacoes', (req, res) => {
+    const query = "SELECT id, titulo, categoria, conteudo, data_criacao FROM publicacao ORDER BY id DESC";
+    connection.query(query, (err, results) => {
+        if (err) {
+            console.error("Erro ao buscar publicações:", err);
+            return res.status(500).json({ erro: 'Erro interno ao buscar publicações.' });
+        }
+        res.status(200).json(results);
+    });
+});
+
+// Cadastrar nova publicação
+app.post('/api/publicacoes', (req, res) => {
+    const { titulo, categoria, conteudo } = req.body;
+
+    if (!titulo || !conteudo) {
+        return res.status(400).json({ erro: 'Preencha o título e o conteúdo da publicação.' });
+    }
+
+    const query = "INSERT INTO publicacao (titulo, categoria, conteudo, data_criacao) VALUES (?, ?, ?, NOW())";
+    connection.query(query, [titulo, categoria || 'Geral', conteudo], (err, result) => {
+        if (err) {
+            console.error("Erro ao salvar publicação:", err);
+            return res.status(500).json({ erro: 'Erro interno ao salvar publicação.' });
+        }
+        res.status(201).json({ mensagem: 'Publicação criada com sucesso!', id: result.insertId });
+    });
+});
+
+// Excluir publicação por ID
+app.delete('/api/publicacoes/:id', (req, res) => {
+    const { id } = req.params;
+    const query = "DELETE FROM publicacao WHERE id = ?";
+
+    connection.query(query, [id], (err, results) => {
+        if (err) {
+            console.error("Erro ao excluir publicação:", err);
+            return res.status(500).json({ erro: 'Erro ao excluir publicação.' });
+        }
+        if (results.affectedRows === 0) {
+            return res.status(404).json({ erro: 'Publicação não encontrada.' });
+        }
+        res.status(200).json({ mensagem: 'Publicação excluída com sucesso!' });
     });
 });
 

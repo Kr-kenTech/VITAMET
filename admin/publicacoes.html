@@ -1,0 +1,270 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitamed - Gestão de Publicações</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="pets.css">
+</head>
+<body>
+
+<div class="layout">
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-icon">
+                <img src="../foto.jpeg" alt="Logo">
+            </div>
+            <div>
+                <h2>Vita<span>Med</span></h2>
+                <p>Painel Administrativo</p>
+            </div>
+        </div>
+
+        <div class="menu">
+            <a href="inicio.html" class="menu-item">
+                <span><i class="fa-solid fa-house"></i></span> Painel de Controle
+            </a>
+            <a href="pets.html" class="menu-item">
+                <span><i class="fa-solid fa-notes-medical"></i></span> Pets & Prontuários
+            </a>
+            <a href="veterinarios.html" class="menu-item">
+                <span><i class="fa-solid fa-user-doctor"></i></span> Veterinários
+            </a>
+            <a href="gestao.html" class="menu-item">
+                <span><i class="fa-solid fa-users"></i></span> Gestão de Usuários
+            </a>
+            <a href="publicacoes.html" class="menu-item active">
+                <span><i class="fa-solid fa-newspaper"></i></span> Publicações
+            </a>
+            <a href="logistica.html" class="menu-item">
+                <span><i class="fa-solid fa-box"></i></span> Logística & Estoque
+            </a>
+            <a href="relatorios.html" class="menu-item">
+                <span><i class="fa-solid fa-chart-pie"></i></span> Relatórios
+            </a>
+            <a href="configuracoes.html" class="menu-item">
+                <span><i class="fa-solid fa-gear"></i></span> Configurações
+            </a>
+        </div>
+
+        <div class="sidebar-bottom">
+            <button class="logout" onclick="window.location.href='../login.html'">
+                <span><i class="fa-solid fa-right-from-bracket"></i></span> Sair da Conta
+            </button>
+        </div>
+    </aside>
+
+    <main class="main">
+        <header class="topbar">
+            <div class="mobile-logo">Vitamet<span>.</span></div>
+            
+            <div class="search-box" style="display: flex; align-items: center; gap: 10px; background: #f8fbff; border: 1px solid #d9eef7; padding: 8px 14px; border-radius: 10px; width: 300px;">
+                <i class="fa-solid fa-magnifying-glass" style="color: #607d8b;"></i>
+                <input type="text" id="inputBuscaPub" placeholder="Buscar publicação..." onkeyup="filtrarPublicacoes()" style="border: none; background: none; outline: none; width: 100%; font-size: 13px;">
+            </div>
+
+            <div class="top-user">
+                <div class="notification"><i class="fa-regular fa-bell"></i></div>
+                <div class="avatar">
+                    <img src="../WhatsApp%20Image%202026-08-31%20at%209.31.23%20PM.jpeg" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                </div>
+                <div class="user-info">
+                    <strong>Dr. Raylander</strong>
+                    <span>Usuário Admin</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="content">
+            <div class="page-header">
+                <div>
+                    <span class="breadcrumb">CONTEÚDO & COMUNICAÇÃO</span>
+                    <h1>Gestão de Publicações</h1>
+                    <p>Crie e gerencie notícias, avisos importantes e informativos para os usuários.</p>
+                </div>
+                <div>
+                    <button class="btn btn-primary" onclick="abrirModalNovaPub()">
+                        <i class="fa-solid fa-plus"></i> Nova Publicação
+                    </button>
+                </div>
+            </div>
+
+            <div class="section-box">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3>Publicações Cadastradas</h3>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Título</th>
+                                <th>Categoria</th>
+                                <th>Data de Criação</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-publicacoes">
+                            <tr>
+                                <td colspan="4" style="text-align: center; color: #607d8b; padding: 25px;">Carregando publicações...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- MODAL DE NOVA PUBLICAÇÃO -->
+<div id="modalPub" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 2000;">
+    <div class="modal-content" style="background: white; padding: 30px; border-radius: 12px; width: 500px; max-width: 90%;">
+        <span class="modal-close" onclick="fecharModalNovaPub()" style="float: right; cursor: pointer; font-size: 20px;">&times;</span>
+        <h2 style="margin-bottom: 20px; font-size: 20px; color: #28556b;">Nova Publicação</h2>
+        
+        <form id="formNovaPub" onsubmit="cadastrarPublicacao(event)">
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label for="tituloPub" style="display: block; margin-bottom: 5px; font-size: 13px; font-weight: 600;">Título</label>
+                <input type="text" id="tituloPub" required placeholder="Ex: Campanha de Vacinação Antirrábica" style="width: 100%; padding: 8px; border: 1px solid #d9eef7; border-radius: 6px;">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label for="categoriaPub" style="display: block; margin-bottom: 5px; font-size: 13px; font-weight: 600;">Categoria</label>
+                <select id="categoriaPub" required style="width: 100%; padding: 8px; border: 1px solid #d9eef7; border-radius: 6px; background: white;">
+                    <option value="Aviso">Aviso</option>
+                    <option value="Notícia">Notícia</option>
+                    <option value="Dica Pet">Dica Pet</option>
+                    <option value="Campanha">Campanha</option>
+                </select>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label for="conteudoPub" style="display: block; margin-bottom: 5px; font-size: 13px; font-weight: 600;">Conteúdo / Texto</label>
+                <textarea id="conteudoPub" required rows="5" placeholder="Escreva os detalhes da publicação..." style="width: 100%; padding: 8px; border: 1px solid #d9eef7; border-radius: 6px; resize: vertical;"></textarea>
+            </div>
+
+            <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button type="button" class="btn btn-secondary" onclick="fecharModalNovaPub()" style="padding: 8px 14px; background: #e0e0e0; border: none; border-radius: 6px; cursor: pointer;">Cancelar</button>
+                <button type="submit" class="btn btn-primary" style="padding: 8px 14px; background: #28556b; color: white; border: none; border-radius: 6px; cursor: pointer;">Publicar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    let listaPubsGlobal = [];
+
+    async function carregarPublicacoes() {
+        const tbody = document.getElementById('tabela-publicacoes');
+        try {
+            const resposta = await fetch('/api/publicacoes');
+            const pubs = await resposta.json();
+
+            if (resposta.ok) {
+                listaPubsGlobal = pubs;
+                renderizarTabelaPubs(pubs);
+            } else {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #d9534f; padding: 20px;">Erro ao carregar publicações.</td></tr>`;
+            }
+        } catch (error) {
+            console.error("Erro:", error);
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #d9534f; padding: 20px;">Erro de comunicação com o servidor.</td></tr>`;
+        }
+    }
+
+    function renderizarTabelaPubs(pubs) {
+        const tbody = document.getElementById('tabela-publicacoes');
+        tbody.innerHTML = '';
+
+        if (!pubs || pubs.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #607d8b; padding: 20px;">Nenhuma publicação encontrada.</td></tr>`;
+            return;
+        }
+
+        pubs.forEach(pub => {
+            let dataFormatada = 'Data não informada';
+            if (pub.data_criacao) {
+                dataFormatada = new Date(pub.data_criacao).toLocaleDateString('pt-BR');
+            }
+
+            const linha = document.createElement('tr');
+            linha.innerHTML = `
+                <td><strong>${pub.titulo}</strong></td>
+                <td><span class="badge" style="background: #e8f8ff; color: #397a99; padding: 4px 8px; border-radius: 6px; font-size: 12px;">${pub.categoria || 'Geral'}</span></td>
+                <td>${dataFormatada}</td>
+                <td><button onclick="excluirPublicacao(${pub.id})" style="border: none; background: none; color: #d9534f; cursor: pointer;" title="Excluir Publicação"><i class="fa-solid fa-trash"></i></button></td>
+            `;
+            tbody.appendChild(linha);
+        });
+    }
+
+    function filtrarPublicacoes() {
+        const termo = document.getElementById('inputBuscaPub').value.toLowerCase();
+        const filtradas = listaPubsGlobal.filter(pub => 
+            pub.titulo.toLowerCase().includes(termo) || 
+            (pub.categoria && pub.categoria.toLowerCase().includes(termo)) ||
+            (pub.conteudo && pub.conteudo.toLowerCase().includes(termo))
+        );
+        renderizarTabelaPubs(filtradas);
+    }
+
+    function abrirModalNovaPub() {
+        document.getElementById('modalPub').style.display = 'flex';
+    }
+
+    function fecharModalNovaPub() {
+        document.getElementById('modalPub').style.display = 'none';
+        document.getElementById('formNovaPub').reset();
+    }
+
+    async function cadastrarPublicacao(event) {
+        event.preventDefault();
+        const dados = {
+            titulo: document.getElementById('tituloPub').value,
+            categoria: document.getElementById('categoriaPub').value,
+            conteudo: document.getElementById('conteudoPub').value
+        };
+
+        try {
+            const resposta = await fetch('/api/publicacoes', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dados)
+            });
+            const resultado = await resposta.json();
+
+            if (resposta.ok) {
+                alert(resultado.mensagem);
+                fecharModalNovaPub();
+                carregarPublicacoes();
+            } else {
+                alert('Erro: ' + resultado.erro);
+            }
+        } catch (e) {
+            console.error(e);
+            alert('Erro ao cadastrar publicação.');
+        }
+    }
+
+    async function excluirPublicacao(id) {
+        if (!confirm('Deseja realmente excluir esta publicação?')) return;
+        try {
+            const resposta = await fetch(`/api/publicacoes/${id}`, { method: 'DELETE' });
+            const resultado = await resposta.json();
+            if (resposta.ok) {
+                carregarPublicacoes();
+            } else {
+                alert(resultado.erro);
+            }
+        } catch (e) {
+            console.error(e);
+            alert('Erro ao excluir publicação.');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', carregarPublicacoes);
+</script>
+</body>
+</html>
