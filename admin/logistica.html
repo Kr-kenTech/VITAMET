@@ -6,21 +6,19 @@
   <title>Vitamed - Logística & Estoque</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="admin-shared.css">
-  <style>
-    .hidden { display: none !important; }
-    .clickable-card { cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
-    .clickable-card:hover { transform: translateY(-2px); }
-  </style>
+  <link rel="stylesheet" href="logistica.css">
 </head>
 <body>
 
+  <!-- SIDEBAR -->
   <aside class="sidebar">
-    <div class="logo-container">
-      <img src="WhatsApp%20Image%202026-08-17%20at%204.21.16%20PM.jpeg" alt="Logo Vitamed" class="logo-img">
-      <div class="logo-text">
-        <h2>Vitamet</h2>
-        <span>Admin</span>
+    <div class="logo">
+      <div class="logo-icon">
+        <img src="../foto.jpeg" alt="Logo Vitamed">
+      </div>
+      <div>
+        <h2>Vita<span>Med</span></h2>
+        <p>Painel Administrativo</p>
       </div>
     </div>
     <ul class="nav-list">
@@ -31,7 +29,7 @@
         <a href="pets.html"><i class="fa-solid fa-notes-medical"></i> Pets & Prontuários</a>
       </li>
       <li class="nav-item">
-        <a href="veterinarios.html"><i class="fa-solid fa-user-doctor"></i> Veterinários (Ativos)</a>
+        <a href="veterinarios.html"><i class="fa-solid fa-user-doctor"></i> Veterinários</a>
       </li>
       <li class="nav-item">
         <a href="gestao.html"><i class="fa-solid fa-users"></i> Gestão de Usuários</a>
@@ -44,42 +42,44 @@
       </li>
       <li class="nav-item">
         <a href="relatorios.html"><i class="fa-solid fa-chart-pie"></i> Relatórios</a>
-      </li>
-      <li class="nav-item">
-        <a href="configuracoes.html"><i class="fa-solid fa-gear"></i> Configurações</a>
-      </li>
     </ul>
+    <div class="sidebar-bottom">
+            <button class="logout" onclick="window.location.href='../login.html'">
+                <span><i class="fa-solid fa-right-from-bracket"></i></span> Sair da Conta
+            </button>
+        </div>
   </aside>
 
   <div class="main-wrapper">
     
+    <!-- TOPBAR -->
     <header class="topbar">
-      <div class="search-box">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" placeholder="Buscar insumo, SKU ou fornecedor...">
-      </div>
-      
-      <div class="user-profile">
-        <i class="fa-regular fa-bell" style="color: #64748b; font-size: 16px; margin-right: 10px;"></i>
-        <img src="WhatsApp%20Image%202026-08-31%20at%209.31.23%20PM.jpeg" alt="Foto Usuário" class="user-avatar">
+      <div></div>
+      <div class="top-user">
+        <button class="notification" aria-label="Notificações">🔔</button>
+        <div class="avatar">
+          <span data-admin-initials>AD</span>
+        </div>
         <div class="user-info">
-          <span>Usuário Admin</span>
-          <strong>Dr. Raylander</strong>
+          <strong data-admin-name>Administrador</strong>
+          <span data-admin-role>Admin</span>
         </div>
       </div>
     </header>
 
+    <!-- CONTEÚDO -->
     <main class="content">
 
       <h1 class="section-title" id="page-title">Controle de Logística & Estoque</h1>
       <p class="section-subtitle" id="page-subtitle">Gerencie o inventário de medicamentos, insumos cirúrgicos e suprimentos.</p>
 
+      <!-- CARDS DO TOPO -->
       <div class="stats-grid">
-        <div class="stat-card">
+        <div class="stat-card" onclick="exibirInventario()" style="cursor: pointer;">
           <div class="stat-icon icon-blue"><i class="fa-solid fa-boxes-stacked"></i></div>
           <div>
             <span class="stat-label">Total de Itens</span>
-            <h3 class="stat-value">1.248</h3>
+            <h3 class="stat-value" id="card-total-itens">0</h3>
           </div>
         </div>
 
@@ -87,27 +87,27 @@
           <div class="stat-icon icon-green"><i class="fa-solid fa-circle-dollar-to-slot"></i></div>
           <div>
             <span class="stat-label">Valor em Estoque</span>
-            <h3 class="stat-value">R$ 142.850,00</h3>
+            <h3 class="stat-value" id="card-valor-estoque">R$ 0,00</h3>
           </div>
         </div>
 
-        <div class="stat-card clickable-card" onclick="exibirItensCriticos()">
+        <div class="stat-card clickable-card" onclick="exibirItensCriticos()" style="cursor: pointer;">
           <div class="stat-icon icon-red"><i class="fa-solid fa-triangle-exclamation"></i></div>
           <div>
             <span class="stat-label">Itens Críticos</span>
-            <h3 class="stat-value">14 itens</h3>
+            <h3 class="stat-value" id="card-itens-criticos">0 itens</h3>
           </div>
         </div>
-
-        <div class="stat-card clickable-card" onclick="exibirPedidos()">
+        <div class="stat-card clickable-card" onclick="exibirPedidos()" style="cursor: pointer;">
           <div class="stat-icon icon-amber"><i class="fa-solid fa-truck-ramp-box"></i></div>
           <div>
             <span class="stat-label">Lista de Pedidos</span>
-            <h3 class="stat-value">13 pedidos</h3>
+            <h3 class="stat-value" id="card-total-pedidos">0 pedidos</h3>
           </div>
         </div>
       </div>
 
+      <!-- SEÇÃO 1: INVENTÁRIO -->
       <div class="card" id="view-inventario">
         <div class="card-header">
           <h2 class="card-title">Inventário de Insumos e Produtos</h2>
@@ -126,7 +126,6 @@
                 <th>Categoria</th>
                 <th>Qtd. Atual</th>
                 <th>Custo Un.</th>
-                <th>Total Em Estoque</th>
                 <th>Status</th>
                 <th>Ações</th>
               </tr>
@@ -138,7 +137,6 @@
                 <td>Medicamentos / Vacinas</td>
                 <td>42 unid.</td>
                 <td>R$ 95,00</td>
-                <td>R$ 3.990,00</td>
                 <td><span class="badge badge-success">Normal</span></td>
                 <td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td>
               </tr>
@@ -148,111 +146,45 @@
                 <td>Alimentação Especial</td>
                 <td>3 unid.</td>
                 <td>R$ 180,00</td>
-                <td>R$ 540,00</td>
                 <td><span class="badge badge-danger">Crítico (Repor)</span></td>
                 <td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td>
               </tr>
-              <tr>
-                <td>#INS-5041</td>
-                <td><strong>Seringa Descartável 3ml (Cx 100)</strong></td>
-                <td>Insumos Hospitalares</td>
-                <td>18 caixas</td>
-                <td>R$ 42,50</td>
-                <td>R$ 765,00</td>
-                <td><span class="badge badge-success">Normal</span></td>
-                <td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td>
-              </tr>
-              <tr>
-                <td>#ANEST-019</td>
-                <td><strong>Anestésico Isoflurano 100ml</strong></td>
-                <td>Cirúrgico / Anestésicos</td>
-                <td>5 frascos</td>
-                <td>R$ 310,00</td>
-                <td>R$ 1.550,00</td>
-                <td><span class="badge badge-warning">Atenção</span></td>
-                <td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td>
-              </tr>
             </tbody>
           </table>
         </div>
       </div>
 
+      <!-- SEÇÃO 2: PEDIDOS (Oculta por padrão) -->
       <div class="card hidden" id="view-pedidos">
         <div class="card-header">
           <h2 class="card-title">Listagem dos 13 Pedidos de Compra</h2>
-          <div>
-            <button class="btn btn-secondary" onclick="exibirInventario()"><i class="fa-solid fa-arrow-left"></i> Voltar para Página Principal</button>
-          </div>
+          <button class="btn btn-secondary" onclick="exibirInventario()"><i class="fa-solid fa-arrow-left"></i> Voltar</button>
         </div>
-
         <div class="table-container">
           <table>
             <thead>
-              <tr>
-                <th>Nº Pedido</th>
-                <th>Fornecedor</th>
-                <th>Data do Pedido</th>
-                <th>Previsão Entrega</th>
-                <th>Valor Total</th>
-                <th>Status</th>
-                <th>Ações</th>
-              </tr>
+              <tr><th>Nº Pedido</th><th>Fornecedor</th><th>Data</th><th>Valor Total</th><th>Status</th></tr>
             </thead>
             <tbody>
-              <tr><td>#PED-9012</td><td><strong>Distribuidora VetBrasil</strong></td><td>01/09/2026</td><td>05/09/2026</td><td>R$ 4.500,00</td><td><span class="badge badge-warning">Em Trânsito</span></td><td class="actions-icon"><i class="fa-solid fa-eye"></i></td></tr>
-              <tr><td>#PED-9011</td><td><strong>Zoetis Saúde Animal</strong></td><td>30/08/2026</td><td>03/09/2026</td><td>R$ 12.300,00</td><td><span class="badge badge-warning">Pendente</span></td><td class="actions-icon"><i class="fa-solid fa-eye"></i></td></tr>
-              <tr><td>#PED-9010</td><td><strong>Laboratório Covet</strong></td><td>28/08/2026</td><td>01/09/2026</td><td>R$ 1.850,00</td><td><span class="badge badge-success">Entregue</span></td><td class="actions-icon"><i class="fa-solid fa-eye"></i></td></tr>
-              <tr><td>#PED-9009</td><td><strong>Insumos Hospitalares SP</strong></td><td>25/08/2026</td><td>02/09/2026</td><td>R$ 890,00</td><td><span class="badge badge-warning">Em Trânsito</span></td><td class="actions-icon"><i class="fa-solid fa-eye"></i></td></tr>
-              <tr><td>#PED-9008</td><td><strong>Royal Canin Distribuição</strong></td><td>24/08/2026</td><td>29/08/2026</td><td>R$ 6.400,00</td><td><span class="badge badge-success">Entregue</span></td><td class="actions-icon"><i class="fa-solid fa-eye"></i></td></tr>
-              <tr><td>#PED-9007</td><td><strong>Cirúrgica Biomed</strong></td><td>22/08/2026</td><td>27/08/2026</td><td>R$ 3.120,00</td><td><span class="badge badge-danger">Cancelado</span></td><td class="actions-icon"><i class="fa-solid fa-eye"></i></td></tr>
-              <tr><td>#PED-9006</td><td><strong>MSD Saúde Animal</strong></td><td>20/08/2026</td><td>26/08/2026</td><td>R$ 9.750,00</td><td><span class="badge badge-success">Entregue</span></td><td class="actions-icon"><i class="fa-solid fa-eye"></i></td></tr>
-              <tr><td>#PED-9005</td><td><strong>VetLine Suprimentos</strong></td><td>18/08/2026</td><td>24/08/2026</td><td>R$ 2.100,00</td><td><span class="badge badge-success">Entregue</span></td><td class="actions-icon"><i class="fa-solid fa-eye"></i></td></tr>
-              <tr><td>#PED-9004</td><td><strong>PharmaPets Ltda</strong></td><td>15/08/2026</td><td>20/08/2026</td><td>R$ 780,00</td><td><span class="badge badge-success">Entregue</span></td><td class="actions-icon"><i class="fa-solid fa-eye"></i></td></tr>
-              <tr><td>#PED-9003</td><td><strong>Distribuidora VetBrasil</strong></td><td>12/08/2026</td><td>17/08/2026</td><td>R$ 5.340,00</td><td><span class="badge badge-success">Entregue</span></td><td class="actions-icon"><i class="fa-solid fa-eye"></i></td></tr>
-              <tr><td>#PED-9002</td><td><strong>Elanco Animal Health</strong></td><td>10/08/2026</td><td>15/08/2026</td><td>R$ 11.200,00</td><td><span class="badge badge-success">Entregue</span></td><td class="actions-icon"><i class="fa-solid fa-eye"></i></td></tr>
-              <tr><td>#PED-9001</td><td><strong>Insumos Hospitalares SP</strong></td><td>05/08/2026</td><td>10/08/2026</td><td>R$ 1.450,00</td><td><span class="badge badge-success">Entregue</span></td><td class="actions-icon"><i class="fa-solid fa-eye"></i></td></tr>
-              <tr><td>#PED-9000</td><td><strong>Cirúrgica Biomed</strong></td><td>01/08/2026</td><td>06/08/2026</td><td>R$ 4.890,00</td><td><span class="badge badge-success">Entregue</span></td><td class="actions-icon"><i class="fa-solid fa-eye"></i></td></tr>
+              <tr><td>#PED-9012</td><td>Distribuidora VetBrasil</td><td>01/09/2026</td><td>R$ 4.500,00</td><td><span class="badge badge-warning">Em Trânsito</span></td></tr>
             </tbody>
           </table>
         </div>
       </div>
 
+      <!-- SEÇÃO 3: ITENS CRÍTICOS (Oculta por padrão) -->
       <div class="card hidden" id="view-criticos">
         <div class="card-header">
-          <h2 class="card-title">Relatório de Itens Críticos em Estoque (14 itens)</h2>
-          <div>
-            <button class="btn btn-secondary" onclick="exibirInventario()"><i class="fa-solid fa-arrow-left"></i> Voltar para Página Principal</button>
-          </div>
+          <h2 class="card-title">Itens Críticos (14 itens)</h2>
+          <button class="btn btn-secondary" onclick="exibirInventario()"><i class="fa-solid fa-arrow-left"></i> Voltar</button>
         </div>
-
         <div class="table-container">
           <table>
             <thead>
-              <tr>
-                <th>Código (SKU)</th>
-                <th>Item / Descrição</th>
-                <th>Categoria</th>
-                <th>Qtd. Atual</th>
-                <th>Qtd. Mínima</th>
-                <th>Status</th>
-                <th>Ações</th>
-              </tr>
+              <tr><th>SKU</th><th>Item</th><th>Qtd. Atual</th><th>Mínimo</th><th>Status</th></tr>
             </thead>
             <tbody>
-              <tr><td>#RAÇ-1029</td><td><strong>Ração Terapêutica Renal 2kg</strong></td><td>Alimentação Especial</td><td>3 unid.</td><td>10 unid.</td><td><span class="badge badge-danger">Crítico (Repor)</span></td><td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td></tr>
-              <tr><td>#ANEST-019</td><td><strong>Anestésico Isoflurano 100ml</strong></td><td>Cirúrgico / Anestésicos</td><td>5 frascos</td><td>15 frascos</td><td><span class="badge badge-warning">Atenção</span></td><td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td></tr>
-              <tr><td>#AGU-3021</td><td><strong>Agulha Descartável 25x7 (Cx 100)</strong></td><td>Insumos Hospitalares</td><td>2 caixas</td><td>12 caixas</td><td><span class="badge badge-danger">Crítico (Repor)</span></td><td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td></tr>
-              <tr><td>#LUVA-008</td><td><strong>Luva Cirúrgica Estéril 7.5</strong></td><td>Insumos Hospitalares</td><td>4 pares</td><td>20 pares</td><td><span class="badge badge-danger">Crítico (Repor)</span></td><td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td></tr>
-              <tr><td>#ANT-4022</td><td><strong>Antibiótico Enrofloxacino 50mg</strong></td><td>Medicamentos</td><td>1 frasco</td><td>8 frascos</td><td><span class="badge badge-danger">Crítico (Repor)</span></td><td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td></tr>
-              <tr><td>#SOR-0012</td><td><strong>Soro Fisiológico 0.9% 500ml</strong></td><td>Insumos Hospitalares</td><td>6 bolsas</td><td>30 bolsas</td><td><span class="badge badge-warning">Atenção</span></td><td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td></tr>
-              <tr><td>#ANTI-881</td><td><strong>Anti-inflamatório Meloxicam 2mg</strong></td><td>Medicamentos</td><td>2 caixas</td><td>10 caixas</td><td><span class="badge badge-danger">Crítico (Repor)</span></td><td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td></tr>
-              <tr><td>#GAZ-0033</td><td><strong>Gaze Hidrófila Estéril (Pacote)</strong></td><td>Insumos Hospitalares</td><td>8 pacotes</td><td>40 pacotes</td><td><span class="badge badge-danger">Crítico (Repor)</span></td><td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td></tr>
-              <tr><td>#CAT-1102</td><td><strong>Cateter Intravenoso 22G</strong></td><td>Insumos Hospitalares</td><td>5 unid.</td><td>25 unid.</td><td><span class="badge badge-danger">Crítico (Repor)</span></td><td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td></tr>
-              <tr><td>#FIO-0091</td><td><strong>Fio de Satura Nylon 3-0</strong></td><td>Cirúrgico</td><td>3 caixas</td><td>15 caixas</td><td><span class="badge badge-warning">Atenção</span></td><td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td></tr>
-              <tr><td>#POM-5541</td><td><strong>Pomada Cicatrizante Vet 50g</strong></td><td>Medicamentos</td><td>2 bisnagas</td><td>10 bisnagas</td><td><span class="badge badge-danger">Crítico (Repor)</span></td><td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td></tr>
-              <tr><td>#ALC-7070</td><td><strong>Álcool 70% Hospitalar 1L</strong></td><td>Higienização</td><td>2 frascos</td><td>12 frascos</td><td><span class="badge badge-danger">Crítico (Repor)</span></td><td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td></tr>
-              <tr><td>#TERM-004</td><td><strong>Termômetro Digital Veterinário</strong></td><td>Equipamentos</td><td>1 unid.</td><td>5 unid.</td><td><span class="badge badge-warning">Atenção</span></td><td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td></tr>
-              <tr><td>#SHAM-302</td><td><strong>Shampoo Terapêutico Clorexidina</strong></td><td>Estética / Tratamento</td><td>3 frascos</td><td>10 frascos</td><td><span class="badge badge-danger">Crítico (Repor)</span></td><td class="actions-icon"><i class="fa-solid fa-ellipsis-vertical"></i></td></tr>
+              <tr><td>#RAÇ-1029</td><td>Ração Terapêutica Renal 2kg</td><td>3 unid.</td><td>10 unid.</td><td><span class="badge badge-danger">Crítico</span></td></tr>
             </tbody>
           </table>
         </div>
@@ -261,7 +193,265 @@
     </main>
   </div>
 
+  <!-- MODAL DE ENTRADA DE MATERIAL -->
+<div id="modal-entrada" class="modal-overlay hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000;">
+  <div class="modal-content" style="background: white; padding: 30px; border-radius: 12px; width: 100%; max-width: 500px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+    <h2 style="margin-bottom: 20px; font-size: 20px; color: #1e293b;">Nova Entrada de Material</h2>
+    <form id="form-entrada-material">
+      <input type="hidden" id="item-id-input">
+      <div style="margin-bottom: 15px;">
+        <label style="display: block; margin-bottom: 5px; font-weight: 500; font-size: 14px;">Código SKU</label>
+        <input type="text" id="sku-input" required placeholder="Ex: #MED-9999" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px;">
+      </div>
+      <div style="margin-bottom: 15px;">
+        <label style="display: block; margin-bottom: 5px; font-weight: 500; font-size: 14px;">Nome / Descrição do Item</label>
+        <input type="text" id="nome-input" required placeholder="Ex: Vacina Raiva" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px;">
+      </div>
+      <div style="margin-bottom: 15px;">
+        <label style="display: block; margin-bottom: 5px; font-weight: 500; font-size: 14px;">Categoria</label>
+        <input type="text" id="categoria-input" placeholder="Ex: Medicamentos / Vacinas" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px;">
+      </div>
+      <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+        <div style="flex: 1;">
+          <label style="display: block; margin-bottom: 5px; font-weight: 500; font-size: 14px;">Quantidade</label>
+          <input type="number" id="qtd-input" required min="1" value="10" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px;">
+        </div>
+        <div style="flex: 1;">
+          <label style="display: block; margin-bottom: 5px; font-weight: 500; font-size: 14px;">Custo Unitário (R$)</label>
+          <input type="number" step="0.01" id="custo-input" required value="0.00" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px;">
+        </div>
+      </div>
+      <div style="margin-bottom: 20px;">
+        <label style="display: block; margin-bottom: 5px; font-weight: 500; font-size: 14px;">Status</label>
+        <select id="status-input" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px;">
+          <option value="Normal">Normal</option>
+          <option value="Crítico (Repor)">Crítico (Repor)</option>
+        </select>
+      </div>
+      <div style="display: flex; justify-content: flex-end; gap: 10px;">
+        <button type="button" onclick="fecharModalEntrada()" style="padding: 10px 16px; background: #e2e8f0; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Cancelar</button>
+        <button type="submit" id="btn-salvar-item" style="padding: 10px 16px; background: #0f766e; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">Salvar Item</button>
+      </div>
+    </form>
+  </div>
+</div>
+
   <script>
+    let listaItensCache = []; // Guarda os itens para a exportação CSV
+
+    document.addEventListener("DOMContentLoaded", () => {
+      carregarEstatisticasLogistica();
+      carregarDadosLogistica();
+
+      // Evento para abrir o modal ao clicar no botão de Entrada de Material
+      const btnEntrada = document.querySelector('.btn-primary'); 
+      if (btnEntrada && btnEntrada.innerText.includes('Entrada de Material')) {
+        btnEntrada.onclick = (e) => {
+          e.preventDefault();
+          abrirModalEntrada();
+        };
+      }
+
+      // Evento para exportar CSV
+      const btnExportar = document.querySelector('.btn-secondary');
+      if (btnExportar && btnExportar.innerText.includes('Exportar')) {
+        btnExportar.onclick = (e) => {
+          e.preventDefault();
+          exportarCSV();
+        };
+      }
+
+      // Envio do formulário do modal via API
+      document.getElementById('form-entrada-material').onsubmit = async (e) => {
+        e.preventDefault();
+        
+        const novoItem = {
+          sku: document.getElementById('sku-input').value,
+          nome: document.getElementById('nome-input').value,
+          categoria: document.getElementById('categoria-input').value,
+          quantidade: parseInt(document.getElementById('qtd-input').value),
+          custo: parseFloat(document.getElementById('custo-input').value),
+          status: document.getElementById('status-input').value
+        };
+        const itemId = document.getElementById('item-id-input').value;
+
+        try {
+          const response = await fetch(itemId ? `/api/logistica/${itemId}` : '/api/logistica', {
+            method: itemId ? 'PUT' : 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(novoItem)
+          });
+
+          const resultado = await response.json();
+          if (response.ok) {
+            alert(resultado.mensagem || 'Item salvo com sucesso!');
+            fecharModalEntrada();
+            document.getElementById('form-entrada-material').reset();
+            carregarEstatisticasLogistica();
+            carregarDadosLogistica();
+          } else {
+            alert('Erro: ' + (resultado.erro || 'Não foi possível salvar o item.'));
+          }
+        } catch (err) {
+          console.error("Erro ao salvar item:", err);
+          alert('Erro ao conectar com o servidor.');
+        }
+      };
+    });
+
+    async function carregarEstatisticasLogistica() {
+      try {
+        const response = await fetch('/api/logistica/estatisticas');
+        const stats = await response.json();
+
+        document.getElementById('card-total-itens').innerText = `${stats.totalItens} unid.`;
+        document.getElementById('card-valor-estoque').innerText = `R$ ${Number(stats.valorEstoque).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        document.getElementById('card-itens-criticos').innerText = `${stats.itensCriticos} itens`;
+        document.getElementById('card-total-pedidos').innerText = `${stats.totalPedidos} pedidos`;
+
+      } catch (error) {
+        console.error("Erro ao carregar estatísticas:", error);
+      }
+    }
+
+    async function carregarDadosLogistica() {
+      try {
+        const response = await fetch('/api/logistica');
+        const itens = await response.json();
+        listaItensCache = itens; // Salva para exportação
+
+        const tbody = document.querySelector('#view-inventario tbody');
+        if (!tbody) return;
+
+        if (itens.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 20px;">Nenhum item cadastrado no estoque. Clique em "+ Entrada de Material" para começar.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = '';
+        itens.forEach(item => {
+          const isCritico = item.status && item.status.toLowerCase().includes('crítico');
+          const badgeClass = isCritico ? 'badge-danger' : 'badge-success';
+
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${item.sku || '#SKU'}</td>
+            <td><strong>${item.nome}</strong></td>
+            <td>${item.categoria || 'Geral'}</td>
+            <td>${item.quantidade} unid.</td>
+            <td>R$ ${Number(item.custo).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+            <td><span class="badge ${badgeClass}">${item.status || 'Normal'}</span></td>
+            <td class="actions-icon">
+              <button class="acoes-item-btn" type="button" aria-label="Ações para ${item.nome}" onclick="alternarMenuAcoes(event, ${item.id})">
+                <i class="fa-solid fa-ellipsis-vertical"></i>
+              </button>
+              <div class="acoes-item-menu" id="menu-acoes-${item.id}">
+                <button type="button" onclick="abrirEdicaoItem(${item.id})"><i class="fa-solid fa-pen"></i> Alterar valores</button>
+                <button type="button" class="acao-excluir" onclick="excluirItem(${item.id})"><i class="fa-solid fa-trash"></i> Excluir item</button>
+              </div>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (error) {
+        console.error("Erro ao carregar logística:", error);
+      }
+    }
+
+    function abrirModalEntrada() {
+      const modal = document.getElementById('modal-entrada');
+      document.getElementById('item-id-input').value = '';
+      document.querySelector('#modal-entrada h2').innerText = 'Nova Entrada de Material';
+      document.getElementById('btn-salvar-item').innerText = 'Salvar Item';
+      document.getElementById('form-entrada-material').reset();
+      modal.classList.remove('hidden');
+      modal.style.display = 'flex';
+    }
+
+    function abrirEdicaoItem(id) {
+      const item = listaItensCache.find(itemAtual => itemAtual.id === id);
+      if (!item) return;
+
+      fecharMenusAcoes();
+      document.getElementById('item-id-input').value = item.id;
+      document.getElementById('sku-input').value = item.sku || '';
+      document.getElementById('nome-input').value = item.nome || '';
+      document.getElementById('categoria-input').value = item.categoria || '';
+      document.getElementById('qtd-input').value = item.quantidade || 0;
+      document.getElementById('custo-input').value = item.custo || 0;
+      document.getElementById('status-input').value = item.status || 'Normal';
+      document.querySelector('#modal-entrada h2').innerText = 'Alterar Item do Estoque';
+      document.getElementById('btn-salvar-item').innerText = 'Salvar Alterações';
+      document.getElementById('modal-entrada').classList.remove('hidden');
+      document.getElementById('modal-entrada').style.display = 'flex';
+    }
+
+    function alternarMenuAcoes(event, id) {
+      event.stopPropagation();
+      const menu = document.getElementById(`menu-acoes-${id}`);
+      const estavaAberto = menu.classList.contains('aberto');
+      fecharMenusAcoes();
+      if (!estavaAberto) menu.classList.add('aberto');
+    }
+
+    function fecharMenusAcoes() {
+      document.querySelectorAll('.acoes-item-menu.aberto').forEach(menu => menu.classList.remove('aberto'));
+    }
+
+    async function excluirItem(id) {
+      fecharMenusAcoes();
+      if (!confirm('Deseja realmente excluir este item do estoque?')) return;
+
+      try {
+        const response = await fetch(`/api/logistica/${id}`, { method: 'DELETE' });
+        const resultado = await response.json();
+        if (!response.ok) throw new Error(resultado.erro || 'Não foi possível excluir o item.');
+
+        alert(resultado.mensagem || 'Item excluído com sucesso!');
+        carregarEstatisticasLogistica();
+        carregarDadosLogistica();
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    function fecharModalEntrada() {
+      const modal = document.getElementById('modal-entrada');
+      modal.classList.add('hidden');
+      modal.style.display = 'none';
+    }
+
+    document.addEventListener('click', fecharMenusAcoes);
+
+    function exportarCSV() {
+      if (!listaItensCache || listaItensCache.length === 0) {
+        alert('Não há dados cadastrados para exportar.');
+        return;
+      }
+
+      let csvContent = "data:text/csv;charset=utf-8,SKU,Nome,Categoria,Quantidade,Custo Unitario,Status\r\n";
+      
+      listaItensCache.forEach(item => {
+        let row = [
+          item.sku,
+          `"${item.nome}"`,
+          `"${item.categoria}"`,
+          item.quantidade,
+          item.custo,
+          `"${item.status}"`
+        ].join(",");
+        csvContent += row + "\r\n";
+      });
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "estoque_vitamet.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
     function ocultarTodas() {
       document.getElementById('view-inventario').classList.add('hidden');
       document.getElementById('view-pedidos').classList.add('hidden');
@@ -271,15 +461,15 @@
     function exibirPedidos() {
       ocultarTodas();
       document.getElementById('view-pedidos').classList.remove('hidden');
-      document.getElementById('page-title').innerText = "Lista de Pedidos";
-      document.getElementById('page-subtitle').innerText = "Gerenciamento e acompanhamento dos 13 pedidos de compra.";
+      document.getElementById('page-title').innerText = "Listagem de Pedidos";
+      document.getElementById('page-subtitle').innerText = "Acompanhamento dos pedidos de compra.";
     }
 
     function exibirItensCriticos() {
       ocultarTodas();
       document.getElementById('view-criticos').classList.remove('hidden');
       document.getElementById('page-title').innerText = "Itens Críticos";
-      document.getElementById('page-subtitle').innerText = "Listagem de insumos com estoque abaixo do nível mínimo de segurança.";
+      document.getElementById('page-subtitle').innerText = "Insumos com estoque abaixo do nível mínimo.";
     }
 
     function exibirInventario() {
@@ -290,5 +480,7 @@
     }
   </script>
 
+  <script src="perfil-admin.js"></script>
+  <script src="notificacoes-admin.js"></script>
 </body>
 </html>

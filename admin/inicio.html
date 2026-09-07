@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="pt-BR">
+er<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,19 +43,9 @@
                 <a href="relatorios.html" class="menu-item">
                     <span><i class="fa-solid fa-chart-pie"></i></span> Relatórios
                 </a>
-                <a href="configuracoes.html" class="menu-item">
-                    <span><i class="fa-solid fa-gear"></i></span> Configurações
-                </a>
             </div>
 
             <div class="sidebar-bottom">
-                <div class="help">
-                    <div class="help-icon">?</div>
-                    <div>
-                        <strong>Suporte Admin</strong>
-                        <p>Dúvidas com o sistema? Contate o suporte técnico.</p>
-                    </div>
-                </div>
                 <button class="logout" onclick="fazerLogout()">
                     <span><i class="fa-solid fa-right-from-bracket"></i></span> Sair da Conta
                 </button>
@@ -68,10 +58,10 @@
                 <div></div>
                 <div class="top-user">
                     <button class="notification">🔔</button>
-                    <div class="avatar"><span id="avatarNome">TU</span></div>
+                    <div class="avatar"><span id="avatarNome" data-admin-initials>AD</span></div>
                     <div class="user-info">
-                        <strong id="nomePerfil">Administrador</strong>
-                        <span>Admin</span>
+                        <strong id="nomePerfil" data-admin-name>Administrador</strong>
+                        <span data-admin-role>Admin</span>
                     </div>
                 </div>
             </header>
@@ -119,6 +109,8 @@
         </main>
     </div>
 
+    <script src="perfil-admin.js"></script>
+    <script src="notificacoes-admin.js"></script>
     <script>
         window.addEventListener('DOMContentLoaded', async () => {
             // 1. Recupera dados do usuário logado via localStorage

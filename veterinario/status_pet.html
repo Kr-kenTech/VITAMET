@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VitaMed - Status do Pet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="veterinario.css">
+</head>
+<body>
+
+<div class="layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-icon">
+                <img src="../foto.jpeg" alt="Logo">
+            </div>
+            <div>
+                <h2>Vita<span>Med</span></h2>
+                <p>Painel Veterinário</p>
+            </div>
+        </div>
+
+        <nav class="menu">
+            <a href="painel.html" class="menu-item">
+                <span><i class="fa-solid fa-notes-medical"></i></span> Prontuários & Receitas
+            </a>
+            <a href="status_pet.html" class="menu-item active">
+                <span><i class="fa-solid fa-clock"></i></span> Status do Pet
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <button class="logout" onclick="sair()">
+                <span><i class="fa-solid fa-right-from-bracket"></i></span> Sair da Conta
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+        <header class="topbar">
+            <div class="mobile-logo">VitaMed<span>.</span></div>
+            
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="inputBusca" placeholder="Pesquisar pet...">
+            </div>
+
+            <div class="top-user">
+                <div class="notification"><i class="fa-regular fa-bell"></i></div>
+                <div class="avatar">
+                    <span data-vet-initials>DR</span>
+                </div>
+                <div class="user-info">
+                    <strong id="nomeVet">Carregando...</strong>
+                    <span>Corpo Clínico</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="content">
+            <div class="page-header">
+                <div>
+                    <span class="breadcrumb">GESTÃO DE FLUXO</span>
+                    <h1>Status Operacional do Pet</h1>
+                    <p>Atualize em tempo real a situação do animal na clínica.</p>
+                </div>
+            </div>
+
+            <!-- GERENCIAMENTO DE STATUS -->
+            <section class="conteudo-aba">
+                <div class="card">
+                    <h3>Atualização de Status</h3>
+                    
+                    <div class="form-group">
+                        <label for="selectPetStatus">Selecionar Animal</label>
+                        <select id="selectPetStatus">
+                            <option value="">Carregando pets...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="novoStatus">Novo Status na Clínica</label>
+                        <select id="novoStatus">
+                            <option value="Em espera">Em espera</option>
+                            <option value="Em consulta">Em consulta</option>
+                            <option value="Em cirurgia">Em cirurgia</option>
+                            <option value="Pronto para busca">Pronto para busca</option>
+                        </select>
+                    </div>
+
+                    <button type="button" class="btn btn-primary" onclick="atualizarStatusPet()">Atualizar Status em Tempo Real</button>
+                </div>
+            </section>
+        </div>
+    </main>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const usuarioStr = localStorage.getItem("usuario");
+        if (usuarioStr) {
+            try {
+                const usuario = JSON.parse(usuarioStr);
+                const nome = usuario.nome || "Dr(a). Veterinário(a)";
+                document.getElementById("nomeVet").innerText = nome;
+                
+                const iniciais = nome.split(" ").map(n => n[0]).slice(0, 2).join("").toUpperCase();
+                document.querySelector("[data-vet-initials]").innerText = iniciais || "DR";
+            } catch (e) {
+                console.error("Erro ao ler dados do usuário:", e);
+            }
+        }
+        carregarPetsStatus();
+    });
+
+    async function carregarPetsStatus() {
+        try {
+            const res = await fetch('/api/pets');
+            const pets = await res.json();
+            
+            const selectStatus = document.getElementById('selectPetStatus');
+            selectStatus.innerHTML = '<option value="">Selecione o pet...</option>';
+
+            pets.forEach(pet => {
+                const opcao = `<option value="${pet.id}">${pet.nome} (${pet.especie || 'Animal'}) - Atual: ${pet.status_atual || 'Normal'}</option>`;
+                selectStatus.innerHTML += opcao;
+            });
+        } catch (e) {
+            console.error("Erro ao carregar pets:", e);
+        }
+    }
+
+    async function atualizarStatusPet() {
+    const petId = document.getElementById('selectPetStatus').value;
+    const status = document.getElementById('novoStatus').value;
+
+    if (!petId) {
+        alert('Selecione um pet.');
+        return;
+    }
+
+    try {
+        // Use relative URL – works regardless of port / domain
+        const res = await fetch('/api/atualizar-status', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ pet_id: petId, status: status })
+        });
+
+        // If the server returns HTML (404 page, login page, etc.) this will throw
+        const text = await res.text();
+        let resultado;
+        try {
+            resultado = JSON.parse(text);
+        } catch {
+            console.error('Resposta não-JSON recebida:', text.substring(0, 200));
+            alert('Erro: o servidor retornou uma página HTML em vez de JSON.\nVerifique se a rota /api/atualizar-status existe e se o servidor foi reiniciado.');
+            return;
+        }
+
+        if (res.ok) {
+            alert(`Status atualizado para "${status}" com sucesso!`);
+            carregarPetsStatus();
+        } else {
+            alert('Erro ao atualizar status: ' + (resultado.erro || 'Desconhecido'));
+        }
+    } catch (e) {
+        console.error(e);
+        alert('Erro de comunicação com o servidor.');
+    }
+}
+    function sair() {
+        localStorage.clear();
+        window.location.href = "../index.html";
+    }
+</script>
+</body>
+</html>

@@ -529,6 +529,24 @@ textarea {
     font-weight: bold;
 }
 
+.report-button {
+    margin-left: auto;
+    padding: 8px 10px;
+    border: 1px solid #d9eef7;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #607d8b;
+    font-size: 11px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.report-button:hover {
+    border-color: #f0b4b4;
+    background: #fff5f5;
+    color: #b42318;
+}
+
 .empty-community {
     min-height: 280px;
     padding: 40px 25px;

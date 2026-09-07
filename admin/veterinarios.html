@@ -44,9 +44,6 @@
             <a href="relatorios.html" class="menu-item">
                 <span><i class="fa-solid fa-chart-pie"></i></span> Relatórios
             </a>
-            <a href="configuracoes.html" class="menu-item">
-                <span><i class="fa-solid fa-gear"></i></span> Configurações
-            </a>
         </div>
 
         <div class="sidebar-bottom">
@@ -68,11 +65,11 @@
             <div class="top-user">
                 <div class="notification"><i class="fa-regular fa-bell"></i></div>
                 <div class="avatar">
-                    <img src="../WhatsApp%20Image%202026-08-31%20at%209.31.23%20PM.jpeg" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                    <span data-admin-initials>AD</span>
                 </div>
                 <div class="user-info">
-                    <strong>Dr. Raylander</strong>
-                    <span>Usuário Admin</span>
+                    <strong data-admin-name>Administrador</strong>
+                    <span data-admin-role>Admin</span>
                 </div>
             </div>
         </header>
@@ -255,5 +252,7 @@
 
     document.addEventListener('DOMContentLoaded', carregarVeterinarios);
 </script>
+    <script src="perfil-admin.js"></script>
+    <script src="notificacoes-admin.js"></script>
 </body>
 </html>

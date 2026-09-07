@@ -6,14 +6,16 @@
   <title>Vitamed - Relatórios Gerenciais</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="admin-shared.css">
+  <link rel="stylesheet" href="relatorios.css">
 </head>
 <body>
 
   <aside class="sidebar">
-<div class="logo-container">
-  <img src="WhatsApp%20Image%202026-08-17%20at%204.21.16%20PM.jpeg" alt="Logo Vitamed" class="logo-img">
-  <div class="logo-text">
+<div class="logo">
+                <div class="logo-icon">
+                    <img src="../foto.jpeg" alt="Logo">
+                </div>
+                <div>
     <h2>Vitamet</h2>
     <span>Admin</span>
   </div>
@@ -40,10 +42,12 @@
   <li class="nav-item active">
     <a href="relatorios.html"><i class="fa-solid fa-chart-pie"></i> Relatórios</a>
   </li>
-  <li class="nav-item">
-    <a href="configuracoes.html"><i class="fa-solid fa-gear"></i> Configurações</a>
-  </li>
 </ul>
+<div class="sidebar-bottom">
+            <button class="logout" onclick="window.location.href='../login.html'">
+                <span><i class="fa-solid fa-right-from-bracket"></i></span> Sair da Conta
+            </button>
+        </div>
   </aside>
 
   <div class="main-wrapper">
@@ -51,15 +55,15 @@
     <header class="topbar">
       <div class="search-box">
         <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" placeholder="Buscar relatório ou período...">
+        <input type="text" id="buscaRelatorio" placeholder="Buscar relatório ou período..." oninput="filtrarRelatorios()">
       </div>
       
       <div class="user-profile">
         <i class="fa-regular fa-bell" style="color: #64748b; font-size: 16px; margin-right: 10px;"></i>
-        <img src="WhatsApp%20Image%202026-08-31%20at%209.31.23%20PM.jpeg" alt="Foto Usuário" class="user-avatar">
+        <span data-admin-initials class="user-avatar">AD</span>
         <div class="user-info">
-          <span>Usuário Admin</span>
-          <strong>Dr. Raylander</strong>
+          <strong data-admin-name>Administrador</strong>
+          <span data-admin-role>Admin</span>
         </div>
       </div>
     </header>
@@ -67,14 +71,33 @@
     <main class="content">
 
       <h1 class="section-title">Relatórios & Indicadores</h1>
-      <p class="section-subtitle">Consulte o desempenho financeiro, atendimentos e movimentação operacional da clínica.</p>
+      <p class="section-subtitle">Acompanhe atendimentos, faturamento, estoque e o histórico de imunização dos animais.</p>
+
+      <div class="escopos-relatorio">
+        <article>
+          <i class="fa-solid fa-stethoscope"></i>
+          <div><strong>Atendimentos</strong><span>Quantidade e histórico de consultas e procedimentos realizados.</span></div>
+        </article>
+        <article>
+          <i class="fa-solid fa-sack-dollar"></i>
+          <div><strong>Faturamento</strong><span>Gestão de pagamentos, receitas e valores arrecadados pela clínica.</span></div>
+        </article>
+        <article>
+          <i class="fa-solid fa-boxes-stacked"></i>
+          <div><strong>Estoque</strong><span>Controle de medicamentos, produtos e insumos disponíveis.</span></div>
+        </article>
+        <article>
+          <i class="fa-solid fa-syringe"></i>
+          <div><strong>Vacinas</strong><span>Acompanhamento e controle do histórico de imunização dos animais.</span></div>
+        </article>
+      </div>
 
       <div class="stats-grid">
         <div class="stat-card">
           <div class="stat-icon icon-green"><i class="fa-solid fa-sack-dollar"></i></div>
           <div>
             <span class="stat-label">Faturamento Mês</span>
-            <h3 class="stat-value">R$ 84.920,00</h3>
+            <h3 class="stat-value" id="indicador-faturamento">R$ 0,00</h3>
           </div>
         </div>
 
@@ -82,23 +105,23 @@
           <div class="stat-icon icon-blue"><i class="fa-solid fa-stethoscope"></i></div>
           <div>
             <span class="stat-label">Consultas Realizadas</span>
-            <h3 class="stat-value">312 atend.</h3>
+            <h3 class="stat-value" id="indicador-consultas">0 atend.</h3>
           </div>
         </div>
 
         <div class="stat-card">
           <div class="stat-icon icon-amber"><i class="fa-solid fa-hospital-user"></i></div>
           <div>
-            <span class="stat-label">Novos Tutores</span>
-            <h3 class="stat-value">7 cadastros</h3>
+            <span class="stat-label">Vacinas Realizadas</span>
+            <h3 class="stat-value" id="indicador-vacinas">0 registros</h3>
           </div>
         </div>
 
         <div class="stat-card">
           <div class="stat-icon icon-red"><i class="fa-solid fa-file-invoice-dollar"></i></div>
           <div>
-            <span class="stat-label">Despesas Operacionais</span>
-            <h3 class="stat-value">R$ 23.410,00</h3>
+            <span class="stat-label">Valor em Estoque</span>
+            <h3 class="stat-value" id="indicador-estoque">R$ 0,00</h3>
           </div>
         </div>
       </div>
@@ -107,8 +130,12 @@
         <div class="card-header">
           <h2 class="card-title">Central de Exportação de Relatórios</h2>
           <div>
-            <button class="btn btn-secondary"><i class="fa-solid fa-filter"></i> Selecionar Período</button>
-            <button class="btn btn-primary"><i class="fa-solid fa-plus"></i> Gerar Novo Relatório</button>
+            <label class="periodo-controle">
+              <i class="fa-solid fa-calendar-days"></i>
+              <input type="month" id="periodoRelatorio" onchange="carregarRelatorios()" aria-label="Selecionar período">
+            </label>
+            <button class="btn btn-secondary" type="button" onclick="carregarRelatorios()"><i class="fa-solid fa-rotate"></i> Atualizar</button>
+            <button class="btn btn-primary" type="button" onclick="abrirModalRelatorio()"><i class="fa-solid fa-plus"></i> Gerar Relatório</button>
           </div>
         </div>
 
@@ -124,39 +151,8 @@
                 <th>Ações</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td><strong>Balanço Financeiro Mensal</strong></td>
-                <td>Financeiro</td>
-                <td>01/10 a 31/10/2023</td>
-                <td>Ontem, 18:30</td>
-                <td><span class="badge badge-success">Concluído</span></td>
-                <td class="actions-icon"><i class="fa-solid fa-download"></i></td>
-              </tr>
-              <tr>
-                <td><strong>Desempenho por Veterinário</strong></td>
-                <td>Clínico / Operacional</td>
-                <td>Últimos 30 dias</td>
-                <td>25/10/2023</td>
-                <td><span class="badge badge-success">Concluído</span></td>
-                <td class="actions-icon"><i class="fa-solid fa-download"></i></td>
-              </tr>
-              <tr>
-                <td><strong>Movimentação de Vacinas & Estoque</strong></td>
-                <td>Logística</td>
-                <td>15/09 a 15/10/2023</td>
-                <td>16/10/2023</td>
-                <td><span class="badge badge-success">Concluído</span></td>
-                <td class="actions-icon"><i class="fa-solid fa-download"></i></td>
-              </tr>
-              <tr>
-                <td><strong>Projeção Orçamentária Q4</strong></td>
-                <td>Planejamento</td>
-                <td>Novembro/Dezembro</td>
-                <td>Em processamento</td>
-                <td><span class="badge badge-warning">Processando</span></td>
-                <td class="actions-icon"><i class="fa-solid fa-arrows-rotate"></i></td>
-              </tr>
+            <tbody id="tabela-relatorios">
+              <tr><td colspan="6">Carregando dados do banco...</td></tr>
             </tbody>
           </table>
         </div>
@@ -165,5 +161,163 @@
     </main>
   </div>
 
+  <div id="modal-relatorio" class="modal-relatorio" role="dialog" aria-modal="true" aria-labelledby="titulo-modal-relatorio">
+    <form class="modal-relatorio-conteudo" onsubmit="salvarRelatorio(event)">
+      <button class="fechar-modal-relatorio" type="button" onclick="fecharModalRelatorio()" aria-label="Fechar">&times;</button>
+      <h2 id="titulo-modal-relatorio">Gerar Novo Relatório</h2>
+      <input type="hidden" id="relatorio-id">
+      <label>Nome do relatório<input id="relatorio-nome" required maxlength="255"></label>
+      <label>Tipo<select id="relatorio-tipo" required>
+        <option>Financeiro</option>
+        <option>Clínico / Operacional</option>
+        <option>Imunização</option>
+        <option>Logística</option>
+        <option>Relacionamento</option>
+      </select></label>
+      <label>Período<input id="relatorio-periodo" type="month" required></label>
+      <label>Descrição<textarea id="relatorio-descricao" rows="3" maxlength="1000"></textarea></label>
+      <div class="modal-relatorio-acoes">
+        <button class="btn btn-secondary" type="button" onclick="fecharModalRelatorio()">Cancelar</button>
+        <button class="btn btn-primary" type="submit">Salvar Relatório</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="perfil-admin.js"></script>
+  <script src="notificacoes-admin.js"></script>
+  <script>
+    function formatarMoeda(valor) {
+      return Number(valor || 0).toLocaleString('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+      });
+    }
+
+    let relatoriosAtuais = [];
+
+    async function carregarRelatorios() {
+      const tabela = document.getElementById('tabela-relatorios');
+
+      try {
+        const periodo = document.getElementById('periodoRelatorio').value;
+        const url = periodo ? `/api/relatorios?periodo=${encodeURIComponent(periodo)}` : '/api/relatorios';
+        const resposta = await fetch(url);
+        if (!resposta.ok) throw new Error('Não foi possível carregar os relatórios.');
+
+        const dados = await resposta.json();
+        const indicadores = dados.indicadores;
+
+        document.getElementById('indicador-faturamento').textContent = formatarMoeda(indicadores.faturamentoMes);
+        document.getElementById('indicador-consultas').textContent = `${indicadores.consultasRealizadas} atend.`;
+        document.getElementById('indicador-vacinas').textContent = `${indicadores.vacinasRealizadas} registros`;
+        document.getElementById('indicador-estoque').textContent = formatarMoeda(indicadores.valorEstoque);
+
+        relatoriosAtuais = dados.relatorios;
+        if (!relatoriosAtuais.length) {
+          tabela.innerHTML = '<tr><td colspan="6">Nenhum relatório criado.</td></tr>';
+          return;
+        }
+        tabela.innerHTML = relatoriosAtuais.map((relatorio, indice) => `
+          <tr>
+            <td><strong>${relatorio.nome}</strong></td>
+            <td>${relatorio.tipo}</td>
+            <td>${formatarPeriodo(relatorio.periodo)}</td>
+            <td>${relatorio.data ? new Date(relatorio.data).toLocaleString('pt-BR') : 'Atualizado agora'}</td>
+            <td><span class="badge badge-success">${relatorio.status}</span></td>
+            <td class="acoes-relatorio">
+              <button class="baixar-relatorio" type="button" onclick="baixarRelatorio(${indice})" title="Baixar relatório"><i class="fa-solid fa-download"></i></button>
+              ${relatorio.origem === 'salvo' ? `
+                <button class="editar-relatorio" type="button" onclick="abrirEdicaoRelatorio(${indice})" title="Alterar relatório"><i class="fa-solid fa-pen"></i></button>
+                <button class="excluir-relatorio" type="button" onclick="excluirRelatorio(${relatorio.id})" title="Excluir relatório"><i class="fa-solid fa-trash"></i></button>
+              ` : ''}
+            </td>
+          </tr>
+        `).join('');
+      } catch (erro) {
+        console.error('Erro ao carregar relatórios:', erro);
+        tabela.innerHTML = '<tr><td colspan="6">Erro ao carregar dados do banco.</td></tr>';
+      }
+    }
+
+    function filtrarRelatorios() {
+      const termo = document.getElementById('buscaRelatorio').value.toLowerCase().trim();
+      document.querySelectorAll('#tabela-relatorios tr').forEach(linha => {
+        linha.hidden = termo && !linha.textContent.toLowerCase().includes(termo);
+      });
+    }
+
+    function formatarPeriodo(periodo) {
+      if (!/^\d{4}-\d{2}$/.test(periodo || '')) return periodo || '-';
+      return `${periodo.slice(5, 7)} de ${periodo.slice(0, 4)}`;
+    }
+
+    function abrirModalRelatorio(relatorio = null) {
+      document.getElementById('relatorio-id').value = relatorio ? relatorio.id : '';
+      document.getElementById('relatorio-nome').value = relatorio ? relatorio.nome : '';
+      document.getElementById('relatorio-tipo').value = relatorio ? relatorio.tipo : 'Financeiro';
+      document.getElementById('relatorio-periodo').value = relatorio && /^\d{4}-\d{2}$/.test(relatorio.periodo)
+        ? relatorio.periodo
+        : (document.getElementById('periodoRelatorio').value || '');
+      document.getElementById('relatorio-descricao').value = relatorio ? (relatorio.descricao || '') : '';
+      document.getElementById('titulo-modal-relatorio').textContent = relatorio ? 'Alterar Relatório' : 'Gerar Novo Relatório';
+      document.getElementById('modal-relatorio').classList.add('aberto');
+    }
+
+    function fecharModalRelatorio() {
+      document.getElementById('modal-relatorio').classList.remove('aberto');
+    }
+
+    function abrirEdicaoRelatorio(indice) {
+      const relatorio = relatoriosAtuais[indice];
+      if (relatorio && relatorio.origem === 'salvo') abrirModalRelatorio(relatorio);
+    }
+
+    async function salvarRelatorio(event) {
+      event.preventDefault();
+      const id = document.getElementById('relatorio-id').value;
+      const dados = {
+        nome: document.getElementById('relatorio-nome').value,
+        tipo: document.getElementById('relatorio-tipo').value,
+        periodo: document.getElementById('relatorio-periodo').value,
+        descricao: document.getElementById('relatorio-descricao').value
+      };
+
+      const resposta = await fetch(id ? `/api/relatorios/${id}` : '/api/relatorios', {
+        method: id ? 'PUT' : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dados)
+      });
+      const resultado = await resposta.json();
+      if (!resposta.ok) return alert(resultado.erro || 'Erro ao salvar relatório.');
+
+      fecharModalRelatorio();
+      carregarRelatorios();
+    }
+
+    async function excluirRelatorio(id) {
+      if (!confirm('Deseja realmente excluir este relatório?')) return;
+      const resposta = await fetch(`/api/relatorios/${id}`, { method: 'DELETE' });
+      const resultado = await resposta.json();
+      if (!resposta.ok) return alert(resultado.erro || 'Erro ao excluir relatório.');
+      carregarRelatorios();
+    }
+
+    function baixarRelatorio(indice) {
+      const relatorio = relatoriosAtuais[indice];
+      if (!relatorio) return;
+
+      const linhas = [
+        ['Nome do Relatório', 'Tipo', 'Período', 'Valor', 'Status'],
+        [relatorio.nome, relatorio.tipo, relatorio.periodo, relatorio.valor, relatorio.status]
+      ];
+      const csv = linhas.map(linha => linha.map(valor => `"${String(valor).replaceAll('"', '""')}"`).join(';')).join('\n');
+      const link = document.createElement('a');
+      link.href = `data:text/csv;charset=utf-8,${encodeURIComponent(csv)}`;
+      link.download = `${relatorio.nome.toLowerCase().replaceAll(' ', '-')}.csv`;
+      link.click();
+    }
+
+    document.addEventListener('DOMContentLoaded', carregarRelatorios);
+  </script>
 </body>
 </html>

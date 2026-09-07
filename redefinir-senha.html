@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VitaMed - Redefinir Senha</title>
+    <link rel="stylesheet" href="esqueci-senha.css">
+</head>
+<body>
+
+<div class="container">
+    <div class="imagem">
+        <img src="foto.jpeg" alt="Imagem VitaMed">
+    </div>
+
+    <div class="cadastro-box">
+        <h1>Redefinir senha</h1>
+        <p>Digite a nova senha para a conta <strong id="email-mostrado"></strong></p>
+
+        <input type="password" id="novaSenha" placeholder="Nova senha" minlength="6">
+        <input type="password" id="confirmarSenha" placeholder="Confirmar nova senha" minlength="6">
+
+        <button onclick="redefinir()">Salvar nova senha</button>
+
+        <a href="login.html" class="voltar">← Voltar para o login</a>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const email = sessionStorage.getItem('email_recuperacao');
+    if (!email) {
+        alert('Fluxo de recuperação inválido. Comece novamente.');
+        window.location.href = 'esqueci-senha.html';
+        return;
+    }
+    document.getElementById('email-mostrado').textContent = email;
+});
+
+async function redefinir() {
+    const email = sessionStorage.getItem('email_recuperacao');
+    const novaSenha = document.getElementById('novaSenha').value;
+    const confirmar = document.getElementById('confirmarSenha').value;
+
+    if (!novaSenha || novaSenha.length < 6) {
+        alert('A senha deve ter pelo menos 6 caracteres.');
+        return;
+    }
+
+    if (novaSenha !== confirmar) {
+        alert('As senhas não coincidem.');
+        return;
+    }
+
+    try {
+        const res = await fetch('/api/redefinir-senha', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, novaSenha })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            alert(data.erro || 'Erro ao redefinir senha.');
+            return;
+        }
+
+        alert('Senha redefinida com sucesso! Faça login com a nova senha.');
+        sessionStorage.removeItem('email_recuperacao');
+        window.location.href = 'login.html';
+
+    } catch (erro) {
+        console.error(erro);
+        alert('Erro de comunicação com o servidor.');
+    }
+}
+</script>
+</body>
+</html>

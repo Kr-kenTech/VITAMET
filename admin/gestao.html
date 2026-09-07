@@ -44,22 +44,19 @@
             <a href="relatorios.html" class="menu-item">
                 <span><i class="fa-solid fa-chart-pie"></i></span> Relatórios
             </a>
-            <a href="configuracoes.html" class="menu-item">
-                <span><i class="fa-solid fa-gear"></i></span> Configurações
-            </a>
         </div>
 
-        <div class="sidebar-bottom">
-            <button class="logout" onclick="window.location.href='../login.html'">
-                <span><i class="fa-solid fa-right-from-bracket"></i></span> Sair da Conta
-            </button>
-        </div>
+    <div class="sidebar-bottom">
+                <button class="logout" onclick="fazerLogout()">
+                    <span><i class="fa-solid fa-right-from-bracket"></i></span> Sair da Conta
+                </button>
+            </div>
     </aside>
 
     <main class="main">
         <header class="topbar">
             <div class="mobile-logo">Vitamet<span>.</span></div>
-            
+
             <div class="search-box" style="display: flex; align-items: center; gap: 10px; background: #f8fbff; border: 1px solid #d9eef7; padding: 8px 14px; border-radius: 10px; width: 300px;">
                 <i class="fa-solid fa-magnifying-glass" style="color: #607d8b;"></i>
                 <input type="text" id="inputBuscaUser" placeholder="Buscar usuário..." onkeyup="filtrarUsuarios()" style="border: none; background: none; outline: none; width: 100%; font-size: 13px;">
@@ -68,11 +65,11 @@
             <div class="top-user">
                 <div class="notification"><i class="fa-regular fa-bell"></i></div>
                 <div class="avatar">
-                    <img src="../WhatsApp%20Image%202026-08-31%20at%209.31.23%20PM.jpeg" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                    <span data-admin-initials>AD</span>
                 </div>
                 <div class="user-info">
-                    <strong>Dr. Raylander</strong>
-                    <span>Usuário Admin</span>
+                    <strong data-admin-name>Administrador</strong>
+                    <span data-admin-role>Admin</span>
                 </div>
             </div>
         </header>
@@ -161,8 +158,8 @@
 
     function filtrarUsuarios() {
         const termo = document.getElementById('inputBuscaUser').value.toLowerCase();
-        const filtrados = listaUsuariosGlobal.filter(user => 
-            user.nome.toLowerCase().includes(termo) || 
+        const filtrados = listaUsuariosGlobal.filter(user =>
+            user.nome.toLowerCase().includes(termo) ||
             user.email.toLowerCase().includes(termo) ||
             (user.perfil && user.perfil.toLowerCase().includes(termo))
         );
@@ -186,6 +183,14 @@
     }
 
     document.addEventListener('DOMContentLoaded', carregarUsuarios);
+
+    function fazerLogout() {
+            localStorage.removeItem("usuario");
+            localStorage.removeItem("tutor");
+            window.location.href = "../login.html";
+        }
 </script>
+    <script src="perfil-admin.js"></script>
+    <script src="notificacoes-admin.js"></script>
 </body>
 </html>

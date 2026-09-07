@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,117 +7,196 @@
     <link rel="stylesheet" href="login.css">
     <link rel="manifest" href="manifest.json">
 </head>
-
 <body>
-
     <div class="container">
-
+        <!-- IMAGEM -->
         <div class="imagem">
             <img src="/foto.jpeg" alt="Imagem VitaMed">
         </div>
 
+        <!-- LOGIN -->
         <div class="login-box">
-
             <h1>Login</h1>
 
+            <!-- E-MAIL -->
             <input
                 type="email"
                 id="email"
                 placeholder="Digite seu e-mail"
+                autocomplete="email"
+                required
             >
 
+            <!-- SENHA -->
             <input
                 type="password"
                 id="senha"
                 placeholder="Digite sua senha"
+                autocomplete="current-password"
+                required
             >
 
+            <!-- ESQUECI SENHA -->
             <a href="esqueci-senha.html" class="esqueci">
                 Esqueci minha senha
             </a>
 
-            <button onclick="entrar()">
+            <!-- BOTÃO LOGIN -->
+            <button type="button" id="btnEntrar" onclick="entrar()">
                 Entrar
             </button>
 
             <p>Não possui uma conta?</p>
 
+            <!-- CADASTRO -->
             <a href="/cadastro.html" class="criar">
                 Criar conta de tutor
             </a>
 
+            <!-- VOLTAR -->
             <a href="/index.html" class="inicio">
-                 Voltar para o início
+                Voltar para o início
             </a>
-
         </div>
-
     </div>
 
     <script>
-    async function entrar() {
-        let email = document.getElementById("email").value.trim();
-        let senha = document.getElementById("senha").value;
+        async function entrar() {
+            const emailInput = document.getElementById("email");
+            const senhaInput = document.getElementById("senha");
+            const botao = document.getElementById("btnEntrar");
 
-        if (!email || !senha) {
-            alert("Preencha o e-mail e a senha!");
-            return;
-        }
+            const email = emailInput.value.trim().toLowerCase();
+            const senha = senhaInput.value;
 
-        try {
-            let resposta = await fetch('/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, senha })
-            });
-
-            let resultado = await resposta.json();
-
-            if (resposta.ok) {
-                console.log(resultado.mensagem);
-                
-                // 1. SALVA OS DADOS DO USUÁRIO NO LOCALSTORAGE
-                const dadosUsuario = resultado.usuario || resultado.tutor;
-                if (dadosUsuario) {
-                    localStorage.setItem("tutor", JSON.stringify(dadosUsuario));
-                }
-                
-                const usuarioId = dadosUsuario ? (dadosUsuario.id || dadosUsuario.tutor_id || dadosUsuario.usuario_id) : "";
-                
-                // Pega o perfil e o email para validação
-                const perfil = dadosUsuario && dadosUsuario.perfil ? dadosUsuario.perfil.toLowerCase().trim() : 'tutor';
-                const emailUsuario = dadosUsuario && dadosUsuario.email ? dadosUsuario.email.toLowerCase().trim() : email.toLowerCase().trim();
-
-                // 2. DIRECIONA COM BASE NO PERFIL OU E-MAIL ESPECÍFICO DO ADMIN
-                if (perfil === 'admin' || emailUsuario === 'backuplucas309@gmail.com') {
-                    window.location.href = `/admin/inicio.html?id=${usuarioId}`;
-                } else if (perfil === 'veterinario' || perfil === 'vet') {
-                    window.location.href = `/admin/inicio.html?id=${usuarioId}`;
-                } else {
-                    window.location.href = `/user/dashboard.html?id=${usuarioId}`;
-                }
-            } else {
-                alert(resultado.erro || "E-mail ou senha incorretos!");
+            if (!email) {
+                alert("Digite seu e-mail!");
+                emailInput.focus();
+                return;
             }
-        } catch (error) {
-            console.error("Erro no login:", error);
-            alert("Erro de conexão com o servidor.");
-        }
-    }
 
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js')
-                .then(reg => {
-                    console.log('Service Worker do VitaMet registrado com sucesso!', reg.scope);
-                })
-                .catch(err => {
-                    console.error('Erro ao registrar o Service Worker:', err);
+            if (!senha) {
+                alert("Digite sua senha!");
+                senhaInput.focus();
+                return;
+            }
+
+            const textoOriginal = botao.innerText;
+            botao.disabled = true;
+            botao.innerText = "Entrando...";
+
+            try {
+                const resposta = await fetch("/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ email, senha })
                 });
+
+                let resultado;
+                try {
+                    resultado = await resposta.json();
+                } catch (erroJson) {
+                    throw new Error("O servidor retornou uma resposta inválida.");
+                }
+
+                if (!resposta.ok) {
+                    alert(resultado.erro || resultado.mensagem || "E-mail ou senha incorretos!");
+                    botao.disabled = false;
+                    botao.innerText = textoOriginal;
+                    return;
+                }
+
+                const usuario = resultado.usuario || resultado.tutor;
+
+                if (!usuario) {
+                    console.error("Resposta do servidor:", resultado);
+                    throw new Error("Dados do usuário não foram retornados pelo servidor.");
+                }
+
+                const perfil = String(usuario.perfil || "tutor").toLowerCase().trim();
+                const emailUsuario = String(usuario.email || email).toLowerCase().trim();
+
+                localStorage.setItem("usuario", JSON.stringify(usuario));
+
+                if (perfil === "tutor") {
+                    localStorage.setItem("tutor", JSON.stringify(usuario));
+                }
+                if (perfil === "veterinario" || perfil === "vet") {
+                    localStorage.setItem("veterinario", JSON.stringify(usuario));
+                }
+                if (perfil === "admin") {
+                    localStorage.setItem("admin", JSON.stringify(usuario));
+                }
+
+                localStorage.setItem("perfil", perfil);
+
+                const usuarioId = usuario.usuario_id || usuario.id || "";
+
+                console.log("Login realizado:", { usuario, perfil, usuarioId, emailUsuario });
+
+                // Regra específica para o Admin por e-mail ou perfil
+                if (emailUsuario === "backuplucas309@gmail.com" || perfil === "admin") {
+                    window.location.href = `/admin/inicio.html?id=${encodeURIComponent(usuarioId)}`;
+                    return;
+                }
+
+                // Redirecionamento para Veterinário para o painel correto
+                if (perfil === "veterinario" || perfil === "vet") {
+                    if (usuario.veterinario_id) {
+                        localStorage.setItem("veterinario_id", String(usuario.veterinario_id));
+                    }
+                    window.location.href = `/veterinario/painel.html?id=${encodeURIComponent(usuarioId)}`;
+                    return;
+                }
+
+                // Redirecionamento para Tutor
+                if (perfil === "tutor") {
+                    if (usuario.tutor_id) {
+                        localStorage.setItem("tutor_id", String(usuario.tutor_id));
+                    }
+                    window.location.href = `/user/dashboard.html?id=${encodeURIComponent(usuarioId)}`;
+                    return;
+                }
+
+                console.warn("Perfil desconhecido:", perfil);
+                alert("Seu perfil de usuário não foi reconhecido.");
+
+                localStorage.removeItem("usuario");
+                localStorage.removeItem("perfil");
+                localStorage.removeItem("tutor");
+                localStorage.removeItem("veterinario");
+                localStorage.removeItem("admin");
+
+                botao.disabled = false;
+                botao.innerText = textoOriginal;
+
+            } catch (error) {
+                console.error("Erro no login:", error);
+                alert(error.message || "Erro de conexão com o servidor.");
+                botao.disabled = false;
+                botao.innerText = textoOriginal;
+            }
+        }
+
+        document.getElementById("senha").addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                entrar();
+            }
         });
-    }
+
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", () => {
+                navigator.serviceWorker.register("/sw.js")
+                    .then(registro => {
+                        console.log("Service Worker do VitaMed registrado com sucesso!", registro.scope);
+                    })
+                    .catch(erro => {
+                        console.error("Erro ao registrar o Service Worker:", erro);
+                    });
+            });
+        }
     </script>
-
 </body>
-
 </html>

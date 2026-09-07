@@ -44,9 +44,6 @@
             <a href="relatorios.html" class="menu-item">
                 <span><i class="fa-solid fa-chart-pie"></i></span> Relatórios
             </a>
-            <a href="configuracoes.html" class="menu-item">
-                <span><i class="fa-solid fa-gear"></i></span> Configurações
-            </a>
         </div>
 
         <div class="sidebar-bottom">
@@ -68,11 +65,11 @@
             <div class="top-user">
                 <div class="notification"><i class="fa-regular fa-bell"></i></div>
                 <div class="avatar">
-                    <img src="../WhatsApp%20Image%202026-08-31%20at%209.31.23%20PM.jpeg" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                    <span data-admin-initials>AD</span>
                 </div>
                 <div class="user-info">
-                    <strong>Dr. Raylander</strong>
-                    <span>Usuário Admin</span>
+                    <strong data-admin-name>Administrador</strong>
+                    <span data-admin-role>Admin</span>
                 </div>
             </div>
         </header>
@@ -102,13 +99,15 @@
                             <tr>
                                 <th>Título</th>
                                 <th>Categoria</th>
+                                <th>Autor</th>
+                                <th>Denúncias</th>
                                 <th>Data de Criação</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
                         <tbody id="tabela-publicacoes">
                             <tr>
-                                <td colspan="4" style="text-align: center; color: #607d8b; padding: 25px;">Carregando publicações...</td>
+                                <td colspan="6" style="text-align: center; color: #607d8b; padding: 25px;">Carregando publicações...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -159,14 +158,14 @@
     async function carregarPublicacoes() {
         const tbody = document.getElementById('tabela-publicacoes');
         try {
-            const resposta = await fetch('/api/publicacoes');
+            const resposta = await fetch('/api/publicacoes?admin=1');
             const pubs = await resposta.json();
 
             if (resposta.ok) {
                 listaPubsGlobal = pubs;
                 renderizarTabelaPubs(pubs);
             } else {
-                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #d9534f; padding: 20px;">Erro ao carregar publicações.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #d9534f; padding: 20px;">Erro ao carregar publicações.</td></tr>`;
             }
         } catch (error) {
             console.error("Erro:", error);
@@ -179,22 +178,28 @@
         tbody.innerHTML = '';
 
         if (!pubs || pubs.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #607d8b; padding: 20px;">Nenhuma publicação encontrada.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #607d8b; padding: 20px;">Nenhuma publicação encontrada.</td></tr>`;
             return;
         }
 
         pubs.forEach(pub => {
             let dataFormatada = 'Data não informada';
-            if (pub.data_criacao) {
-                dataFormatada = new Date(pub.data_criacao).toLocaleDateString('pt-BR');
+            if (pub.data) {
+                dataFormatada = new Date(pub.data).toLocaleDateString('pt-BR');
             }
 
             const linha = document.createElement('tr');
             linha.innerHTML = `
                 <td><strong>${pub.titulo}</strong></td>
                 <td><span class="badge" style="background: #e8f8ff; color: #397a99; padding: 4px 8px; border-radius: 6px; font-size: 12px;">${pub.categoria || 'Geral'}</span></td>
+                <td>${pub.autor || pub.autor_usuario_nome || 'VitaMet'}${pub.autor_banido ? ' <span class="badge" style="background:#fee2e2;color:#b91c1c;">Banido</span>' : ''}</td>
+                <td>${pub.total_denuncias || 0}${pub.oculta ? ' <span class="badge" style="background:#fef3c7;color:#92400e;">Oculta</span>' : ''}</td>
                 <td>${dataFormatada}</td>
-                <td><button onclick="excluirPublicacao(${pub.id})" style="border: none; background: none; color: #d9534f; cursor: pointer;" title="Excluir Publicação"><i class="fa-solid fa-trash"></i></button></td>
+                <td>
+                    <button onclick="alternarVisibilidade(${pub.id}, ${!pub.oculta})" style="border: none; background: none; color: #d97706; cursor: pointer;" title="${pub.oculta ? 'Restaurar publicação' : 'Ocultar publicação'}"><i class="fa-solid ${pub.oculta ? 'fa-eye' : 'fa-eye-slash'}"></i></button>
+                    ${pub.autor_usuario_id && !pub.autor_banido ? `<button onclick="banirAutor(${pub.autor_usuario_id})" style="border: none; background: none; color: #b91c1c; cursor: pointer;" title="Banir autor"><i class="fa-solid fa-user-slash"></i></button>` : ''}
+                    <button onclick="excluirPublicacao(${pub.id})" style="border: none; background: none; color: #d9534f; cursor: pointer;" title="Excluir publicação"><i class="fa-solid fa-trash"></i></button>
+                </td>
             `;
             tbody.appendChild(linha);
         });
@@ -205,7 +210,7 @@
         const filtradas = listaPubsGlobal.filter(pub => 
             pub.titulo.toLowerCase().includes(termo) || 
             (pub.categoria && pub.categoria.toLowerCase().includes(termo)) ||
-            (pub.conteudo && pub.conteudo.toLowerCase().includes(termo))
+            (pub.texto && pub.texto.toLowerCase().includes(termo))
         );
         renderizarTabelaPubs(filtradas);
     }
@@ -264,7 +269,31 @@
         }
     }
 
+    async function alternarVisibilidade(id, ocultar) {
+        const acao = ocultar ? 'ocultar' : 'restaurar';
+        if (!confirm(`Deseja ${acao} esta publicação?`)) return;
+        const resposta = await fetch(`/api/moderacao/publicacoes/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ oculta: ocultar })
+        });
+        const resultado = await resposta.json();
+        if (!resposta.ok) return alert(resultado.erro || 'Erro ao moderar publicação.');
+        carregarPublicacoes();
+    }
+
+    async function banirAutor(usuarioId) {
+        if (!confirm('Deseja banir este usuário? Ele não poderá mais acessar a conta.')) return;
+        const resposta = await fetch(`/api/moderacao/usuarios/${usuarioId}/banir`, { method: 'PUT' });
+        const resultado = await resposta.json();
+        if (!resposta.ok) return alert(resultado.erro || 'Erro ao banir usuário.');
+        alert(resultado.mensagem);
+        carregarPublicacoes();
+    }
+
     document.addEventListener('DOMContentLoaded', carregarPublicacoes);
 </script>
+    <script src="perfil-admin.js"></script>
+    <script src="notificacoes-admin.js"></script>
 </body>
 </html>

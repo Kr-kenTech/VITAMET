@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,81 +7,68 @@
     <link rel="stylesheet" href="esqueci-senha.css">
     <link rel="manifest" href="manifest.json">
 </head>
-
 <body>
 
-    <div class="container">
-
-        <div class="imagem">
-            <img src="foto.jpeg" alt="Imagem VitaMed">
-        </div>
-
-        <div class="cadastro-box">
-
-            <h1>Recuperar senha</h1>
-
-            <p>
-                Digite o e-mail cadastrado para recuperar sua senha.
-            </p>
-
-            <input
-                type="email"
-                id="email"
-                placeholder="Digite seu e-mail"
-            >
-
-            <button onclick="recuperar()">
-                Recuperar senha
-            </button>
-
-            <a href="login.html" class="voltar">
-                ← Voltar para o login
-            </a>
-
-            <a href="index.html" class="inicio">
-                ← Voltar para o início
-            </a>
-
-        </div>
-
+<div class="container">
+    <div class="imagem">
+        <img src="foto.jpeg" alt="Imagem VitaMed">
     </div>
 
-    <script>
+    <div class="cadastro-box">
+        <h1>Recuperar senha</h1>
+        <p>Digite o e-mail cadastrado para recuperar sua senha.</p>
 
-        function recuperar() {
+        <input type="email" id="email" placeholder="Digite seu e-mail">
 
-            let email = document.getElementById("email").value;
+        <button onclick="recuperar()">Recuperar senha</button>
 
-            let tutor = JSON.parse(localStorage.getItem("tutor"));
+        <a href="login.html" class="voltar">← Voltar para o login</a>
+        <a href="index.html" class="inicio">← Voltar para o início</a>
+    </div>
+</div>
 
-            if (email === "") {
-                alert("Digite seu e-mail!");
-                return;
-            }
+<script>
+async function recuperar() {
+    const email = document.getElementById("email").value.trim().toLowerCase();
 
-            if (!tutor || email !== tutor.email) {
-                alert("E-mail não encontrado!");
-                return;
-            }
+    if (!email) {
+        alert("Digite seu e-mail!");
+        return;
+    }
 
-            alert("E-mail encontrado! Agora você pode redefinir sua senha.");
+    try {
+        const res = await fetch('/recuperar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
 
-            window.location.href = "login.html";
+        const data = await res.json();
+
+        if (!res.ok) {
+            alert(data.erro || "E-mail não encontrado!");
+            return;
         }
-    
-        if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then(reg => {
-        console.log('Service Worker do VitaMet registrado com sucesso!', reg.scope);
-      })
-      .catch(err => {
-        console.error('Erro ao registrar o Service Worker:', err);
-      });
-  });
+
+        // Guarda o e-mail temporariamente para a próxima página
+        sessionStorage.setItem('email_recuperacao', email);
+
+        alert("E-mail encontrado! Agora você pode redefinir sua senha.");
+        window.location.href = "redefinir-senha.html";
+
+    } catch (erro) {
+        console.error(erro);
+        alert("Erro de comunicação com o servidor.");
+    }
 }
-    </script>
 
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+            .then(reg => console.log('Service Worker registrado!', reg.scope))
+            .catch(err => console.error('Erro no Service Worker:', err));
+    });
+}
+</script>
 </body>
-
 </html>

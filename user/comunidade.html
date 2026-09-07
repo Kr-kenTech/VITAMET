@@ -39,13 +39,6 @@
         </nav>
 
         <div class="sidebar-bottom">
-            <div class="help">
-                <div class="help-icon">?</div>
-                <div>
-                    <strong>Precisa de ajuda?</strong>
-                    <p>Entre em contato com a VitaMet.</p>
-                </div>
-            </div>
             <a href="../login.html" class="logout">
                 <span>🚪</span> Sair
             </a>
@@ -241,7 +234,8 @@
                     let htmlComentarios = '';
                     if (publicacao.comentarios && publicacao.comentarios.length > 0) {
                         publicacao.comentarios.forEach(c => {
-                            const ehMeuComentario = String(c.tutor_id) === String(tutorId);
+                            const ehMeuComentario = [c.tutor_id, c.usuario_id]
+                                .some(id => String(id) === String(tutorId));
                             htmlComentarios += `
                                 <div class="comment-item" id="comentario-${c.id}" style="font-size: 13px; background: #f9f9f9; padding: 6px 10px; border-radius: 6px; margin-top: 5px; display: flex; justify-content: space-between; align-items: center;">
                                     <div>
@@ -291,6 +285,9 @@
                                     🗑️ Excluir
                                 </button>
                             ` : ""}
+                            <button class="report-button" onclick="denunciarPublicacao(${publicacao.id})" title="Denunciar publicação">
+                                ⚑ Denunciar
+                            </button>
                         </div>
 
                         <div class="post-comments-section" style="margin-top: 10px; border-top: 1px solid #eee; padding-top: 10px;">
@@ -359,9 +356,30 @@
                 });
                 if (resposta.ok) {
                     carregarPublicacoes();
+                } else {
+                    const erro = await resposta.json().catch(() => ({}));
+                    alert(erro.erro || "Não foi possível registrar a curtida.");
                 }
             } catch (erro) {
                 console.error("Erro ao curtir:", erro);
+            }
+        }
+
+        async function denunciarPublicacao(id) {
+            const motivo = prompt("Informe o motivo da denúncia:");
+            if (!motivo || !motivo.trim() || !tutorId) return;
+
+            try {
+                const resposta = await fetch(`/api/publicacoes/${id}/denunciar`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ usuario_id: tutorId, motivo: motivo.trim() })
+                });
+                const resultado = await resposta.json();
+                alert(resultado.mensagem || resultado.erro);
+            } catch (erro) {
+                console.error("Erro ao denunciar publicação:", erro);
+                alert("Não foi possível registrar a denúncia.");
             }
         }
 
@@ -444,5 +462,6 @@
 
         carregarPublicacoes();
     </script>
+    <script src="notificacoes.js"></script>
 </body>
 </html>

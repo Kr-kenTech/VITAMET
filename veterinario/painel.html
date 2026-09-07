@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VitaMed - Prontuários</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="veterinario.css">
+</head>
+<body>
+
+<div class="layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-icon">
+                <img src="../foto.jpeg" alt="Logo">
+            </div>
+            <div>
+                <h2>Vita<span>Med</span></h2>
+                <p>Painel Veterinário</p>
+            </div>
+        </div>
+
+        <nav class="menu">
+            <a href="painel.html" class="menu-item active">
+                <span><i class="fa-solid fa-notes-medical"></i></span> Prontuários & Receitas
+            </a>
+            <a href="status_pet.html" class="menu-item">
+                <span><i class="fa-solid fa-clock"></i></span> Status do Pet
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <button class="logout" onclick="sair()">
+                <span><i class="fa-solid fa-right-from-bracket"></i></span> Sair da Conta
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+        <header class="topbar">
+            <div class="mobile-logo">VitaMed<span>.</span></div>
+            
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="inputBusca" placeholder="Pesquisar paciente ou prontuário...">
+            </div>
+
+            <div class="top-user">
+                <div class="notification"><i class="fa-regular fa-bell"></i></div>
+                <div class="avatar">
+                    <span data-vet-initials>DR</span>
+                </div>
+                <div class="user-info">
+                    <strong id="nomeVet">Carregando...</strong>
+                    <span>Corpo Clínico</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="content">
+            <div class="page-header">
+                <div>
+                    <span class="breadcrumb">ROTINA CLÍNICA</span>
+                    <h1>Prontuários e Receitas</h1>
+                    <p>Registre a evolução médica e emita receitas para os pacientes.</p>
+                </div>
+            </div>
+
+            <!-- FORMULÁRIO DE PRONTUÁRIOS -->
+            <section class="conteudo-aba">
+                <div class="card">
+                    <h3>Novo Atendimento Clínico</h3>
+                    <form id="formClinico" onsubmit="salvarAtendimento(event)">
+                        <div class="form-group">
+                            <label for="selectPet">Selecionar Paciente (Pet)</label>
+                            <select id="selectPet" required>
+                                <option value="">Carregando pets...</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="prontuario">Queixa / Histórico Clínico</label>
+                            <textarea id="prontuario" placeholder="Descreva os sintomas, queixa principal e quadro clínico..." required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="receita">Emitir Tratamento / Receita Médica</label>
+                            <textarea id="receita" placeholder="Insira os medicamentos, dosagem e orientações..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Salvar Prontuário e Receita</button>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </main>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const usuarioStr = localStorage.getItem("usuario");
+        if (usuarioStr) {
+            try {
+                const usuario = JSON.parse(usuarioStr);
+                const nome = usuario.nome || "Dr(a). Veterinário(a)";
+                document.getElementById("nomeVet").innerText = nome;
+                
+                const iniciais = nome.split(" ").map(n => n[0]).slice(0, 2).join("").toUpperCase();
+                document.querySelector("[data-vet-initials]").innerText = iniciais || "DR";
+            } catch (e) {
+                console.error("Erro ao ler dados do usuário:", e);
+            }
+        }
+        carregarPets();
+    });
+
+    async function carregarPets() {
+        try {
+            const res = await fetch('/api/pets');
+            const pets = await res.json();
+            
+            const selectProntuario = document.getElementById('selectPet');
+            selectProntuario.innerHTML = '<option value="">Selecione o pet...</option>';
+
+            pets.forEach(pet => {
+                const opcao = `<option value="${pet.id}">${pet.nome} (${pet.especie || 'Animal'})</option>`;
+                selectProntuario.innerHTML += opcao;
+            });
+        } catch (e) {
+            console.error("Erro ao carregar pets:", e);
+        }
+    }
+
+    async function salvarAtendimento(event) {
+        event.preventDefault();
+        
+        const usuarioStr = localStorage.getItem("usuario");
+        let veterinarioId = null;
+
+        if (usuarioStr) {
+            try {
+                const usuario = JSON.parse(usuarioStr);
+                veterinarioId = usuario.veterinario_id || usuario.id; 
+            } catch (e) {
+                console.error("Erro ao ler dados do usuário do localStorage:", e);
+            }
+        }
+
+        if (!veterinarioId) {
+            alert("Erro: ID do veterinário não encontrado. Por favor, faça login novamente.");
+            return;
+        }
+
+        const animalId = document.getElementById('selectPet').value;
+        const queixa = document.getElementById('prontuario').value;
+        const tratamento = document.getElementById('receita').value;
+
+        if (!animalId) {
+            alert('Por favor, selecione um paciente (pet).');
+            return;
+        }
+
+        const dados = {
+            animal_id: animalId,
+            veterinario_id: veterinarioId,
+            queixa: queixa,
+            diagnostico: "Atendimento Clínico Geral", 
+            tratamento: tratamento,
+            observacoes: ""
+        };
+
+        try {
+            const res = await fetch('/api/prontuarios', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dados)
+            });
+            
+            const resultado = await res.json();
+            
+            if (res.ok) {
+                alert('Prontuário e receita salvos com sucesso!');
+                document.getElementById('formClinico').reset();
+            } else {
+                alert('Erro do servidor: ' + (resultado.erro || resultado.mensagem || 'Não foi possível salvar'));
+            }
+        } catch (e) {
+            console.error("Erro de requisição:", e);
+            alert('Erro de conexão ao salvar dados clínicos.');
+        }
+    }
+
+    function sair() {
+        localStorage.clear();
+        window.location.href = "../index.html";
+    }
+</script>
+</body>
+</html>

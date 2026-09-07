@@ -44,13 +44,10 @@
                 <a href="relatorios.html" class="menu-item">
                     <span><i class="fa-solid fa-chart-pie"></i></span> Relatórios
                 </a>
-                <a href="configuracoes.html" class="menu-item">
-                    <span><i class="fa-solid fa-gear"></i></span> Configurações
-                </a>
             </div>
 
         <div class="sidebar-bottom">
-            <button class="logout" onclick="window.location.href='login.html'">
+            <button class="logout" onclick="window.location.href='../login.html'">
                 <span><i class="fa-solid fa-right-from-bracket"></i></span> Sair da Conta
             </button>
         </div>
@@ -71,11 +68,11 @@
                     <i class="fa-regular fa-bell"></i>
                 </div>
                 <div class="avatar">
-                    <img src="WhatsApp%20Image%202026-08-31%20at%209.31.23%20PM.jpeg" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                    <span data-admin-initials>AD</span>
                 </div>
                 <div class="user-info">
-                    <strong>Dr. Raylander</strong>
-                    <span>Usuário Admin</span>
+                    <strong data-admin-name>Administrador</strong>
+                    <span data-admin-role>Admin</span>
                 </div>
                 <i class="fa-solid fa-chevron-down arrow"></i>
             </div>
@@ -160,7 +157,7 @@
                 </div>
                 <div class="form-group" style="flex: 1;">
                     <label for="peso">Peso (kg)</label>
-                    <input type="number" step="0.1" id="peso" placeholder="Ex: 12.5">
+                    <input type="number " step="0.1" id="peso" placeholder="Ex: 12.5">
                 </div>
             </div>
 
@@ -173,9 +170,8 @@
 </div>
 
 <script>
-   let listaPetsGlobal = [];
+    let listaPetsGlobal = [];
 
-    // Função principal que busca os pets do backend
     async function carregarPets() {
         const tbody = document.getElementById('tabela-pets');
         tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #607d8b; padding: 25px;">Carregando pets do banco de dados...</td></tr>`;
@@ -185,7 +181,7 @@
             const animais = await resposta.json();
 
             if (resposta.ok) {
-                listaPetsGlobal = animais; // Salva na global para a busca/filtro funcionar
+                listaPetsGlobal = animais;
                 renderizarTabela(animais);
             } else {
                 tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #d9534f; padding: 25px;">Erro ao carregar pets: ${animais.erro || 'Erro desconhecido'}</td></tr>`;
@@ -206,7 +202,12 @@
         }
 
         pets.forEach(pet => {
+            // Limpa unidades que possam vir do banco
+            const idadeLimpa = pet.idade ? String(pet.idade).replace(/anos?/gi, '').trim() : null;
+            const pesoLimpo  = pet.peso  ? String(pet.peso).replace(/kgs?/gi, '').trim()  : null;
+
             const fotoUrl = 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=100';
+
             const linha = document.createElement('tr');
             linha.innerHTML = `
                 <td>
@@ -217,9 +218,18 @@
                 </td>
                 <td>${pet.especie} ${pet.raca ? '- ' + pet.raca : ''}</td>
                 <td>${pet.nome_tutor || 'Não vinculado'}</td>
-                <td>${pet.idade ? pet.idade + ' anos' : 'N/D'} / ${pet.peso ? pet.peso + 'kg' : 'N/D'}</td>
-                <td><span class="badge badge-success" style="background: #e1f5fe; color: #0288d1; padding: 4px 8px; border-radius: 6px; font-size: 12px;">${pet.status_atual || 'Ativo'}</span></td>
-                <td><i class="fa-solid fa-ellipsis-vertical" style="cursor: pointer; color: #607d8b; padding: 5px;"></i></td>
+                <td>
+                    ${idadeLimpa ? idadeLimpa + ' anos' : 'N/D'} / 
+                    ${pesoLimpo  ? pesoLimpo  + ' kg'  : 'N/D'}
+                </td>
+                <td>
+                    <span class="badge badge-success" style="background: #e1f5fe; color: #0288d1; padding: 4px 8px; border-radius: 6px; font-size: 12px;">
+                        ${pet.status_atual || 'Ativo'}
+                    </span>
+                </td>
+                <td>
+                    <i class="fa-solid fa-ellipsis-vertical" style="cursor: pointer; color: #607d8b; padding: 5px;"></i>
+                </td>
             `;
             tbody.appendChild(linha);
         });
@@ -227,8 +237,8 @@
 
     function filtrarPets() {
         const termo = document.getElementById('inputBusca').value.toLowerCase();
-        const filtrados = listaPetsGlobal.filter(pet => 
-            pet.nome.toLowerCase().includes(termo) || 
+        const filtrados = listaPetsGlobal.filter(pet =>
+            pet.nome.toLowerCase().includes(termo) ||
             pet.especie.toLowerCase().includes(termo) ||
             (pet.nome_tutor && pet.nome_tutor.toLowerCase().includes(termo))
         );
@@ -257,7 +267,7 @@
                 select.innerHTML += `<option value="${tutor.id}">${tutor.nome} (CPF: ${tutor.cpf})</option>`;
             });
         } catch (e) {
-            console.warn("Aviso ao carregar tutores para o select:", e);
+            console.warn("Aviso ao carregar tutores:", e);
         }
     }
 
@@ -285,7 +295,7 @@
             if (resposta.ok) {
                 alert(resultado.mensagem);
                 fecharModalNovoPet();
-                carregarPets(); // Recarrega a tabela automaticamente após salvar
+                carregarPets();
             } else {
                 alert('Erro: ' + resultado.erro);
             }
@@ -297,5 +307,7 @@
 
     document.addEventListener('DOMContentLoaded', carregarPets);
 </script>
+    <script src="perfil-admin.js"></script>
+    <script src="notificacoes-admin.js"></script>
 </body>
 </html>
