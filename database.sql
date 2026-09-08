@@ -131,22 +131,6 @@ CREATE TABLE curtidas (
     FOREIGN KEY (usuario_id) REFERENCES usuario(id) ON DELETE CASCADE
   );
 
-  CREATE TABLE configuracoes_sistema (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    chave VARCHAR(80) NOT NULL UNIQUE,
-    valor TEXT NOT NULL,
-    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-  );
-
-  INSERT IGNORE INTO configuracoes_sistema (chave, valor) VALUES
-  ('razao_social', 'Clínica Veterinária Vitamed LTDA'),
-  ('cnpj', '12.345.678/0001-90'),
-  ('email_notificacoes', 'contato@vitamedvet.com.br'),
-  ('alertas_estoque_baixo', '1'),
-  ('autenticacao_2fa', '1'),
-  ('notificacoes_consultas', '1'),
-  ('ultimo_backup', 'Nunca');
-
 CREATE TABLE logistica (
     id INT AUTO_INCREMENT PRIMARY KEY,
     sku VARCHAR(50) UNIQUE,
@@ -177,16 +161,7 @@ CREATE TABLE pedidos_compra (
     atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
   );
 
--- Tabela do corpo clínico veterinário (RF-03)
-CREATE TABLE IF NOT EXISTS veterinario (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    usuario_id INT NOT NULL,
-    area_atuacao VARCHAR(120) DEFAULT 'Clínica geral',
-    UNIQUE KEY veterinario_usuario_unica (usuario_id),
-    FOREIGN KEY (usuario_id) REFERENCES usuario(id) ON DELETE CASCADE
-);
-
--- Prontuários clínicos (RF-07)
+-- Prontuários clínicos
 CREATE TABLE IF NOT EXISTS prontuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     animal_id INT NOT NULL,
@@ -201,7 +176,7 @@ CREATE TABLE IF NOT EXISTS prontuarios (
     FOREIGN KEY (veterinario_id) REFERENCES veterinario(id) ON DELETE CASCADE
 );
 
--- Receitas médicas (RF-08)
+-- Receitas médicas
 CREATE TABLE IF NOT EXISTS receitas (
     id INT AUTO_INCREMENT PRIMARY KEY,
     animal_id INT NOT NULL,
